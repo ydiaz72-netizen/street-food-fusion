@@ -4,20 +4,19 @@
   <meta charset="UTF-8" />
   <title>Street Food Fusion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Street Food Fusion — mobile-first food truck menu, schedule, and ordering." />
+  <meta name="description" content="Street Food Fusion — menu, schedule, and WhatsApp ordering." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-  <!-- Top Bar -->
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
         <img src="logo.png" class="brand-logo" alt="Street Food Fusion logo" />
         <div class="brand-text">
           <div class="brand-name">Street Food Fusion</div>
-          <div class="brand-tagline">Fresh. Fast. Fusion.</div>
+          <div class="brand-tagline">Fresh • Fast • Fusion</div>
         </div>
       </div>
 
@@ -31,153 +30,179 @@
 
   <main class="container">
 
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-card">
-        <h1>Street Food Fusion</h1>
-        <p class="hero-sub">
-          Street flavors with a fusion twist. Mobile-first menu and easy ordering.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#order">Order on WhatsApp</a>
-          <a class="btn" href="#menu">View Menu</a>
+    <section class="quick">
+      <div class="quick-card">
+        <div class="quick-left">
+          <div class="quick-title">Order fast on WhatsApp</div>
+          <div class="quick-sub">Tap the button — pickup-friendly.</div>
         </div>
-
-        <div class="hero-badges">
-          <span class="badge">🍔 Burgers</span>
-          <span class="badge">🥟 Empanadas</span>
-          <span class="badge">🌭 Cheese Dogs</span>
-          <span class="badge">☕ Coffee</span>
-        </div>
-      </div>
-
-      <div class="hero-side">
-        <div class="info-card">
-          <div class="info-title">Quick Order</div>
-          <a class="btn btn-primary btn-wide" href="https://wa.me/4915201454543" target="_blank" rel="noopener">
-            WhatsApp: +49 152 01454543
-          </a>
-          <p class="muted tiny">Fastest way to order for pickup.</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-title">Today’s Location</div>
-          <p class="muted" id="today-location">Downtown • 12:00–18:00</p>
-          <p class="tiny muted">Update this text anytime in the schedule section.</p>
-        </div>
+        <a class="btn btn-primary" href="https://wa.me/4915201454543" target="_blank" rel="noopener">
+          WhatsApp Order
+        </a>
       </div>
     </section>
 
-    <!-- Menu -->
     <section id="menu" class="section">
       <div class="section-head">
         <h2>Menu</h2>
-        <p class="muted">Tap “Order” to message us on WhatsApp.</p>
+        <p class="muted">Quick list. Small photos. Easy to scan.</p>
       </div>
 
       <div class="menu-list">
 
-        <!-- Fusion Burger (with image) -->
-        <article class="menu-item">
-          <img src="burger.png" class="menu-thumb" alt="Fusion Burger" />
-          <div class="menu-body">
-            <div class="menu-title-row">
-              <h3>Fusion Burger</h3>
-              <span class="price">€10.50</span>
+        <article class="menu-row">
+          <img src="burger.png" class="thumb" alt="Fusion Burger" />
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Fusion Burger</div>
+              <div class="price">€10.50</div>
             </div>
-            <p class="menu-desc">Juicy burger with signature fusion sauce.</p>
-            <a class="mini-order" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+            <div class="item-desc">Juicy burger with signature fusion sauce.</div>
           </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
         </article>
 
-        <!-- Crispy Chicken Bites -->
-        <article class="menu-item">
-          <div class="menu-thumb placeholder">🍗</div>
-          <div class="menu-body">
-            <div class="menu-title-row">
-              <h3>Crispy Chicken Bites</h3>
-              <span class="price">€8.50</span>
+        <article class="menu-row">
+          <div class="thumb placeholder">🍗</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Crispy Chicken Bites</div>
+              <div class="price">€8.50</div>
             </div>
-            <p class="menu-desc">Crunchy, saucy, addictive.</p>
-            <a class="mini-order" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+            <div class="item-desc">Crunchy, saucy, addictive.</div>
           </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
         </article>
 
-        <!-- Loaded Fries -->
-        <article class="menu-item">
-          <div class="menu-thumb placeholder">🍟</div>
-          <div class="menu-body">
-            <div class="menu-title-row">
-              <h3>Loaded Fries</h3>
-              <span class="price">€6.50</span>
+        <article class="menu-row">
+          <div class="thumb placeholder">🍟</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Loaded Fries</div>
+              <div class="price">€6.50</div>
             </div>
-            <p class="menu-desc">Toppings + sauce + crunch.</p>
-            <a class="mini-order" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+            <div class="item-desc">Toppings + sauce + crunch.</div>
           </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
         </article>
 
-        <!-- Lemonade -->
-        <article class="menu-item">
-          <div class="menu-thumb placeholder">🥤</div>
-          <div class="menu-body">
-            <div class="menu-title-row">
-              <h3>Homemade Lemonade</h3>
-              <span class="price">€3.50</span>
+        <article class="menu-row">
+          <div class="thumb placeholder">🥟</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Empanada</div>
+              <div class="price">€4.50</div>
             </div>
-            <p class="menu-desc">Fresh &amp; cold.</p>
-            <a class="mini-order" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+            <div class="item-desc">Golden, crispy pastry with filling.</div>
           </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+        </article>
+
+        <article class="menu-row">
+          <div class="thumb placeholder">🌭</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Cheese Dog</div>
+              <div class="price">€6.00</div>
+            </div>
+            <div class="item-desc">Cheesy, fun street-food classic.</div>
+          </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+        </article>
+
+        <article class="menu-row">
+          <div class="thumb placeholder">🍕</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Pizza Slice</div>
+              <div class="price">€4.00</div>
+            </div>
+            <div class="item-desc">Hot slice, quick bite.</div>
+          </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+        </article>
+
+        <article class="menu-row">
+          <div class="thumb placeholder">☕</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Coffee</div>
+              <div class="price">€2.50</div>
+            </div>
+            <div class="item-desc">Strong, simple, perfect.</div>
+          </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+        </article>
+
+        <article class="menu-row">
+          <div class="thumb placeholder">🍵</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Tea</div>
+              <div class="price">€2.20</div>
+            </div>
+            <div class="item-desc">Hot and comforting.</div>
+          </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
+        </article>
+
+        <article class="menu-row">
+          <div class="thumb placeholder">🥤</div>
+          <div class="row-main">
+            <div class="row-top">
+              <div class="item-name">Soda</div>
+              <div class="price">€2.00</div>
+            </div>
+            <div class="item-desc">Cold can/bottle.</div>
+          </div>
+          <a class="mini" href="https://wa.me/4915201454543" target="_blank" rel="noopener">Order</a>
         </article>
 
       </div>
     </section>
 
-    <!-- Order -->
-    <section id="order" class="section">
-      <div class="section-head">
-        <h2>Order</h2>
-        <p class="muted">Message us on WhatsApp for quick pickup.</p>
-      </div>
-
-      <div class="order-panel">
-        <div class="order-left">
-          <h3>WhatsApp Ordering</h3>
-          <p class="muted">Click below to open chat and place your order.</p>
-          <a class="btn btn-primary btn-wide" href="https://wa.me/4915201454543" target="_blank" rel="noopener">
-            Order on WhatsApp
-          </a>
-          <p class="tiny muted">Number: +49 152 01454543</p>
-        </div>
-
-        <div class="order-right">
-          <h3>Call</h3>
-          <p class="muted">Prefer calling? Tap to dial:</p>
-          <a class="btn btn-wide" href="tel:+4915201454543">Call +49 152 01454543</a>
-          <p class="tiny muted">If we’re busy, WhatsApp is best.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Schedule -->
     <section id="schedule" class="section">
       <div class="section-head">
         <h2>Schedule</h2>
-        <p class="muted">Where to find us this week.</p>
+        <p class="muted">Short + readable. Edit anytime.</p>
       </div>
 
-      <div class="schedule-card">
-        <div class="schedule-row"><span class="day">Mon–Fri</span><span>Downtown • 12:00–18:00</span></div>
-        <div class="schedule-row"><span class="day">Sat</span><span>Night Market • 17:00–22:00</span></div>
-        <div class="schedule-row"><span class="day">Sun</span><span>Closed</span></div>
+      <div class="card">
+        <div class="sched-row"><span class="day">Mon–Fri</span><span>Downtown • 12:00–18:00</span></div>
+        <div class="sched-row"><span class="day">Sat</span><span>Night Market • 17:00–22:00</span></div>
+        <div class="sched-row"><span class="day">Sun</span><span>Closed</span></div>
+      </div>
+    </section>
+
+    <section id="order" class="section">
+      <div class="section-head">
+        <h2>Order</h2>
+        <p class="muted">WhatsApp or call — both shown clearly.</p>
+      </div>
+
+      <div class="card order-card">
+        <a class="btn btn-primary btn-wide" href="https://wa.me/4915201454543" target="_blank" rel="noopener">
+          Order on WhatsApp
+        </a>
+        <div class="order-lines">
+          <div><strong>WhatsApp:</strong> +49 152 01454543</div>
+          <div><strong>Call:</strong> <a class="phone" href="tel:+4915201454543">+49 152 01454543</a></div>
+        </div>
       </div>
     </section>
 
     <footer class="footer">
-      <p>© <span id="year"></span> Street Food Fusion</p>
+      <div>© <span id="year"></span> Street Food Fusion</div>
     </footer>
 
   </main>
+
+  <!-- Sticky order bar (mobile) -->
+  <div class="sticky-order">
+    <a class="sticky-btn" href="https://wa.me/4915201454543" target="_blank" rel="noopener">
+      Order on WhatsApp
+    </a>
+  </div>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
