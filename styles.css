@@ -9,8 +9,15 @@
   --max: 980px;
 }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
@@ -23,10 +30,12 @@ body {
   padding: 22px 14px 10px;
   text-align: center;
 }
+
 .header-inner {
   max-width: var(--max);
   margin: 0 auto;
 }
+
 .logo {
   width: 320px;
   max-width: 92%;
@@ -34,12 +43,14 @@ body {
   margin: 0 auto 14px auto;
   filter: drop-shadow(0 10px 25px rgba(0,0,0,0.6));
 }
+
 h1 {
   margin: 6px 0 4px;
   color: var(--accent);
   font-size: 2rem;
   letter-spacing: 0.3px;
 }
+
 .tagline {
   margin: 0 0 14px;
   color: var(--muted);
@@ -53,6 +64,7 @@ h1 {
   flex-wrap: wrap;
   margin: 10px 0 0;
 }
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -65,12 +77,17 @@ h1 {
   text-decoration: none;
   font-weight: 800;
 }
-.btn:hover { border-color: #333; }
+
+.btn:hover {
+  border-color: #333;
+}
+
 .btn-primary {
   background: var(--accent);
   color: #000;
   border-color: transparent;
 }
+
 .btn-wide {
   width: 100%;
   max-width: 460px;
@@ -83,15 +100,23 @@ h1 {
   margin: 0 auto;
   padding: 14px;
 }
+
 .section {
   margin: 26px 0;
 }
+
 .section-head h2 {
   margin: 0 0 6px;
   font-size: 1.45rem;
 }
-.muted { color: var(--muted); }
-.tiny { font-size: 0.92rem; }
+
+.muted {
+  color: var(--muted);
+}
+
+.tiny {
+  font-size: 0.92rem;
+}
 
 /* Menu cards */
 .menu-grid {
@@ -100,41 +125,50 @@ h1 {
   gap: 14px;
   margin-top: 12px;
 }
+
 .menu-card {
   background: var(--card);
   border: 1px solid #1f1f1f;
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
+  text-align: center;
+  padding: 10px;
 }
+
 .menu-content {
-  padding: 14px;
+  padding: 8px;
 }
+
 .menu-top {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
 }
+
 .menu-card h3 {
   margin: 0;
   font-size: 1.12rem;
 }
+
 .menu-card p {
   margin: 8px 0 0;
   color: var(--muted);
 }
+
 .price {
   color: var(--accent);
   font-weight: 900;
 }
 
-/* Food images */
+/* Food images - SMALL VERSION (~1 inch) */
 .food-img {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
+  width: auto;
+  height: 96px;  /* ≈ 1 inch */
+  object-fit: contain;
   display: block;
+  margin: 10px auto;
 }
 
 /* Order */
@@ -146,10 +180,12 @@ h1 {
   box-shadow: var(--shadow);
   text-align: center;
 }
+
 .order-info {
   margin-top: 12px;
   color: var(--text);
 }
+
 .order-info p {
   margin: 6px 0;
 }
@@ -162,6 +198,7 @@ h1 {
   padding: 14px;
   box-shadow: var(--shadow);
 }
+
 .schedule-row {
   display: flex;
   justify-content: space-between;
@@ -169,8 +206,15 @@ h1 {
   padding: 10px 6px;
   border-bottom: 1px solid #1f1f1f;
 }
-.schedule-row:last-child { border-bottom: none; }
-.day { color: var(--accent); font-weight: 900; }
+
+.schedule-row:last-child {
+  border-bottom: none;
+}
+
+.day {
+  color: var(--accent);
+  font-weight: 900;
+}
 
 /* Footer */
 .footer {
@@ -183,8 +227,5 @@ h1 {
 @media (min-width: 720px) {
   .menu-grid {
     grid-template-columns: 1fr 1fr;
-  }
-  .food-img {
-    height: 220px;
   }
 }
