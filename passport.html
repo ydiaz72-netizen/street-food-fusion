@@ -7,763 +7,790 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #fdf6ee;
-      --card: #ffffff;
-      --text: #1a1a1a;
-      --text-soft: #6b7280;
-      --gold: #e8a83e;
-      --gold-light: #fff8ed;
-      --gold-dark: #c97600;
-      --green: #2d7a4f;
-      --green-light: #eaf4ee;
-      --teal: #0e7490;
-      --teal-light: #e0f2fe;
-      --pink: #db2777;
-      --pink-light: #fce7f3;
+      --bg: #fdf6ee; --card: #ffffff; --text: #1a1a1a; --soft: #6b7280;
+      --gold: #e8a83e; --gold-light: #fff8ed; --gold-dark: #c97600;
+      --green: #2d7a4f; --green-light: #eaf4ee;
+      --teal: #0e7490; --teal-light: #e0f2fe;
+      --pink: #db2777; --pink-light: #fce7f3;
       --shadow: 0 2px 16px rgba(0,0,0,0.07);
-      --radius: 20px;
       --font: 'Plus Jakarta Sans', sans-serif;
     }
+    html, body { min-height: 100vh; background: var(--bg); font-family: var(--font); color: var(--text); -webkit-font-smoothing: antialiased; }
 
-    html, body {
-      min-height: 100vh;
-      background: var(--bg);
-      font-family: var(--font);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
+    /* NAV */
+    .topbar { background: var(--gold); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 20; }
+    .topbar-logo { font-size: 16px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .topbar-id { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600; letter-spacing: 1px; font-family: monospace; }
+    .lang-switcher { display: flex; gap: 4px; }
+    .lang-btn { background: rgba(255,255,255,0.2); border: none; color: #fff; font-family: var(--font); font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; letter-spacing: 0.5px; transition: background 0.15s; }
+    .lang-btn.active { background: rgba(255,255,255,0.45); }
+    .lang-btn:hover { background: rgba(255,255,255,0.35); }
 
-    /* ── TOP BAR ── */
-    .topbar {
-      background: var(--gold);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .topbar-logo {
-      font-size: 17px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .topbar-id {
-      font-size: 11px;
-      color: rgba(255,255,255,0.75);
-      font-weight: 600;
-      letter-spacing: 1px;
-      font-family: monospace;
-    }
-
-    /* ── TYPE SWITCHER ── */
-    .switcher {
-      display: flex;
-      gap: 10px;
-      padding: 18px 18px 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+    /* TYPE SWITCHER */
+    .switcher { display: flex; gap: 10px; padding: 16px 16px 0; overflow-x: auto; scrollbar-width: none; }
     .switcher::-webkit-scrollbar { display: none; }
-
-    .type-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 20px;
-      border-radius: 99px;
-      border: 2px solid transparent;
-      background: var(--card);
-      font-family: var(--font);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-soft);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.18s;
-      box-shadow: var(--shadow);
-      min-height: 50px;
-    }
-
+    .type-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 99px; border: 2px solid transparent; background: var(--card); font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--soft); cursor: pointer; white-space: nowrap; transition: all 0.15s; box-shadow: var(--shadow); min-height: 48px; }
     .type-btn.active-senior { background: var(--gold-light); border-color: var(--gold); color: var(--gold-dark); }
     .type-btn.active-kids   { background: var(--pink-light);  border-color: var(--pink);  color: var(--pink); }
     .type-btn.active-pet    { background: var(--teal-light);  border-color: var(--teal);  color: var(--teal); }
-    .type-btn .t-emoji { font-size: 20px; }
 
-    /* ── PASSPORT VIEWS ── */
-    .pview { display: none; padding: 18px; }
+    /* VIEWS */
+    .pview { display: none; padding: 16px; }
     .pview.active { display: block; }
 
-    /* ── WELCOME CARD ── */
-    .welcome {
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      box-shadow: var(--shadow);
-    }
-    .welcome.senior { background: linear-gradient(135deg, #fff8f0, #fff3e0); border: 1.5px solid #ffe0b2; }
-    .welcome.kids   { background: linear-gradient(135deg, #fdf2f8, #fce7f3); border: 1.5px solid #fbcfe8; }
-    .welcome.pet    { background: linear-gradient(135deg, #f0fdf9, #e0f2fe); border: 1.5px solid #bae6fd; }
+    /* SETUP SCREEN */
+    .setup-screen { padding: 16px; }
+    .setup-card { background: var(--card); border-radius: 20px; padding: 28px; box-shadow: var(--shadow); text-align: center; }
+    .setup-emoji { font-size: 64px; margin-bottom: 16px; }
+    .setup-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .setup-desc { font-size: 14px; color: var(--soft); font-weight: 400; line-height: 1.6; margin-bottom: 24px; }
+    .setup-types { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 24px; }
+    .setup-type { border: 2px solid #e5e7eb; border-radius: 14px; padding: 14px 8px; cursor: pointer; text-align: center; transition: all 0.15s; background: #f9fafb; }
+    .setup-type:hover { border-color: var(--gold); background: var(--gold-light); }
+    .setup-type.selected { border-color: var(--gold); background: var(--gold-light); }
+    .setup-type-emoji { font-size: 28px; margin-bottom: 6px; }
+    .setup-type-label { font-size: 13px; font-weight: 700; }
+    .setup-input { width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: var(--font); font-size: 16px; color: var(--text); outline: none; background: #f9fafb; margin-bottom: 12px; transition: border-color 0.2s; }
+    .setup-input:focus { border-color: var(--gold); background: #fff; }
+    .setup-btn { width: 100%; padding: 16px; background: var(--gold); color: #fff; border: none; border-radius: 12px; font-family: var(--font); font-size: 16px; font-weight: 900; cursor: pointer; transition: background 0.2s; }
+    .setup-btn:hover { background: var(--gold-dark); }
+    .setup-skip { font-size: 13px; color: var(--soft); margin-top: 12px; cursor: pointer; text-decoration: underline; }
 
-    .welcome-avatar {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 40px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
+    /* WELCOME */
+    .welcome { border-radius: 20px; padding: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
+    .welcome.senior { background: linear-gradient(135deg,#fff8f0,#fff3e0); border: 1.5px solid #ffe0b2; }
+    .welcome.kids   { background: linear-gradient(135deg,#fdf2f8,#fce7f3); border: 1.5px solid #fbcfe8; }
+    .welcome.pet    { background: linear-gradient(135deg,#f0fdf9,#e0f2fe); border: 1.5px solid #bae6fd; }
+    .welcome-avatar { width: 68px; height: 68px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 38px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .welcome-name { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+    .welcome-meta { font-size: 13px; color: var(--soft); font-weight: 500; }
 
-    .welcome-name { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
-    .welcome-meta { font-size: 14px; color: var(--text-soft); font-weight: 500; }
-
-    /* ── STATS ── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .stat {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 16px 10px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-
-    .stat-num {
-      font-size: 30px;
-      font-weight: 900;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
+    .stat { background: var(--card); border-radius: 16px; padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
+    .stat-num { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
     .stat-num.kids { color: var(--pink); }
     .stat-num.pet  { color: var(--teal); }
+    .stat-label { font-size: 12px; font-weight: 700; color: var(--soft); }
 
-    .stat-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-soft);
-      line-height: 1.3;
-    }
+    /* REWARD */
+    .reward { border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .reward.senior { background: var(--green-light); border: 1.5px solid var(--green); }
+    .reward.kids   { background: var(--pink-light);  border: 1.5px solid var(--pink); }
+    .reward.pet    { background: var(--teal-light);  border: 1.5px solid var(--teal); }
+    .reward-icon { font-size: 36px; flex-shrink: 0; }
+    .reward-title { font-size: 17px; font-weight: 900; margin-bottom: 3px; }
+    .reward-desc  { font-size: 13px; color: var(--soft); font-weight: 500; line-height: 1.4; }
 
-    /* ── REWARD BANNER ── */
-    .reward-banner {
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .reward-banner.senior { background: var(--green-light); border: 1.5px solid var(--green); }
-    .reward-banner.kids   { background: var(--pink-light);  border: 1.5px solid var(--pink); }
-    .reward-banner.pet    { background: var(--teal-light);  border: 1.5px solid var(--teal); }
+    /* CARD */
+    .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .card-title { font-size: 17px; font-weight: 900; margin-bottom: 4px; }
+    .card-sub   { font-size: 13px; color: var(--soft); font-weight: 500; margin-bottom: 16px; }
 
-    .reward-icon { font-size: 40px; flex-shrink: 0; }
-    .reward-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
-    .reward-desc  { font-size: 14px; color: var(--text-soft); font-weight: 500; line-height: 1.4; }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-subtitle {
-      font-size: 13px;
-      color: var(--text-soft);
-      font-weight: 500;
-      margin-bottom: 18px;
-    }
-
-    /* ── STAMPS ── */
-    .stamp-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .stamp {
-      aspect-ratio: 1;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      border: 2.5px dashed #e5e7eb;
-      background: #f9fafb;
-      position: relative;
-      transition: all 0.2s;
-    }
-
+    /* STAMPS */
+    .stamp-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+    .stamp { aspect-ratio:1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2.5px dashed #e5e7eb; background: #f9fafb; position: relative; transition: all 0.2s; }
     .stamp.earned        { border: 2.5px solid var(--gold);  background: var(--gold-light); }
     .stamp.earned.kids   { border-color: var(--pink);  background: var(--pink-light); }
     .stamp.earned.pet    { border-color: var(--teal);  background: var(--teal-light); }
     .stamp.reward-slot   { border-color: var(--green); background: var(--green-light); }
+    .stamp.empty::after  { content: attr(data-n); position: absolute; font-size: 15px; font-weight: 800; color: #d1d5db; }
 
-    .stamp.empty::after {
-      content: attr(data-n);
-      position: absolute;
-      font-size: 15px;
-      font-weight: 800;
-      color: #d1d5db;
-    }
+    .prog-wrap { margin-top: 16px; }
+    .prog-labels { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 7px; }
+    .prog-track { height: 10px; background: #f3f4f6; border-radius: 99px; overflow: hidden; }
+    .prog-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg,var(--gold),#f5a623); transition: width 0.8s ease; }
+    .prog-fill.kids { background: linear-gradient(90deg,var(--pink),#f472b6); }
+    .prog-fill.pet  { background: linear-gradient(90deg,var(--teal),#22d3ee); }
 
-    /* Progress */
-    .progress-wrap { margin-top: 18px; }
-    .progress-labels { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-    .progress-track { height: 12px; background: #f3f4f6; border-radius: 99px; overflow: hidden; }
-    .progress-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--gold), #f5a623); transition: width 1s ease; }
-    .progress-fill.kids { background: linear-gradient(90deg, var(--pink), #f472b6); }
-    .progress-fill.pet  { background: linear-gradient(90deg, var(--teal), #22d3ee); }
-
-    /* ── VISITS ── */
-    .visit {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid #f3f4f6;
-    }
+    /* VISITS */
+    .visit { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f3f4f6; }
     .visit:last-child { border-bottom: none; padding-bottom: 0; }
+    .visit-dot { width: 38px; height: 38px; border-radius: 50%; background: var(--gold-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .visit-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .visit-date  { font-size: 12px; color: var(--soft); font-weight: 500; }
+    .visit-badge { font-size: 11px; font-weight: 700; color: var(--gold-dark); background: var(--gold-light); padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
 
-    .visit-dot {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--gold-light);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
+    /* LOADING */
+    .loading { text-align: center; padding: 60px 20px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 15px; color: var(--soft); font-weight: 500; }
 
-    .visit-title { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
-    .visit-date  { font-size: 13px; color: var(--text-soft); font-weight: 500; }
-    .visit-badge {
-      font-size: 12px; font-weight: 700;
-      color: var(--gold-dark); background: var(--gold-light);
-      padding: 4px 10px; border-radius: 99px; white-space: nowrap;
-    }
+    /* EMPTY VISITS */
+    .no-visits { text-align: center; padding: 24px; color: var(--soft); font-size: 14px; font-weight: 500; }
 
-    /* ── SHOW STAFF BTN ── */
-    .staff-btn {
-      width: 100%;
-      padding: 20px;
-      border: none;
-      border-radius: 18px;
-      font-family: var(--font);
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      transition: transform 0.15s;
-      color: #fff;
-    }
+    /* BUTTONS */
+    .staff-btn { width: 100%; padding: 18px; border: none; border-radius: 18px; font-family: var(--font); font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; color: #fff; transition: transform 0.15s; }
     .staff-btn:active { transform: scale(0.97); }
-    .staff-btn.senior { background: var(--gold);  box-shadow: 0 6px 20px rgba(232,168,62,0.35); }
-    .staff-btn.kids   { background: var(--pink);  box-shadow: 0 6px 20px rgba(219,39,119,0.3); }
-    .staff-btn.pet    { background: var(--teal);  box-shadow: 0 6px 20px rgba(14,116,144,0.3); }
+    .staff-btn.senior { background: var(--gold); }
+    .staff-btn.kids   { background: var(--pink); }
+    .staff-btn.pet    { background: var(--teal); }
 
-    /* ── WAITLIST BTN ── */
-    .waitlist-btn {
-      width: 100%;
-      padding: 17px;
-      background: #fff;
-      border: 2px solid var(--gold);
-      border-radius: 18px;
-      font-family: var(--font);
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--gold-dark);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      transition: background 0.2s;
-    }
+    .waitlist-btn { width: 100%; padding: 16px; background: #fff; border: 2px solid var(--gold); border-radius: 18px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--gold-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; transition: background 0.2s; }
     .waitlist-btn:hover { background: var(--gold-light); }
 
-    /* ── WAITLIST FORM ── */
-    .waitlist-form {
-      display: none;
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-    .waitlist-form.open { display: block; }
-    .wf-title { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
-    .wf-desc  { font-size: 14px; color: var(--text-soft); font-weight: 500; margin-bottom: 18px; line-height: 1.5; }
-
-    .wf-label { display: block; font-size: 15px; font-weight: 800; margin-bottom: 8px; }
-
-    .wf-input {
-      width: 100%;
-      padding: 15px 16px;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      font-family: var(--font);
-      font-size: 16px;
-      color: var(--text);
-      outline: none;
-      background: #f9fafb;
-      margin-bottom: 14px;
-      transition: border-color 0.2s;
-    }
+    /* WAITLIST FORM */
+    .wf { display: none; background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .wf.open { display: block; }
+    .wf-title { font-size: 17px; font-weight: 900; margin-bottom: 6px; }
+    .wf-desc  { font-size: 13px; color: var(--soft); margin-bottom: 16px; line-height: 1.5; }
+    .wf-label { display: block; font-size: 14px; font-weight: 800; margin-bottom: 7px; }
+    .wf-input { width: 100%; padding: 13px 15px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: var(--font); font-size: 16px; color: var(--text); outline: none; background: #f9fafb; margin-bottom: 12px; transition: border-color 0.2s; }
     .wf-input:focus { border-color: var(--gold); background: #fff; }
+    .wf-submit { width: 100%; padding: 14px; background: var(--gold); color: #fff; border: none; border-radius: 12px; font-family: var(--font); font-size: 15px; font-weight: 900; cursor: pointer; }
+    .wf-ok { display: none; background: var(--green-light); border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 800; color: var(--green); text-align: center; }
 
-    .wf-submit {
-      width: 100%;
-      padding: 16px;
-      background: var(--gold);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: var(--font);
-      font-size: 16px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .wf-submit:hover { background: var(--gold-dark); }
-
-    .wf-success {
-      display: none;
-      background: var(--green-light);
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--green);
-      text-align: center;
-    }
-
-    /* ── STAFF MODAL ── */
-    .modal-bg {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+    /* MODAL */
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-bg.open { display: flex; }
+    .modal { background: #fff; border-radius: 28px; padding: 32px 24px; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+    .modal-emoji  { font-size: 52px; margin-bottom: 12px; }
+    .modal-label  { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
+    .modal-name   { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+    .modal-id     { font-size: 12px; color: var(--soft); font-weight: 600; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 18px; }
+    .modal-stamps { font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+    .modal-stamps-label { font-size: 13px; color: var(--soft); font-weight: 600; margin-bottom: 22px; }
+    .modal-close  { width: 100%; padding: 14px; background: #f3f4f6; border: none; border-radius: 12px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--text); cursor: pointer; }
 
-    .modal {
-      background: #fff;
-      border-radius: 28px;
-      padding: 36px 28px;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-
-    .modal-emoji  { font-size: 56px; margin-bottom: 14px; }
-    .modal-label  { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 6px; }
-    .modal-name   { font-size: 32px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
-    .modal-id     { font-size: 13px; color: var(--text-soft); font-weight: 600; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 20px; }
-    .modal-stamps { font-size: 52px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
-    .modal-stamps-label { font-size: 14px; color: var(--text-soft); font-weight: 600; margin-bottom: 24px; }
-
-    .modal-close {
-      width: 100%;
-      padding: 16px;
-      background: #f3f4f6;
-      border: none;
-      border-radius: 12px;
-      font-family: var(--font);
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    /* ── FOOTER ── */
-    .page-footer {
-      text-align: center;
-      padding: 20px 18px 40px;
-      font-size: 12px;
-      color: var(--text-soft);
-      font-weight: 500;
-    }
-    .page-footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
-
-    @media (max-width: 380px) {
-      .stamp-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-      .stamp { font-size: 20px; }
-    }
+    /* FOOTER */
+    .footer { text-align: center; padding: 18px 16px 40px; font-size: 12px; color: var(--soft); }
+    .footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
   </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-logo">🐸 Wepa Passport</div>
-  <div class="topbar-id">WEPA-4829-KX</div>
+  <div class="topbar-right">
+    <div class="topbar-id" id="topbar-id">—</div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
 </div>
 
-<!-- SWITCHER -->
-<div class="switcher">
-  <button class="type-btn active-senior" id="btn-senior" onclick="switchTo('senior')">
-    <span class="t-emoji">👴</span> Senior
-  </button>
-  <button class="type-btn" id="btn-kids" onclick="switchTo('kids')">
-    <span class="t-emoji">🧒</span> Kids
-  </button>
-  <button class="type-btn" id="btn-pet" onclick="switchTo('pet')">
-    <span class="t-emoji">🐾</span> Pet
-  </button>
+<!-- LOADING -->
+<div id="app-loading" class="loading">
+  <div class="spinner"></div>
+  <div class="loading-text" data-i="loading">Loading your passport...</div>
 </div>
 
-<!-- ════════════════════════ SENIOR ════════════════════════ -->
-<div class="pview active" id="pview-senior">
-
-  <div class="welcome senior">
-    <div class="welcome-avatar">👴</div>
-    <div>
-      <div class="welcome-name">Welcome, Hans!</div>
-      <div class="welcome-meta">Senior Passport · Since March 2026</div>
+<!-- SETUP SCREEN -->
+<div id="app-setup" style="display:none;" class="setup-screen">
+  <div class="setup-card">
+    <div class="setup-emoji">🐸</div>
+    <div class="setup-title" data-i="setup_title">Welcome to Wepa!</div>
+    <div class="setup-desc" data-i="setup_desc">This is your first visit. Choose your passport type and we'll remember you every time you tap your card.</div>
+    <div class="setup-types">
+      <div class="setup-type selected" id="stype-senior" onclick="selectType('senior')">
+        <div class="setup-type-emoji">👴</div>
+        <div class="setup-type-label" data-i="senior">Senior</div>
+      </div>
+      <div class="setup-type" id="stype-kids" onclick="selectType('kids')">
+        <div class="setup-type-emoji">🧒</div>
+        <div class="setup-type-label" data-i="kids">Kids</div>
+      </div>
+      <div class="setup-type" id="stype-pet" onclick="selectType('pet')">
+        <div class="setup-type-emoji">🐾</div>
+        <div class="setup-type-label" data-i="pet">Pet</div>
+      </div>
     </div>
+    <input class="setup-input" id="setup-name" type="text" placeholder="Your name (optional)">
+    <input class="setup-input" id="setup-email" type="email" placeholder="Email (optional)">
+    <button class="setup-btn" onclick="createPassport()" data-i="setup_btn">Create My Passport</button>
+    <div class="setup-skip" onclick="createPassport()" data-i="setup_skip">Skip — just show me the passport</div>
   </div>
-
-  <div class="stats">
-    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Visits</div></div>
-    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Stamps</div></div>
-    <div class="stat"><div class="stat-num">3</div><div class="stat-label">To Reward</div></div>
-  </div>
-
-  <div class="reward-banner senior">
-    <div class="reward-icon">🎁</div>
-    <div>
-      <div class="reward-title">3 stamps to go!</div>
-      <div class="reward-desc">Collect 8 stamps → free <strong>Empanada</strong> on us.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">⭐ Your Stamps</div>
-    <div class="card-subtitle">Collect 8 stamps — get a free item</div>
-    <div class="stamp-grid">
-      <div class="stamp earned">🌮</div>
-      <div class="stamp earned">🌮</div>
-      <div class="stamp earned">🌮</div>
-      <div class="stamp earned">🌮</div>
-      <div class="stamp earned">🌮</div>
-      <div class="stamp empty" data-n="6"></div>
-      <div class="stamp empty" data-n="7"></div>
-      <div class="stamp reward-slot">🎁</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-labels"><span>5 of 8 stamps</span><span style="color:var(--gold)">63%</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:63%"></div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">📋 Visit History</div>
-    <div class="visit">
-      <div class="visit-dot">🍔</div>
-      <div style="flex:1"><div class="visit-title">Fusion Burger + Fries</div><div class="visit-date">Mon, 2 Jun 2026</div></div>
-      <div class="visit-badge">+1 stamp</div>
-    </div>
-    <div class="visit">
-      <div class="visit-dot">🫓</div>
-      <div style="flex:1"><div class="visit-title">Empanada + Drink</div><div class="visit-date">Wed, 28 May 2026</div></div>
-      <div class="visit-badge">+1 stamp</div>
-    </div>
-    <div class="visit">
-      <div class="visit-dot">🍗</div>
-      <div style="flex:1"><div class="visit-title">Crispy Chicken Bites</div><div class="visit-date">Fri, 23 May 2026</div></div>
-      <div class="visit-badge">+1 stamp</div>
-    </div>
-  </div>
-
-  <button class="staff-btn senior" onclick="openModal('senior')">📲 Show to Staff</button>
-
-  <button class="waitlist-btn" onclick="toggleWaitlist('senior')">🔔 Notify Me When You Open</button>
-  <div class="waitlist-form" id="wf-senior">
-    <div class="wf-title">Stay in the loop! 🎉</div>
-    <div class="wf-desc">Leave your email and we'll let you know the moment Wepa opens.</div>
-    <label class="wf-label">Your Name (optional)</label>
-    <input class="wf-input" id="wf-name-senior" type="text" placeholder="Hans Müller">
-    <label class="wf-label">Your Email</label>
-    <input class="wf-input" id="wf-email-senior" type="email" placeholder="hans@email.de">
-    <button class="wf-submit" onclick="submitWaitlist('senior')">Count Me In! 🌮</button>
-    <div class="wf-success" id="wf-ok-senior">✅ You're on the list! See you soon.</div>
-  </div>
-
 </div>
 
-<!-- ════════════════════════ KIDS ════════════════════════ -->
-<div class="pview" id="pview-kids">
+<!-- PASSPORT CONTENT -->
+<div id="app-passport" style="display:none;">
 
-  <div class="welcome kids">
-    <div class="welcome-avatar">🧒</div>
-    <div>
-      <div class="welcome-name">Hey Emma! 🌟</div>
-      <div class="welcome-meta">Kids Passport · Adventure Level 2</div>
+  <div class="switcher">
+    <button class="type-btn active-senior" id="btn-senior" onclick="switchType('senior')">
+      <span>👴</span> <span data-i="senior">Senior</span>
+    </button>
+    <button class="type-btn" id="btn-kids" onclick="switchType('kids')">
+      <span>🧒</span> <span data-i="kids">Kids</span>
+    </button>
+    <button class="type-btn" id="btn-pet" onclick="switchType('pet')">
+      <span>🐾</span> <span data-i="pet">Pet</span>
+    </button>
+  </div>
+
+  <div class="pview active" id="pview-senior">
+    <div class="welcome senior">
+      <div class="welcome-avatar">👴</div>
+      <div>
+        <div class="welcome-name" id="welcome-name-senior">—</div>
+        <div class="welcome-meta" id="welcome-meta-senior">Senior Passport</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="stat-visits-senior">0</div><div class="stat-label" data-i="visits">Visits</div></div>
+      <div class="stat"><div class="stat-num" id="stat-stamps-senior">0</div><div class="stat-label" data-i="stamps">Stamps</div></div>
+      <div class="stat"><div class="stat-num" id="stat-left-senior">8</div><div class="stat-label" data-i="to_reward">To Reward</div></div>
+    </div>
+    <div class="reward senior" id="reward-senior">
+      <div class="reward-icon">🎁</div>
+      <div>
+        <div class="reward-title" id="reward-title-senior">—</div>
+        <div class="reward-desc" id="reward-desc-senior">—</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" data-i="your_stamps">⭐ Your Stamps</div>
+      <div class="card-sub" data-i="stamps_sub_senior">Collect 8 stamps — get a free item</div>
+      <div class="stamp-grid" id="stamps-senior"></div>
+      <div class="prog-wrap">
+        <div class="prog-labels">
+          <span id="prog-label-senior">0 / 8</span>
+          <span id="prog-pct-senior" style="color:var(--gold)">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill-senior" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" data-i="visit_history">📋 Visit History</div>
+      <div id="visits-senior"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div>
+    </div>
+    <button class="staff-btn senior" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
+    <button class="waitlist-btn" onclick="toggleWF('senior')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="wf" id="wf-senior">
+      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
+      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label" data-i="name_optional">Name (optional)</label>
+      <input class="wf-input" id="wf-name-senior" type="text">
+      <label class="wf-label" data-i="your_email">Your Email</label>
+      <input class="wf-input" id="wf-email-senior" type="email" placeholder="your@email.com">
+      <button class="wf-submit" onclick="submitWF('senior')" data-i="count_me_in">Count Me In!</button>
+      <div class="wf-ok" id="wf-ok-senior" data-i="wf_success">✅ You're on the list! See you soon.</div>
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num kids">3</div><div class="stat-label">Visits</div></div>
-    <div class="stat"><div class="stat-num kids">3</div><div class="stat-label">Stars</div></div>
-    <div class="stat"><div class="stat-num kids">2</div><div class="stat-label">To Prize!</div></div>
-  </div>
-
-  <div class="reward-banner kids">
-    <div class="reward-icon">🏆</div>
-    <div>
-      <div class="reward-title">Almost there, Emma!</div>
-      <div class="reward-desc">2 more visits → free <strong>Cheese Dog</strong> 🌭</div>
+  <div class="pview" id="pview-kids">
+    <div class="welcome kids">
+      <div class="welcome-avatar">🧒</div>
+      <div>
+        <div class="welcome-name" id="welcome-name-kids">—</div>
+        <div class="welcome-meta" id="welcome-meta-kids">Kids Passport</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num kids" id="stat-visits-kids">0</div><div class="stat-label" data-i="visits">Visits</div></div>
+      <div class="stat"><div class="stat-num kids" id="stat-stamps-kids">0</div><div class="stat-label" data-i="stars">Stars</div></div>
+      <div class="stat"><div class="stat-num kids" id="stat-left-kids">5</div><div class="stat-label" data-i="to_prize">To Prize!</div></div>
+    </div>
+    <div class="reward kids" id="reward-kids">
+      <div class="reward-icon">🏆</div>
+      <div>
+        <div class="reward-title" id="reward-title-kids">—</div>
+        <div class="reward-desc" id="reward-desc-kids">—</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" data-i="your_stars">⭐ Your Stars</div>
+      <div class="card-sub" data-i="stamps_sub_kids">Collect 5 stars — win a prize!</div>
+      <div class="stamp-grid" id="stamps-kids"></div>
+      <div class="prog-wrap">
+        <div class="prog-labels">
+          <span id="prog-label-kids">0 / 5</span>
+          <span id="prog-pct-kids" style="color:var(--pink)">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill kids" id="prog-fill-kids" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" data-i="adventure_log">🗺️ Adventure Log</div>
+      <div id="visits-kids"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div>
+    </div>
+    <button class="staff-btn kids" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
+    <button class="waitlist-btn" style="border-color:var(--pink);color:var(--pink)" onclick="toggleWF('kids')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="wf" id="wf-kids">
+      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
+      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label" data-i="parent_email">Parent's Email</label>
+      <input class="wf-input" id="wf-email-kids" type="email" placeholder="parent@email.com">
+      <button class="wf-submit" style="background:var(--pink)" onclick="submitWF('kids')" data-i="sign_us_up">Sign Us Up!</button>
+      <div class="wf-ok" id="wf-ok-kids" data-i="wf_success_kids">✅ You're on the list! See you soon.</div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">⭐ Your Stars</div>
-    <div class="card-subtitle">Collect 5 stars — win a prize!</div>
-    <div class="stamp-grid">
-      <div class="stamp earned kids">⭐</div>
-      <div class="stamp earned kids">⭐</div>
-      <div class="stamp earned kids">⭐</div>
-      <div class="stamp empty" data-n="4"></div>
-      <div class="stamp reward-slot">🏆</div>
+  <div class="pview" id="pview-pet">
+    <div class="welcome pet">
+      <div class="welcome-avatar">🐕</div>
+      <div>
+        <div class="welcome-name" id="welcome-name-pet">—</div>
+        <div class="welcome-meta" id="welcome-meta-pet">Pet Passport</div>
+      </div>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-labels"><span>3 of 5 stars</span><span style="color:var(--pink)">60%</span></div>
-      <div class="progress-track"><div class="progress-fill kids" style="width:60%"></div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num pet" id="stat-visits-pet">0</div><div class="stat-label" data-i="visits">Visits</div></div>
+      <div class="stat"><div class="stat-num pet" id="stat-stamps-pet">0</div><div class="stat-label" data-i="paw_prints">Paw Prints</div></div>
+      <div class="stat"><div class="stat-num pet" id="stat-left-pet">6</div><div class="stat-label" data-i="to_treat">To Treat!</div></div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🗺️ Adventure Log</div>
-    <div class="visit">
-      <div class="visit-dot">🍕</div>
-      <div style="flex:1"><div class="visit-title">Pizza Slice + Juice</div><div class="visit-date">Sat, 31 May 2026</div></div>
-      <div class="visit-badge" style="color:var(--pink);background:var(--pink-light)">+1 ⭐</div>
+    <div class="reward pet" id="reward-pet">
+      <div class="reward-icon">🦴</div>
+      <div>
+        <div class="reward-title" id="reward-title-pet">—</div>
+        <div class="reward-desc" id="reward-desc-pet">—</div>
+      </div>
     </div>
-    <div class="visit">
-      <div class="visit-dot">🍟</div>
-      <div style="flex:1"><div class="visit-title">Loaded Fries</div><div class="visit-date">Sun, 25 May 2026</div></div>
-      <div class="visit-badge" style="color:var(--pink);background:var(--pink-light)">+1 ⭐</div>
+    <div class="card">
+      <div class="card-title" data-i="your_paws">🐾 Your Paw Prints</div>
+      <div class="card-sub" data-i="stamps_sub_pet">Collect 6 paw prints — free treat!</div>
+      <div class="stamp-grid" id="stamps-pet"></div>
+      <div class="prog-wrap">
+        <div class="prog-labels">
+          <span id="prog-label-pet">0 / 6</span>
+          <span id="prog-pct-pet" style="color:var(--teal)">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill pet" id="prog-fill-pet" style="width:0%"></div></div>
+      </div>
     </div>
-  </div>
-
-  <button class="staff-btn kids" onclick="openModal('kids')">📲 Show to Staff</button>
-
-  <button class="waitlist-btn" style="border-color:var(--pink);color:var(--pink)" onclick="toggleWaitlist('kids')">🔔 Tell Me When You Open!</button>
-  <div class="waitlist-form" id="wf-kids">
-    <div class="wf-title">Emma will be first to know! 🎉</div>
-    <div class="wf-desc">Leave your email and we'll tell you when Wepa opens.</div>
-    <label class="wf-label">Parent's Email</label>
-    <input class="wf-input" id="wf-email-kids" type="email" placeholder="parent@email.de">
-    <button class="wf-submit" style="background:var(--pink)" onclick="submitWaitlist('kids')">Sign Us Up! ⭐</button>
-    <div class="wf-success" id="wf-ok-kids">✅ Emma is on the list! See you soon! 🌟</div>
-  </div>
-
-</div>
-
-<!-- ════════════════════════ PET ════════════════════════ -->
-<div class="pview" id="pview-pet">
-
-  <div class="welcome pet">
-    <div class="welcome-avatar">🐕</div>
-    <div>
-      <div class="welcome-name">Luna's Passport 🐾</div>
-      <div class="welcome-meta">Golden Retriever · Since April 2026</div>
+    <div class="card">
+      <div class="card-title" data-i="visit_notes">🗒️ Visit Notes</div>
+      <div id="visits-pet"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div>
     </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><div class="stat-num pet">4</div><div class="stat-label">Visits</div></div>
-    <div class="stat"><div class="stat-num pet">4</div><div class="stat-label">Paw Prints</div></div>
-    <div class="stat"><div class="stat-num pet">2</div><div class="stat-label">To Treat!</div></div>
-  </div>
-
-  <div class="reward-banner pet">
-    <div class="reward-icon">🦴</div>
-    <div>
-      <div class="reward-title">Luna is so close!</div>
-      <div class="reward-desc">2 more visits → free <strong>Pet Treat</strong> 🐾</div>
+    <button class="staff-btn pet" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
+    <button class="waitlist-btn" style="border-color:var(--teal);color:var(--teal)" onclick="toggleWF('pet')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="wf" id="wf-pet">
+      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
+      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label" data-i="your_email">Your Email</label>
+      <input class="wf-input" id="wf-email-pet" type="email" placeholder="your@email.com">
+      <button class="wf-submit" style="background:var(--teal)" onclick="submitWF('pet')" data-i="count_me_in">Count Me In!</button>
+      <div class="wf-ok" id="wf-ok-pet" data-i="wf_success">✅ You're on the list! See you soon.</div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🐾 Paw Prints</div>
-    <div class="card-subtitle">Collect 6 paw prints — free treat!</div>
-    <div class="stamp-grid">
-      <div class="stamp earned pet">🐾</div>
-      <div class="stamp earned pet">🐾</div>
-      <div class="stamp earned pet">🐾</div>
-      <div class="stamp earned pet">🐾</div>
-      <div class="stamp empty" data-n="5"></div>
-      <div class="stamp reward-slot">🦴</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-labels"><span>4 of 6 paw prints</span><span style="color:var(--teal)">67%</span></div>
-      <div class="progress-track"><div class="progress-fill pet" style="width:67%"></div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🗒️ Visit Notes</div>
-    <div class="visit">
-      <div class="visit-dot">🐕</div>
-      <div style="flex:1"><div class="visit-title">Luna visited with Maria</div><div class="visit-date">Tue, 3 Jun 2026</div></div>
-      <div class="visit-badge" style="color:var(--teal);background:var(--teal-light)">+1 🐾</div>
-    </div>
-    <div class="visit">
-      <div class="visit-dot">🐾</div>
-      <div style="flex:1"><div class="visit-title">Had the chicken bites!</div><div class="visit-date">Sun, 1 Jun 2026</div></div>
-      <div class="visit-badge" style="color:var(--teal);background:var(--teal-light)">+1 🐾</div>
-    </div>
-  </div>
-
-  <button class="staff-btn pet" onclick="openModal('pet')">📲 Show to Staff</button>
-
-  <button class="waitlist-btn" style="border-color:var(--teal);color:var(--teal)" onclick="toggleWaitlist('pet')">🔔 Notify Luna & Me When You Open!</button>
-  <div class="waitlist-form" id="wf-pet">
-    <div class="wf-title">Luna can't wait! 🐾</div>
-    <div class="wf-desc">Leave your email and we'll let you know the moment we open.</div>
-    <label class="wf-label">Your Email</label>
-    <input class="wf-input" id="wf-email-pet" type="email" placeholder="luna-owner@email.de">
-    <button class="wf-submit" style="background:var(--teal)" onclick="submitWaitlist('pet')">Count Luna In! 🦴</button>
-    <div class="wf-success" id="wf-ok-pet">✅ Luna is on the list! See you at opening day! 🐾</div>
   </div>
 
 </div>
 
-<!-- ════════════════════════ MODAL ════════════════════════ -->
+<!-- STAFF MODAL -->
 <div class="modal-bg" id="staffModal" onclick="closeModal(event)">
   <div class="modal">
-    <div class="modal-emoji" id="m-emoji">👴</div>
-    <div class="modal-label">Wepa Passport</div>
-    <div class="modal-name" id="m-name">Hans</div>
-    <div class="modal-id" id="m-id">WEPA-4829-KX · Senior</div>
-    <div class="modal-stamps" id="m-stamps">5</div>
-    <div class="modal-stamps-label">stamps collected</div>
-    <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')">✕ Close</button>
+    <div class="modal-emoji" id="m-emoji">🐸</div>
+    <div class="modal-label" data-i="wepa_passport">Wepa Passport</div>
+    <div class="modal-name" id="m-name">—</div>
+    <div class="modal-id" id="m-id">—</div>
+    <div class="modal-stamps" id="m-stamps">0</div>
+    <div class="modal-stamps-label" data-i="stamps_collected">stamps collected</div>
+    <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')" data-i="close">Close</button>
   </div>
 </div>
 
-<!-- FOOTER -->
-<div class="page-footer">
-  Powered by <a href="https://streetfoodfusion.de">Wepa Street Food Fusion</a> · <a href="https://setzio.com">Setzio</a>
+<div class="footer">
+  Wepa Street Food Fusion · <a href="https://streetfoodfusion.de">streetfoodfusion.de</a> · <a href="https://setzio.com">Setzio</a>
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M';
+const SB_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M';
 
-  function switchTo(type) {
-    ['senior','kids','pet'].forEach(t => {
-      document.getElementById('pview-' + t).classList.remove('active');
-      const btn = document.getElementById('btn-' + t);
-      btn.className = 'type-btn';
-    });
-    document.getElementById('pview-' + type).classList.add('active');
-    document.getElementById('btn-' + type).classList.add('active-' + type);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+const TRANSLATIONS = {
+  en: {
+    loading: 'Loading your passport...',
+    setup_title: 'Welcome to Wepa!',
+    setup_desc: 'This is your first visit. Choose your passport type and we\'ll remember you every time you tap your card.',
+    setup_btn: 'Create My Passport',
+    setup_skip: 'Skip — just show me the passport',
+    senior: 'Senior', kids: 'Kids', pet: 'Pet',
+    visits: 'Visits', stamps: 'Stamps', to_reward: 'To Reward',
+    stars: 'Stars', to_prize: 'To Prize!',
+    paw_prints: 'Paw Prints', to_treat: 'To Treat!',
+    your_stamps: '⭐ Your Stamps',
+    your_stars: '⭐ Your Stars',
+    your_paws: '🐾 Your Paw Prints',
+    stamps_sub_senior: 'Collect 8 stamps — get a free item',
+    stamps_sub_kids: 'Collect 5 stars — win a prize!',
+    stamps_sub_pet: 'Collect 6 paw prints — free treat!',
+    visit_history: '📋 Visit History',
+    adventure_log: '🗺️ Adventure Log',
+    visit_notes: '🗒️ Visit Notes',
+    no_visits: 'No visits yet. Come visit us!',
+    show_staff: 'Show to Staff',
+    notify_me: 'Notify Me When You Open',
+    wf_title: 'Stay in the loop!',
+    wf_desc: 'Leave your email and we\'ll notify you when Wepa opens.',
+    name_optional: 'Name (optional)',
+    your_email: 'Your Email',
+    parent_email: 'Parent\'s Email',
+    count_me_in: 'Count Me In! 🌮',
+    sign_us_up: 'Sign Us Up! ⭐',
+    wf_success: '✅ You\'re on the list! See you soon.',
+    wf_success_kids: '✅ You\'re on the list! See you soon! 🌟',
+    wepa_passport: 'Wepa Passport',
+    stamps_collected: 'stamps collected',
+    close: 'Close',
+    reward_senior_go: '🎁 {n} more stamps to go!',
+    reward_senior_desc: 'Collect 8 stamps → free Empanada on us.',
+    reward_senior_done: '🎉 Reward unlocked!',
+    reward_senior_done_desc: 'You earned a free Empanada! Show to staff.',
+    reward_kids_go: '🏆 {n} more stars to go!',
+    reward_kids_desc: 'Collect 5 stars → free Cheese Dog 🌭',
+    reward_kids_done: '🎉 Prize unlocked!',
+    reward_kids_done_desc: 'You earned a free Cheese Dog! Show to staff.',
+    reward_pet_go: '🦴 {n} more paw prints!',
+    reward_pet_desc: 'Collect 6 paw prints → free Pet Treat 🐾',
+    reward_pet_done: '🎉 Treat unlocked!',
+    reward_pet_done_desc: 'Luna earned a free treat! Show to staff.',
+    member_since: 'Member since',
+    passport_type_senior: 'Senior Passport',
+    passport_type_kids: 'Kids Passport',
+    passport_type_pet: 'Pet Passport',
+  },
+  de: {
+    loading: 'Deinen Pass laden...',
+    setup_title: 'Willkommen bei Wepa!',
+    setup_desc: 'Das ist dein erster Besuch. Wähle deinen Passtyp und wir erkennen dich beim nächsten Mal automatisch.',
+    setup_btn: 'Meinen Pass erstellen',
+    setup_skip: 'Überspringen — zeig mir einfach den Pass',
+    senior: 'Senior', kids: 'Kinder', pet: 'Tier',
+    visits: 'Besuche', stamps: 'Stempel', to_reward: 'Bis Prämie',
+    stars: 'Sterne', to_prize: 'Bis Preis!',
+    paw_prints: 'Pfoten', to_treat: 'Bis Leckerli!',
+    your_stamps: '⭐ Deine Stempel',
+    your_stars: '⭐ Deine Sterne',
+    your_paws: '🐾 Deine Pfoten',
+    stamps_sub_senior: '8 Stempel sammeln — gratis Empanada',
+    stamps_sub_kids: '5 Sterne sammeln — Preis gewinnen!',
+    stamps_sub_pet: '6 Pfoten sammeln — gratis Leckerli!',
+    visit_history: '📋 Besuchshistorie',
+    adventure_log: '🗺️ Abenteuerlog',
+    visit_notes: '🗒️ Besuchsnotizen',
+    no_visits: 'Noch keine Besuche. Komm uns besuchen!',
+    show_staff: 'Mitarbeiter zeigen',
+    notify_me: 'Benachrichtige mich bei Eröffnung',
+    wf_title: 'Bleib auf dem Laufenden!',
+    wf_desc: 'Hinterlasse deine E-Mail und wir benachrichtigen dich, wenn Wepa öffnet.',
+    name_optional: 'Name (optional)',
+    your_email: 'Deine E-Mail',
+    parent_email: 'E-Mail der Eltern',
+    count_me_in: 'Ich bin dabei! 🌮',
+    sign_us_up: 'Anmelden! ⭐',
+    wf_success: '✅ Du bist auf der Liste! Bis bald.',
+    wf_success_kids: '✅ Ihr seid auf der Liste! Bis bald! 🌟',
+    wepa_passport: 'Wepa-Pass',
+    stamps_collected: 'Stempel gesammelt',
+    close: 'Schließen',
+    reward_senior_go: '🎁 Noch {n} Stempel!',
+    reward_senior_desc: '8 Stempel → gratis Empanada.',
+    reward_senior_done: '🎉 Prämie freigeschaltet!',
+    reward_senior_done_desc: 'Du hast eine gratis Empanada verdient! Zeig dem Personal.',
+    reward_kids_go: '🏆 Noch {n} Sterne!',
+    reward_kids_desc: '5 Sterne → gratis Cheese Dog 🌭',
+    reward_kids_done: '🎉 Preis freigeschaltet!',
+    reward_kids_done_desc: 'Du hast einen gratis Cheese Dog verdient!',
+    reward_pet_go: '🦴 Noch {n} Pfoten!',
+    reward_pet_desc: '6 Pfoten → gratis Leckerli 🐾',
+    reward_pet_done: '🎉 Leckerli freigeschaltet!',
+    reward_pet_done_desc: 'Dein Tier hat ein gratis Leckerli verdient!',
+    member_since: 'Mitglied seit',
+    passport_type_senior: 'Senior-Pass',
+    passport_type_kids: 'Kinder-Pass',
+    passport_type_pet: 'Tier-Pass',
+  },
+  es: {
+    loading: 'Cargando tu pasaporte...',
+    setup_title: '¡Bienvenido a Wepa!',
+    setup_desc: 'Esta es tu primera visita. Elige tu tipo de pasaporte y te reconoceremos cada vez que toques tu tarjeta.',
+    setup_btn: 'Crear mi pasaporte',
+    setup_skip: 'Omitir — solo muéstrame el pasaporte',
+    senior: 'Senior', kids: 'Niños', pet: 'Mascota',
+    visits: 'Visitas', stamps: 'Sellos', to_reward: 'Para Premio',
+    stars: 'Estrellas', to_prize: '¡Para Premio!',
+    paw_prints: 'Huellas', to_treat: '¡Para Golosina!',
+    your_stamps: '⭐ Tus Sellos',
+    your_stars: '⭐ Tus Estrellas',
+    your_paws: '🐾 Tus Huellas',
+    stamps_sub_senior: 'Colecciona 8 sellos — empanada gratis',
+    stamps_sub_kids: 'Colecciona 5 estrellas — ¡gana un premio!',
+    stamps_sub_pet: 'Colecciona 6 huellas — ¡golosina gratis!',
+    visit_history: '📋 Historial de visitas',
+    adventure_log: '🗺️ Registro de aventuras',
+    visit_notes: '🗒️ Notas de visita',
+    no_visits: 'Aún no hay visitas. ¡Ven a visitarnos!',
+    show_staff: 'Mostrar al personal',
+    notify_me: 'Notifícame cuando abran',
+    wf_title: '¡Mantente informado!',
+    wf_desc: 'Deja tu correo y te avisaremos cuando Wepa abra.',
+    name_optional: 'Nombre (opcional)',
+    your_email: 'Tu correo',
+    parent_email: 'Correo del padre/madre',
+    count_me_in: '¡Apúntame! 🌮',
+    sign_us_up: '¡Regístranos! ⭐',
+    wf_success: '✅ ¡Estás en la lista! Hasta pronto.',
+    wf_success_kids: '✅ ¡Estáis en la lista! ¡Hasta pronto! 🌟',
+    wepa_passport: 'Pasaporte Wepa',
+    stamps_collected: 'sellos coleccionados',
+    close: 'Cerrar',
+    reward_senior_go: '🎁 ¡Faltan {n} sellos!',
+    reward_senior_desc: '8 sellos → empanada gratis.',
+    reward_senior_done: '🎉 ¡Premio desbloqueado!',
+    reward_senior_done_desc: '¡Ganaste una empanada gratis! Muéstraselo al personal.',
+    reward_kids_go: '🏆 ¡Faltan {n} estrellas!',
+    reward_kids_desc: '5 estrellas → Cheese Dog gratis 🌭',
+    reward_kids_done: '🎉 ¡Premio desbloqueado!',
+    reward_kids_done_desc: '¡Ganaste un Cheese Dog gratis!',
+    reward_pet_go: '🦴 ¡Faltan {n} huellas!',
+    reward_pet_desc: '6 huellas → golosina gratis 🐾',
+    reward_pet_done: '🎉 ¡Golosina desbloqueada!',
+    reward_pet_done_desc: '¡Tu mascota ganó una golosina gratis!',
+    member_since: 'Miembro desde',
+    passport_type_senior: 'Pasaporte Senior',
+    passport_type_kids: 'Pasaporte Niños',
+    passport_type_pet: 'Pasaporte Mascota',
+  }
+};
+
+let lang = localStorage.getItem('wepa_lang') || 'en';
+let passportId = null;
+let passportData = null;
+let stampsData = [];
+let selectedType = 'senior';
+let currentType = 'senior';
+
+function t(key, vars) {
+  let str = (TRANSLATIONS[lang] || TRANSLATIONS.en)[key] || key;
+  if (vars) Object.keys(vars).forEach(k => { str = str.replace('{' + k + '}', vars[k]); });
+  return str;
+}
+
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('wepa_lang', l);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => { if (b.textContent === l.toUpperCase()) b.classList.add('active'); });
+  applyTranslations();
+  if (passportData) renderPassport();
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i]').forEach(el => {
+    const key = el.getAttribute('data-i');
+    el.textContent = t(key);
+  });
+}
+
+function getPassportId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id') || localStorage.getItem('wepa_passport_id');
+}
+
+async function init() {
+  applyTranslations();
+  passportId = getPassportId();
+
+  if (!passportId) {
+    passportId = 'WEPA-' + Math.random().toString(36).substring(2,6).toUpperCase() + '-' + Math.random().toString(36).substring(2,4).toUpperCase();
+    document.getElementById('app-loading').style.display = 'none';
+    document.getElementById('app-setup').style.display = 'block';
+    return;
   }
 
-  function toggleWaitlist(type) {
-    const form = document.getElementById('wf-' + type);
-    form.classList.toggle('open');
-    if (form.classList.contains('open')) {
-      setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-    }
-  }
+  document.getElementById('topbar-id').textContent = passportId;
+  await loadPassport();
+}
 
-  async function submitWaitlist(type) {
-    const emailEl = document.getElementById('wf-email-' + type);
-    const email = emailEl.value.trim();
-    if (!email || !email.includes('@')) {
-      emailEl.style.borderColor = '#e74c3c';
-      emailEl.focus();
+async function loadPassport() {
+  try {
+    const [pRes, sRes] = await Promise.all([
+      fetch(`${SB_URL}/rest/v1/wepa_passports?id=eq.${passportId}&select=*`, { headers: { apikey: SB_KEY } }),
+      fetch(`${SB_URL}/rest/v1/wepa_stamps?passport_id=eq.${passportId}&select=*&order=stamped_at.desc`, { headers: { apikey: SB_KEY } })
+    ]);
+    const passports = await pRes.json();
+    stampsData = await sRes.json();
+
+    if (!passports || passports.length === 0) {
+      document.getElementById('app-loading').style.display = 'none';
+      document.getElementById('app-setup').style.display = 'block';
       return;
     }
-    const nameEl = document.getElementById('wf-name-' + type);
-    const name = nameEl ? nameEl.value.trim() : '';
 
-    const btn = document.querySelector('#wf-' + type + ' .wf-submit');
-    btn.textContent = '...';
-    btn.disabled = true;
+    passportData = passports[0];
+    currentType = passportData.passport_type || 'senior';
+    localStorage.setItem('wepa_passport_id', passportId);
 
-    try {
-      await fetch(SUPABASE_URL + '/rest/v1/wepa_waitlist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email, source: 'passport-' + type })
-      });
-    } catch(e) { console.error(e); }
+    document.getElementById('app-loading').style.display = 'none';
+    document.getElementById('app-passport').style.display = 'block';
+    renderPassport();
+    switchType(currentType);
 
-    btn.style.display = 'none';
-    document.querySelectorAll('#wf-' + type + ' .wf-input, #wf-' + type + ' .wf-label').forEach(el => el.style.display = 'none');
-    document.getElementById('wf-ok-' + type).style.display = 'block';
+  } catch(e) {
+    document.getElementById('app-loading').innerHTML = '<div style="padding:40px;text-align:center;color:#e74c3c;font-weight:700;">Connection error. Please try again.</div>';
   }
+}
 
-  const modalData = {
-    senior: { emoji: '👴', name: 'Hans',  stamps: '5', type: 'Senior' },
-    kids:   { emoji: '🧒', name: 'Emma',  stamps: '3', type: 'Kids'   },
-    pet:    { emoji: '🐕', name: 'Luna',  stamps: '4', type: 'Pet'    },
-  };
+function renderPassport() {
+  const types = ['senior','kids','pet'];
+  const maxStamps = { senior: 8, kids: 5, pet: 6 };
+  const stampEmojis = { senior: '🌮', kids: '⭐', pet: '🐾' };
+  const avatarEmojis = { senior: '👴', kids: '🧒', pet: '🐕' };
 
-  function openModal(type) {
-    const d = modalData[type];
-    document.getElementById('m-emoji').textContent  = d.emoji;
-    document.getElementById('m-name').textContent   = d.name;
-    document.getElementById('m-stamps').textContent = d.stamps;
-    document.getElementById('m-id').textContent     = 'WEPA-4829-KX · ' + d.type;
-    document.getElementById('staffModal').classList.add('open');
-  }
+  types.forEach(type => {
+    const stamps = stampsData.filter(s => s.note !== 'other').length;
+    const total = maxStamps[type];
+    const earned = Math.min(stamps, total);
+    const left = Math.max(0, total - earned);
+    const pct = Math.round((earned / total) * 100);
+    const name = passportData.name || 'Wepa Friend';
+    const since = new Date(passportData.created_at).toLocaleDateString(lang === 'de' ? 'de-DE' : lang === 'es' ? 'es-ES' : 'en-GB', { month: 'long', year: 'numeric' });
 
-  function closeModal(e) {
-    if (e.target.id === 'staffModal') {
-      document.getElementById('staffModal').classList.remove('open');
+    document.getElementById('welcome-name-' + type).textContent = name;
+    document.getElementById('welcome-meta-' + type).textContent = t('passport_type_' + type) + ' · ' + t('member_since') + ' ' + since;
+    document.getElementById('stat-visits-' + type).textContent = stampsData.length;
+    document.getElementById('stat-stamps-' + type).textContent = earned;
+    document.getElementById('stat-left-' + type).textContent = left;
+
+    if (left === 0) {
+      document.getElementById('reward-title-' + type).textContent = t('reward_' + type + '_done');
+      document.getElementById('reward-desc-' + type).textContent = t('reward_' + type + '_done_desc');
+    } else {
+      document.getElementById('reward-title-' + type).textContent = t('reward_' + type + '_go', { n: left });
+      document.getElementById('reward-desc-' + type).textContent = t('reward_' + type + '_desc');
     }
+
+    document.getElementById('prog-label-' + type).textContent = earned + ' / ' + total;
+    document.getElementById('prog-pct-' + type).textContent = pct + '%';
+    document.getElementById('prog-fill-' + type).style.width = pct + '%';
+
+    const grid = document.getElementById('stamps-' + type);
+    grid.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const div = document.createElement('div');
+      if (i === total - 1) {
+        div.className = 'stamp reward-slot';
+        div.textContent = type === 'senior' ? '🎁' : type === 'kids' ? '🏆' : '🦴';
+      } else if (i < earned) {
+        div.className = 'stamp earned ' + type;
+        div.textContent = stampEmojis[type];
+      } else {
+        div.className = 'stamp empty';
+        div.setAttribute('data-n', i + 1);
+      }
+      grid.appendChild(div);
+    }
+
+    const visitsEl = document.getElementById('visits-' + type);
+    if (stampsData.length === 0) {
+      visitsEl.innerHTML = '<div class="no-visits">' + t('no_visits') + '</div>';
+    } else {
+      visitsEl.innerHTML = stampsData.slice(0, 5).map(s => {
+        const d = new Date(s.stamped_at).toLocaleDateString(lang === 'de' ? 'de-DE' : lang === 'es' ? 'es-ES' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        return `<div class="visit">
+          <div class="visit-dot">${stampEmojis[type]}</div>
+          <div style="flex:1"><div class="visit-title">${s.note || 'Wepa Visit'}</div><div class="visit-date">${d}</div></div>
+          <div class="visit-badge">+1 ${stampEmojis[type]}</div>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('m-emoji').textContent = avatarEmojis[currentType];
+    document.getElementById('m-name').textContent = name;
+    document.getElementById('m-id').textContent = passportId + ' · ' + t('passport_type_' + currentType);
+    document.getElementById('m-stamps').textContent = earned;
+  });
+}
+
+function switchType(type) {
+  ['senior','kids','pet'].forEach(t => {
+    document.getElementById('pview-' + t).classList.remove('active');
+    const btn = document.getElementById('btn-' + t);
+    if (btn) { btn.className = 'type-btn'; }
+  });
+  document.getElementById('pview-' + type).classList.add('active');
+  const btn = document.getElementById('btn-' + type);
+  if (btn) btn.classList.add('active-' + type);
+  currentType = type;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectType(type) {
+  selectedType = type;
+  ['senior','kids','pet'].forEach(t => document.getElementById('stype-' + t).classList.remove('selected'));
+  document.getElementById('stype-' + type).classList.add('selected');
+}
+
+async function createPassport() {
+  const name = document.getElementById('setup-name').value.trim();
+  const email = document.getElementById('setup-email').value.trim();
+  const btn = document.querySelector('.setup-btn');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    await fetch(`${SB_URL}/rest/v1/wepa_passports`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ id: passportId, name: name || null, email: email || null, passport_type: selectedType })
+    });
+    if (email) {
+      await fetch(`${SB_URL}/rest/v1/wepa_waitlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+        body: JSON.stringify({ email, source: 'passport-setup' })
+      });
+    }
+    localStorage.setItem('wepa_passport_id', passportId);
+    document.getElementById('topbar-id').textContent = passportId;
+    passportData = { id: passportId, name: name || null, email: email || null, passport_type: selectedType, created_at: new Date().toISOString() };
+    stampsData = [];
+    currentType = selectedType;
+    document.getElementById('app-setup').style.display = 'none';
+    document.getElementById('app-passport').style.display = 'block';
+    renderPassport();
+    switchType(currentType);
+  } catch(e) {
+    btn.textContent = t('setup_btn');
+    btn.disabled = false;
   }
+}
+
+function toggleWF(type) {
+  const el = document.getElementById('wf-' + type);
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+
+async function submitWF(type) {
+  const emailEl = document.getElementById('wf-email-' + type);
+  const email = emailEl.value.trim();
+  if (!email || !email.includes('@')) { emailEl.style.borderColor = '#e74c3c'; emailEl.focus(); return; }
+  const btn = document.querySelector('#wf-' + type + ' .wf-submit');
+  btn.textContent = '...'; btn.disabled = true;
+  try {
+    await fetch(`${SB_URL}/rest/v1/wepa_waitlist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ email, source: 'passport-' + type })
+    });
+  } catch(e) {}
+  btn.style.display = 'none';
+  document.querySelectorAll('#wf-' + type + ' .wf-input, #wf-' + type + ' .wf-label').forEach(el => el.style.display = 'none');
+  const ok = document.getElementById('wf-ok-' + type);
+  ok.textContent = t(type === 'kids' ? 'wf_success_kids' : 'wf_success');
+  ok.style.display = 'block';
+}
+
+function openModal() {
+  const stampEmojis = { senior: '👴', kids: '🧒', pet: '🐕' };
+  const maxStamps = { senior: 8, kids: 5, pet: 6 };
+  const earned = Math.min(stampsData.length, maxStamps[currentType]);
+  document.getElementById('m-emoji').textContent = stampEmojis[currentType];
+  document.getElementById('m-name').textContent = passportData ? (passportData.name || 'Wepa Friend') : '—';
+  document.getElementById('m-id').textContent = passportId + ' · ' + t('passport_type_' + currentType);
+  document.getElementById('m-stamps').textContent = earned;
+  document.getElementById('m-stamps-label') && (document.getElementById('m-stamps-label').textContent = t('stamps_collected'));
+  document.getElementById('staffModal').classList.add('open');
+}
+
+function closeModal(e) { if (e.target.id === 'staffModal') document.getElementById('staffModal').classList.remove('open'); }
+
+init();
 </script>
 </body>
 </html>

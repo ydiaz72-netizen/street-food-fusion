@@ -228,6 +228,11 @@
       animation: rise 0.9s 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
     }
 
+
+    .lang-sw { display:flex; gap:4px; }
+    .lb { background:rgba(242,236,224,0.08); border:1px solid rgba(242,236,224,0.15); color:rgba(242,236,224,0.5); font-family:var(--font); font-size:10px; font-weight:700; padding:5px 9px; border-radius:6px; cursor:pointer; letter-spacing:1px; transition:all 0.15s; }
+    .lb.active { background:rgba(242,236,224,0.18); color:var(--cream); border-color:rgba(242,236,224,0.3); }
+    .lb:hover { background:rgba(242,236,224,0.14); }
     @keyframes rise {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -511,7 +516,14 @@
 <!-- NAV -->
 <nav>
   <div class="nav-mark">Wepa · SFF</div>
-  <div class="nav-pill">Opening Soon</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="lang-sw">
+      <button class="lb active" onclick="setLang('en')">EN</button>
+      <button class="lb" onclick="setLang('de')">DE</button>
+      <button class="lb" onclick="setLang('es')">ES</button>
+    </div>
+    <div class="nav-pill" id="nav-pill">Opening Soon</div>
+  </div>
 </nav>
 
 <!-- ══ HERO ══ -->
@@ -520,28 +532,23 @@
 
     <img src="logo.png" alt="Moncho — Wepa Street Food Fusion" class="moncho" />
 
-    <h1 class="hero-headline">
-      The whole world<br>
-      <em>sits down to eat.</em>
-    </h1>
+    <h1 class="hero-headline" id="hero-h1">The whole world<br><em>sits down to eat.</em></h1>
 
-    <p class="hero-sub">
-      The only place in Erfurt where cultures,<br>stories, and flavours share one table.
-    </p>
+    <p class="hero-sub" id="hero-sub">The only place in Erfurt where cultures,<br>stories, and flavours share one table.</p>
 
     <div class="signup">
-      <p class="signup-eyebrow">Be first through the door</p>
+      <p class="signup-eyebrow" id="signup-eyebrow">Be first through the door</p>
       <div class="signup-field" id="signupField">
         <input type="email" id="heroEmail" placeholder="your@email.com" />
-        <button onclick="doSignup()">Notify me</button>
+        <button onclick="doSignup()" id="signup-btn">Notify me</button>
       </div>
-      <p class="signup-note" id="signupNote">No spam. Just the opening date.</p>
+      <p class="signup-note" id="signup-note">No spam. Just the opening date.</p>
       <div class="signup-success" id="heroSuccess">
         ✓ &nbsp;You're on the list. See you when we open.
       </div>
     </div>
 
-    <p class="moncho-line">"No passports required." — Moncho</p>
+    <p class="moncho-line" id="moncho-line">"No passports required." — Moncho</p>
 
   </div>
 </section>
@@ -550,22 +557,22 @@
 
 <!-- ══ WHO WE ARE ══ -->
 <div class="section">
-  <p class="eyebrow">Who we are</p>
-  <h2 class="section-h">Two kitchens.<br><em>One table.</em></h2>
-  <p class="section-p">
+  <p class="eyebrow" id="who-eyebrow">Who we are</p>
+  <h2 class="section-h" id="who-h">Two kitchens.<br><em>One table.</em></h2>
+  <p class="section-p" id="who-p">
     Wepa is the place in Erfurt where cultures meet, strangers become neighbours, and every meal is an invitation to discover another corner of the world. Born from a Puerto Rican family and a Pakistani kitchen — two households that believed food is how you show love.
   </p>
 
   <div class="story-grid">
     <div class="story-card">
       <span class="story-flag">🇵🇷</span>
-      <h3>Puerto Rico</h3>
-      <p>Where food is how you show love. Empanadas, mofongo, pernil — Caribbean soul that carries five centuries of history in every bite.</p>
+      <h3 id="pr-h">Puerto Rico</h3>
+      <p id="pr-p">Where food is how you show love. Empanadas, mofongo, pernil — Caribbean soul that carries five centuries of history in every bite.</p>
     </div>
     <div class="story-card">
       <span class="story-flag">🇵🇰</span>
-      <h3>Pakistan</h3>
-      <p>Generations of spice, warmth, and home cooking. Samosa, pakora, biryani — made from scratch, the way it was always meant to be.</p>
+      <h3 id="pak-h">Pakistan</h3>
+      <p id="pak-p">Generations of spice, warmth, and home cooking. Samosa, pakora, biryani — made from scratch, the way it was always meant to be.</p>
     </div>
   </div>
 
@@ -582,9 +589,9 @@
 
 <!-- ══ WHY WE ARE DIFFERENT ══ -->
 <div class="section">
-  <p class="eyebrow">Why we are different</p>
-  <h2 class="section-h">The menu<br><em>rotates. The world doesn't.</em></h2>
-  <p class="section-p">Every dish has a story. Every visit is a different corner of the world. Made from scratch, priced for everyone, available when we open our doors.</p>
+  <p class="eyebrow" id="why-eyebrow">Why we are different</p>
+  <h2 class="section-h" id="why-h">The menu<br><em>rotates. The world doesn't.</em></h2>
+  <p class="section-p" id="why-p">Every dish has a story. Every visit is a different corner of the world. Made from scratch, priced for everyone, available when we open our doors.</p>
 
   <div class="menu-grid">
     <div class="menu-card">
@@ -635,9 +642,9 @@
       </div>
     </div>
     <div class="dotm-overlay">
-      <div class="dotm-overlay-eyebrow">Coming when we open</div>
-      <div class="dotm-overlay-title">Dish of the Month</div>
-      <div class="dotm-overlay-sub">A new country. A new story. Every month.</div>
+      <div class="dotm-overlay-eyebrow" id="dish-eyebrow">Coming when we open</div>
+      <div class="dotm-overlay-title" id="dish-title">Dish of the Month</div>
+      <div class="dotm-overlay-sub" id="dish-sub">A new country. A new story. Every month.</div>
     </div>
   </div>
 </div>
@@ -646,38 +653,38 @@
 
 <!-- ══ HOW TO JOIN ══ -->
 <div class="section" style="text-align:center;">
-  <p class="eyebrow">How to join</p>
-  <h2 class="section-h">Your seat<br><em>at the table.</em></h2>
-  <p class="section-p" style="margin:0 auto 0;">
+  <p class="eyebrow" id="how-eyebrow">How to join</p>
+  <h2 class="section-h" id="how-h">Your seat<br><em>at the table.</em></h2>
+  <p class="section-p" id="how-p" style="margin:0 auto 0;">
     Tap your NFC card or scan the QR code to open your Wepa Passport. Collect stamps with every visit. Earn rewards. No app. No login. No hassle.
   </p>
 
   <div class="passport-grid">
     <div class="passport-card">
       <span class="p-emoji">👴</span>
-      <h3>Senior Passport</h3>
-      <p>Large text, simple layout. Built for ease. Collect stamps, earn free items.</p>
+      <h3 id="senior-h">Senior Passport</h3>
+      <p id="senior-p">Large text, simple layout. Built for ease. Collect stamps, earn free items.</p>
     </div>
     <div class="passport-card">
       <span class="p-emoji">🧒</span>
-      <h3>Kids Passport</h3>
-      <p>Stars, adventures, prizes. Every visit is a new discovery.</p>
+      <h3 id="kids-h">Kids Passport</h3>
+      <p id="kids-p">Stars, adventures, prizes. Every visit is a new discovery.</p>
     </div>
     <div class="passport-card">
       <span class="p-emoji">🐾</span>
-      <h3>Pet Passport</h3>
-      <p>Luna, Max, Bella — every furry regular deserves their own seat.</p>
+      <h3 id="pet-h">Pet Passport</h3>
+      <p id="pet-p">Luna, Max, Bella — every furry regular deserves their own seat.</p>
     </div>
   </div>
 
-  <a href="passport.html" class="passport-cta">Open My Passport →</a>
+  <a href="passport.html" class="passport-cta"><span id="passport-cta">Open My Passport →</span></a>
 </div>
 
 <div class="divider"></div>
 
 <!-- ══ FOOTER ══ -->
 <footer>
-  <p class="footer-tagline">"Come hungry. Leave with a story."</p>
+  <p class="footer-tagline" id="footer-quote">"Come hungry. Leave with a story."</p>
   <div class="footer-links">
     <a href="https://instagram.com">Instagram</a>
     <a href="passport.html">Passport</a>
@@ -711,7 +718,7 @@
       });
       if (res.ok || res.status === 201) {
         document.getElementById('signupField').style.display = 'none';
-        document.getElementById('signupNote').style.display = 'none';
+        document.getElementById('signup-note').style.display = 'none';
         document.getElementById('heroSuccess').style.display = 'block';
       } else {
         btn.textContent = 'Notify me';
@@ -726,6 +733,9 @@
   document.getElementById('heroEmail').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSignup();
   });
+  // Apply saved language on load
+  document.querySelectorAll('.lb').forEach(b => { b.classList.toggle('active', b.textContent === lang.toUpperCase()); });
+  applyLang();
 </script>
 
 </body>
