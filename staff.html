@@ -217,7 +217,11 @@
 <div class="app" id="app">
   <div class="topbar">
     <div class="topbar-title">🐸 Wepa Staff</div>
-    <button class="topbar-logout" onclick="logout()">Lock</button>
+    <div style="display:flex;gap:8px;">
+      <button class="topbar-logout" onclick="showTab('search')" id="tab-search-btn">Customers</button>
+      <button class="topbar-logout" onclick="showTab('settings')" id="tab-settings-btn">⚙️ Settings</button>
+      <button class="topbar-logout" onclick="logout()">Lock</button>
+    </div>
   </div>
   <div class="content">
 
@@ -292,13 +296,18 @@
         <div class="stamp-grid" id="c-stampgrid"></div>
       </div>
 
-      <div class="stamp-section">
-        <div class="stamp-section-title">ADD STAMP</div>
+      <div class="stamp-section" id="stamp-section">
+        <div class="stamp-section-title" id="stamp-section-title">ADD STAMP</div>
         <input class="note-input" id="stamp-note" placeholder="What did they order? (optional)" />
         <button class="add-stamp-btn" id="stamp-btn" onclick="addStamp()">
           ✦ Add Stamp
         </button>
+        <button class="add-stamp-btn" id="redeem-btn" onclick="redeemReward()"
+          style="display:none;background:var(--green);box-shadow:0 6px 20px rgba(45,122,79,0.35);">
+          🎁 Redeem Reward
+        </button>
         <div class="stamp-success" id="stamp-success">✓ Stamp added!</div>
+        <div class="stamp-success" id="redeem-success" style="background:rgba(45,122,79,0.15);border-color:rgba(45,122,79,0.4);">🎉 Reward redeemed! Stamps reset.</div>
       </div>
 
       <div class="customer-card" id="c-history-card">
@@ -341,9 +350,11 @@ function updateDots() {
 }
 
 function checkPin() {
-  if (pinEntry === STAFF_PIN) {
+  const pin = localStorage.getItem('wepa_staff_pin') || STAFF_PIN;
+  if (pinEntry === pin) {
     document.getElementById('pinScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    loadSettings();
     renderRecent();
     checkUrlCard();
   } else {
@@ -457,8 +468,22 @@ function renderCustomer() {
 
   document.getElementById('stamp-note').value = '';
   document.getElementById('stamp-success').style.display = 'none';
+  document.getElementById('redeem-success').style.display = 'none';
+
+  // Show redeem button if stamps complete
+  const maxStamps = { senior: 8, kids: 5, pet: 6 };
+  const total = maxStamps[p.passport_type || 'senior'];
+  const earned = Math.min(currentStamps.length, total - 1); // -1 for reward slot
+  const rewardEarned = currentStamps.length >= (total - 1);
+
+  document.getElementById('stamp-btn').style.display = rewardEarned ? 'none' : 'flex';
+  document.getElementById('redeem-btn').style.display = rewardEarned ? 'flex' : 'none';
   document.getElementById('stamp-btn').disabled = false;
   document.getElementById('stamp-btn').textContent = '✦ Add Stamp';
+
+  // Update reward button label with current reward
+  const reward = wepaSettings['reward_' + (p.passport_type || 'senior')] || 'Reward';
+  document.getElementById('redeem-btn').textContent = '🎁 Redeem — ' + reward;
 }
 
 // ── ADD STAMP ──
@@ -507,6 +532,93 @@ function checkUrlCard() {
   if (card) {
     document.getElementById('card-input').value = card.toUpperCase();
     lookupCard();
+  }
+}
+
+// ── SETTINGS ──
+let wepaSettings = { reward_senior: 'Empanada', reward_kids: 'Cheese Dog', reward_pet: 'Dog Treat' };
+let staffPin = localStorage.getItem('wepa_staff_pin') || '1234';
+
+async function loadSettings() {
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/wepa_settings?select=*`, { headers: { apikey: SB_KEY } });
+    const rows = await res.json();
+    if (Array.isArray(rows)) {
+      rows.forEach(r => { wepaSettings[r.key] = r.value; });
+    }
+    document.getElementById('reward-senior-input').value = wepaSettings['reward_senior'] || '';
+    document.getElementById('reward-kids-input').value = wepaSettings['reward_kids'] || '';
+    document.getElementById('reward-pet-input').value = wepaSettings['reward_pet'] || '';
+  } catch(e) { console.error('Settings load error', e); }
+}
+
+async function saveReward(type) {
+  const val = document.getElementById('reward-' + type + '-input').value.trim();
+  if (!val) return;
+  wepaSettings['reward_' + type] = val;
+  try {
+    await fetch(`${SB_URL}/rest/v1/wepa_settings?key=eq.reward_${type}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ value: val, updated_at: new Date().toISOString() })
+    });
+    const ok = document.getElementById('reward-' + type + '-ok');
+    ok.style.display = 'block';
+    setTimeout(() => ok.style.display = 'none', 2000);
+  } catch(e) { alert('Error saving. Try again.'); }
+}
+
+function savePin() {
+  const val = document.getElementById('new-pin-input').value.trim();
+  if (!val || val.length < 4) { alert('PIN must be 4 digits.'); return; }
+  staffPin = val;
+  localStorage.setItem('wepa_staff_pin', val);
+  document.getElementById('pin-change-ok').style.display = 'block';
+  setTimeout(() => document.getElementById('pin-change-ok').style.display = 'none', 2000);
+}
+
+function showTab(tab) {
+  document.getElementById('view-settings').style.display = tab === 'settings' ? 'block' : 'none';
+  document.getElementById('view-search').style.display = tab === 'search' ? 'block' : 'none';
+  document.getElementById('view-customer').style.display = 'none';
+  document.getElementById('view-loading').style.display = 'none';
+  document.getElementById('view-notfound').style.display = 'none';
+  document.getElementById('tab-search-btn').style.opacity = tab === 'search' ? '1' : '0.6';
+  document.getElementById('tab-settings-btn').style.opacity = tab === 'settings' ? '1' : '0.6';
+}
+
+async function redeemReward() {
+  const type = currentPassport.passport_type || 'senior';
+  const reward = wepaSettings['reward_' + type] || 'Reward';
+  if (!confirm('Redeem "' + reward + '" for ' + (currentPassport.name || 'this customer') + '? Their stamps will reset to zero.')) return;
+
+  const btn = document.getElementById('redeem-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    // Log redemption
+    await fetch(`${SB_URL}/rest/v1/wepa_redemptions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ passport_id: currentPassport.id, passport_type: type, reward })
+    });
+
+    // Delete all stamps for this passport
+    await fetch(`${SB_URL}/rest/v1/wepa_stamps?passport_id=eq.${currentPassport.id}`, {
+      method: 'DELETE',
+      headers: { apikey: SB_KEY }
+    });
+
+    currentStamps = [];
+    addToRecent(currentPassport, 0);
+    renderCustomer();
+    document.getElementById('redeem-success').style.display = 'block';
+    setTimeout(() => document.getElementById('redeem-success').style.display = 'none', 4000);
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '🎁 Redeem — ' + reward;
+    alert('Error redeeming. Try again.');
   }
 }
 
