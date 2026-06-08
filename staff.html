@@ -5,26 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Wepa Staff</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0d0905; --card: #1a1208; --cream: #f2ece0;
       --gold: #e8a83e; --gold-dark: #c97600; --gold-light: #fff8ed;
       --green: #2d7a4f; --green-light: #eaf4ee;
-      --red: #c0392b; --red-light: #fdecea;
+      --red: #c0392b;
       --soft: rgba(242,236,224,0.5);
       --faint: rgba(242,236,224,0.08);
       --font: 'Plus Jakarta Sans', sans-serif;
     }
     html, body { min-height: 100vh; background: var(--bg); font-family: var(--font); color: var(--cream); -webkit-font-smoothing: antialiased; }
 
-    /* PIN SCREEN */
-    .pin-screen {
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 32px 24px; text-align: center;
-    }
+    .pin-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center; }
     .pin-logo { font-size: 48px; margin-bottom: 16px; }
     .pin-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
     .pin-sub { font-size: 14px; color: var(--soft); margin-bottom: 32px; }
@@ -32,156 +27,109 @@
     .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(242,236,224,0.3); background: transparent; transition: all 0.15s; }
     .pin-dot.filled { background: var(--gold); border-color: var(--gold); }
     .pin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; max-width: 280px; width: 100%; }
-    .pin-key {
-      aspect-ratio: 1; border-radius: 16px; border: 1px solid var(--faint);
-      background: var(--card); font-size: 24px; font-weight: 800;
-      color: var(--cream); cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
-      transition: all 0.12s; font-family: var(--font);
-    }
+    .pin-key { aspect-ratio: 1; border-radius: 16px; border: 1px solid var(--faint); background: var(--card); font-size: 24px; font-weight: 800; color: var(--cream); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; font-family: var(--font); }
     .pin-key:active { background: rgba(232,168,62,0.15); border-color: var(--gold); transform: scale(0.95); }
     .pin-key.del { font-size: 18px; color: var(--soft); }
     .pin-error { font-size: 14px; color: #e74c3c; font-weight: 700; margin-top: 16px; display: none; }
 
-    /* MAIN APP */
     .app { display: none; min-height: 100vh; }
-
-    /* TOPBAR */
-    .topbar {
-      background: var(--gold); padding: 14px 18px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 20;
-    }
+    .topbar { background: var(--gold); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 20; }
     .topbar-title { font-size: 16px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
-    .topbar-logout { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.8); cursor: pointer; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: transparent; font-family: var(--font); }
+    .topbar-actions { display: flex; gap: 6px; }
+    .topbar-btn { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); cursor: pointer; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; background: transparent; font-family: var(--font); transition: background 0.15s; }
+    .topbar-btn:hover { background: rgba(255,255,255,0.15); }
+    .topbar-btn.active { background: rgba(255,255,255,0.25); color: #fff; }
 
-    /* CONTENT */
-    .content { padding: 20px; max-width: 480px; margin: 0 auto; }
+    .content { padding: 18px; max-width: 480px; margin: 0 auto; }
 
-    /* SEARCH */
-    .search-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid var(--faint); }
-    .search-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.75; margin-bottom: 12px; }
-    .search-row { display: flex; gap: 10px; }
-    .search-input {
-      flex: 1; padding: 14px 16px; background: rgba(242,236,224,0.05);
-      border: 1px solid rgba(242,236,224,0.12); border-radius: 12px;
-      font-family: var(--font); font-size: 16px; color: var(--cream);
-      outline: none; letter-spacing: 1px; font-weight: 600;
-      text-transform: uppercase; transition: border-color 0.2s;
-    }
+    .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 14px; border: 1px solid var(--faint); }
+    .card-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.75; margin-bottom: 12px; }
+
+    .nfc-btn { width: 100%; padding: 18px; border: 1.5px solid rgba(242,236,224,0.2); border-radius: 14px; background: rgba(242,236,224,0.05); font-family: var(--font); font-size: 16px; font-weight: 800; color: var(--cream); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; transition: all 0.15s; }
+    .nfc-btn:hover { background: rgba(242,236,224,0.1); }
+    .nfc-btn.gold { background: rgba(232,168,62,0.1); border-color: rgba(232,168,62,0.35); color: var(--gold); }
+    .nfc-btn.gold:hover { background: rgba(232,168,62,0.18); }
+    .nfc-btn.scanning { animation: pulse 1.2s ease-in-out infinite; border-color: var(--gold); color: var(--gold); background: rgba(232,168,62,0.1); }
+    .nfc-btn.unsupported { opacity: 0.35; cursor: not-allowed; border-style: dashed; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+    .divider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .divider-row::before, .divider-row::after { content: ''; flex: 1; height: 1px; background: rgba(242,236,224,0.07); }
+    .divider-row span { font-size: 10px; font-weight: 600; color: var(--soft); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+
+    .search-row { display: flex; gap: 8px; }
+    .search-input { flex: 1; padding: 13px 15px; background: rgba(242,236,224,0.05); border: 1px solid rgba(242,236,224,0.1); border-radius: 12px; font-family: var(--font); font-size: 15px; color: var(--cream); outline: none; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; transition: border-color 0.2s; }
     .search-input:focus { border-color: rgba(232,168,62,0.4); }
-    .search-input::placeholder { color: rgba(242,236,224,0.2); text-transform: none; font-weight: 400; letter-spacing: 0; }
-    .search-btn {
-      padding: 14px 20px; background: var(--gold); color: var(--bg);
-      border: none; border-radius: 12px; font-family: var(--font);
-      font-size: 14px; font-weight: 900; cursor: pointer; white-space: nowrap;
-      transition: background 0.2s;
-    }
+    .search-input::placeholder { text-transform: none; font-weight: 400; letter-spacing: 0; color: rgba(242,236,224,0.2); }
+    .search-btn { padding: 13px 18px; background: var(--gold); color: var(--bg); border: none; border-radius: 12px; font-family: var(--font); font-size: 14px; font-weight: 900; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
     .search-btn:hover { background: var(--gold-dark); }
 
-    /* RECENT */
+    .qr-video-wrap { display: none; position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 10px; background: #000; }
+    .qr-viewfinder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+    .qr-frame { width: 180px; height: 180px; border: 3px solid var(--gold); border-radius: 14px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); }
+    .qr-close-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; font-size: 18px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-
-    #qr-scan-btn { margin-bottom: 10px; background: rgba(242,236,224,0.06); border-color: rgba(242,236,224,0.2); color: var(--cream); }
-    #qr-scan-btn:hover { background: rgba(242,236,224,0.12); }
-    #qr-scan-btn.scanning { animation: pulse 1.2s ease-in-out infinite; border-color: var(--gold); color: var(--gold); background: rgba(232,168,62,0.1); }
-    .nfc-btn {
-      width: 100%; padding: 20px; background: rgba(232,168,62,0.1);
-      border: 1.5px solid rgba(232,168,62,0.3); border-radius: 16px;
-      font-family: var(--font); font-size: 18px; font-weight: 900;
-      color: var(--gold); cursor: pointer; display: flex;
-      align-items: center; justify-content: center; gap: 10px;
-      margin-bottom: 14px; transition: all 0.2s;
-    }
-    .nfc-btn:hover { background: rgba(232,168,62,0.18); border-color: var(--gold); }
-    .nfc-btn.scanning { background: rgba(232,168,62,0.2); border-color: var(--gold); animation: pulse 1.2s ease-in-out infinite; }
-    .nfc-btn.unsupported { opacity: 0.35; cursor: not-allowed; border-style: dashed; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-    .manual-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .manual-divider::before, .manual-divider::after { content: ''; flex: 1; height: 1px; background: rgba(242,236,224,0.08); }
-    .manual-divider span { font-size: 11px; font-weight: 600; color: var(--soft); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
-    .recent-title { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--soft); margin: 16px 0 10px; }
-    .recent-list { display: flex; flex-direction: column; gap: 8px; }
-    .recent-item {
-      background: var(--card); border: 1px solid var(--faint); border-radius: 14px;
-      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-      cursor: pointer; transition: border-color 0.15s;
-    }
+    .recent-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--soft); margin-bottom: 10px; }
+    .recent-item { background: var(--card); border: 1px solid var(--faint); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color 0.15s; margin-bottom: 8px; }
     .recent-item:hover { border-color: rgba(232,168,62,0.3); }
-    .recent-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(232,168,62,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .recent-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(232,168,62,0.12); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .recent-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
     .recent-id { font-size: 11px; color: var(--soft); font-family: monospace; letter-spacing: 1px; }
-    .recent-stamps { margin-left: auto; background: rgba(232,168,62,0.15); color: var(--gold); font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+    .recent-stamps { margin-left: auto; background: rgba(232,168,62,0.12); color: var(--gold); font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
 
-    /* CUSTOMER CARD */
-    .customer-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 14px; border: 1px solid var(--faint); }
-    .customer-back { font-size: 13px; color: var(--soft); cursor: pointer; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
-    .customer-back:hover { color: var(--cream); }
-    .customer-header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--faint); }
-    .customer-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(232,168,62,0.15); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
-    .customer-name { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
-    .customer-meta { font-size: 13px; color: var(--soft); font-weight: 500; font-family: monospace; letter-spacing: 1px; }
-    .customer-type { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-top: 4px; }
+    .back-btn { font-size: 13px; color: var(--soft); cursor: pointer; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .back-btn:hover { color: var(--cream); }
+    .customer-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--faint); }
+    .c-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(232,168,62,0.12); display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; }
+    .c-name { font-size: 20px; font-weight: 900; margin-bottom: 3px; }
+    .c-meta { font-size: 12px; color: var(--soft); font-family: monospace; letter-spacing: 1px; }
+    .c-type-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-top: 3px; }
 
-    /* STAMP GRID */
-    .stamp-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
-    .stamp { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px dashed rgba(242,236,224,0.15); background: rgba(242,236,224,0.03); position: relative; }
-    .stamp.earned { border: 2px solid var(--gold); background: rgba(232,168,62,0.12); }
-    .stamp.reward-slot { border-color: var(--green); background: rgba(45,122,79,0.12); }
-    .stamp.empty::after { content: attr(data-n); position: absolute; font-size: 14px; font-weight: 800; color: rgba(242,236,224,0.15); }
+    .stamp-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 18px; }
+    .stamp { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px dashed rgba(242,236,224,0.12); background: rgba(242,236,224,0.02); position: relative; }
+    .stamp.earned { border: 2px solid var(--gold); background: rgba(232,168,62,0.1); }
+    .stamp.reward-slot { border-color: var(--green); background: rgba(45,122,79,0.1); }
+    .stamp.empty::after { content: attr(data-n); position: absolute; font-size: 13px; font-weight: 800; color: rgba(242,236,224,0.12); }
 
-    /* STAMP BUTTON */
-    .stamp-section { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 14px; border: 1px solid var(--faint); }
-    .stamp-section-title { font-size: 14px; font-weight: 700; color: var(--soft); margin-bottom: 14px; letter-spacing: 0.5px; }
-    .note-input {
-      width: 100%; padding: 13px 15px; background: rgba(242,236,224,0.05);
-      border: 1px solid rgba(242,236,224,0.1); border-radius: 12px;
-      font-family: var(--font); font-size: 15px; color: var(--cream);
-      outline: none; margin-bottom: 14px; transition: border-color 0.2s;
-    }
+    .note-input { width: 100%; padding: 13px 15px; background: rgba(242,236,224,0.05); border: 1px solid rgba(242,236,224,0.1); border-radius: 12px; font-family: var(--font); font-size: 15px; color: var(--cream); outline: none; margin-bottom: 12px; transition: border-color 0.2s; }
     .note-input:focus { border-color: rgba(232,168,62,0.35); }
     .note-input::placeholder { color: rgba(242,236,224,0.2); }
-    .add-stamp-btn {
-      width: 100%; padding: 20px; background: var(--gold); color: var(--bg);
-      border: none; border-radius: 16px; font-family: var(--font);
-      font-size: 20px; font-weight: 900; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .add-stamp-btn:active { transform: scale(0.97); }
-    .add-stamp-btn:hover { background: var(--gold-dark); }
-    .add-stamp-btn:disabled { background: rgba(242,236,224,0.1); color: var(--soft); cursor: not-allowed; }
+    .add-btn { width: 100%; padding: 20px; border: none; border-radius: 14px; font-family: var(--font); font-size: 18px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.15s, background 0.2s; color: #fff; }
+    .add-btn:active { transform: scale(0.97); }
+    .add-btn.stamp { background: var(--gold); }
+    .add-btn.stamp:hover { background: var(--gold-dark); }
+    .add-btn.redeem { background: var(--green); }
+    .add-btn:disabled { background: rgba(242,236,224,0.1); color: var(--soft); cursor: not-allowed; transform: none; }
+    .flash { display: none; border-radius: 12px; padding: 14px; text-align: center; font-size: 16px; font-weight: 900; margin-top: 10px; }
+    .flash.green { background: rgba(45,122,79,0.15); border: 1px solid rgba(45,122,79,0.4); color: #6fcf97; }
 
-    /* SUCCESS FLASH */
-    .stamp-success {
-      display: none; background: rgba(45,122,79,0.15);
-      border: 1px solid rgba(45,122,79,0.4); border-radius: 14px;
-      padding: 16px; text-align: center; font-size: 18px;
-      font-weight: 900; color: #6fcf97; margin-top: 12px;
-    }
+    .hist-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--faint); font-size: 13px; }
+    .hist-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .hist-dot { font-size: 18px; flex-shrink: 0; }
+    .hist-note { font-weight: 600; color: var(--cream); flex: 1; }
+    .hist-date { color: var(--soft); font-weight: 500; white-space: nowrap; }
 
-    /* RECENT STAMPS */
-    .history-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px 0; border-bottom: 1px solid var(--faint);
-      font-size: 13px;
-    }
-    .history-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .history-dot { font-size: 18px; flex-shrink: 0; }
-    .history-note { font-weight: 600; color: var(--cream); flex: 1; }
-    .history-date { color: var(--soft); font-weight: 500; white-space: nowrap; }
+    .settings-group { margin-bottom: 22px; }
+    .settings-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .settings-label.gold  { color: var(--gold); }
+    .settings-label.pink  { color: #db2777; }
+    .settings-label.teal  { color: #0e7490; }
+    .settings-row { display: flex; gap: 8px; }
+    .settings-input { flex: 1; padding: 13px 15px; background: rgba(242,236,224,0.05); border: 1px solid rgba(242,236,224,0.1); border-radius: 12px; font-family: var(--font); font-size: 15px; color: var(--cream); outline: none; transition: border-color 0.2s; }
+    .settings-input:focus { border-color: rgba(232,168,62,0.4); }
+    .settings-input::placeholder { color: rgba(242,236,224,0.2); }
+    .save-btn { padding: 13px 18px; border: none; border-radius: 12px; font-family: var(--font); font-size: 13px; font-weight: 900; cursor: pointer; color: var(--bg); background: var(--gold); white-space: nowrap; }
+    .save-ok { font-size: 12px; color: #6fcf97; font-weight: 700; margin-top: 6px; display: none; }
 
-    /* NOT FOUND */
+    .loading { text-align: center; padding: 60px 20px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .not-found { text-align: center; padding: 40px 20px; }
     .not-found-emoji { font-size: 48px; margin-bottom: 14px; }
     .not-found-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
-    .not-found-desc { font-size: 14px; color: var(--soft); line-height: 1.6; }
-
-    /* LOADING */
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 40px auto; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .not-found-desc { font-size: 14px; color: var(--soft); line-height: 1.6; margin-bottom: 20px; }
   </style>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
 
@@ -213,108 +161,155 @@
   <div class="pin-error" id="pinError">Wrong PIN. Try again.</div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div class="app" id="app">
+
   <div class="topbar">
     <div class="topbar-title">🐸 Wepa Staff</div>
-    <div style="display:flex;gap:8px;">
-      <button class="topbar-logout" onclick="showTab('search')" id="tab-search-btn">Customers</button>
-      <button class="topbar-logout" onclick="showTab('settings')" id="tab-settings-btn">⚙️ Settings</button>
-      <button class="topbar-logout" onclick="logout()">Lock</button>
+    <div class="topbar-actions">
+      <button class="topbar-btn active" id="tab-customers" onclick="showTab('customers')">Customers</button>
+      <button class="topbar-btn" id="tab-settings" onclick="showTab('settings')">⚙️ Settings</button>
+      <button class="topbar-btn" onclick="logout()">Lock</button>
     </div>
   </div>
+
   <div class="content">
 
-    <!-- SEARCH VIEW -->
-    <div id="view-search">
-      <div class="search-card">
-        <div class="search-label">Scan or Enter Card ID</div>
-        <button class="nfc-btn" id="qr-scan-btn" onclick="startQRScan()">
+    <!-- CUSTOMERS TAB -->
+    <div id="view-customers">
+
+      <!-- SEARCH -->
+      <div class="card" id="search-card">
+        <div class="card-label">Find Customer</div>
+
+        <!-- QR Scan -->
+        <button class="nfc-btn" id="qr-btn" onclick="toggleQR()">
           <span id="qr-btn-icon">📷</span>
           <span id="qr-btn-text">Scan QR Code</span>
         </button>
-        <div id="qr-video-wrap" style="display:none;position:relative;border-radius:16px;overflow:hidden;margin-bottom:14px;background:#000;">
+        <div class="qr-video-wrap" id="qr-wrap">
           <video id="qr-video" style="width:100%;display:block;" playsinline></video>
-          <canvas id="qr-scan-canvas" style="display:none;"></canvas>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-            <div style="width:180px;height:180px;border:3px solid var(--gold);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,0.45);"></div>
-          </div>
-          <button onclick="stopQRScan()" style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+          <canvas id="qr-canvas" style="display:none;"></canvas>
+          <div class="qr-viewfinder"><div class="qr-frame"></div></div>
+          <button class="qr-close-btn" onclick="stopQR()">✕</button>
         </div>
-        <div id="qr-error" style="display:none;text-align:center;font-size:13px;color:#e74c3c;font-weight:600;margin-bottom:10px;"></div>
-        <button class="nfc-btn" id="nfc-btn" onclick="startNFC()">
-          <span id="nfc-btn-icon">📡</span>
-          <span id="nfc-btn-text">Tap a Card</span>
+        <div id="qr-err" style="display:none;font-size:13px;color:#e74c3c;font-weight:600;margin-bottom:10px;text-align:center;"></div>
+
+        <!-- NFC -->
+        <button class="nfc-btn gold" id="nfc-btn" onclick="toggleNFC()">
+          <span id="nfc-icon">📡</span>
+          <span id="nfc-text">Tap a Card (Android)</span>
         </button>
-        <div id="nfc-status" style="display:none;text-align:center;font-size:13px;color:var(--gold);font-weight:600;margin:10px 0;letter-spacing:0.5px;">Waiting for card...</div>
-        <div id="nfc-error" style="display:none;text-align:center;font-size:13px;color:#e74c3c;font-weight:600;margin:10px 0;"></div>
-        <div class="manual-divider"><span>or enter manually</span></div>
+        <div id="nfc-status" style="display:none;text-align:center;font-size:13px;color:var(--gold);font-weight:600;margin-bottom:10px;">Waiting for card...</div>
+        <div id="nfc-err" style="display:none;font-size:13px;color:#e74c3c;font-weight:600;margin-bottom:10px;text-align:center;"></div>
+
+        <div class="divider-row"><span>or enter manually</span></div>
         <div class="search-row">
           <input class="search-input" id="card-input" placeholder="e.g. WEPA-001" maxlength="20"
             onkeydown="if(event.key==='Enter') lookupCard()" />
           <button class="search-btn" onclick="lookupCard()">Look Up</button>
         </div>
       </div>
-      <div class="recent-title">Recent Customers</div>
-      <div class="recent-list" id="recent-list">
-        <div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">No recent customers yet.</div>
+
+      <!-- RECENT -->
+      <div class="recent-label">Recent Customers</div>
+      <div id="recent-list">
+        <div style="text-align:center;padding:20px;color:var(--soft);font-size:14px;">No recent customers yet.</div>
       </div>
-    </div>
 
-    <!-- LOADING VIEW -->
-    <div id="view-loading" style="display:none;">
-      <div class="spinner"></div>
-    </div>
+      <!-- LOADING -->
+      <div id="view-loading" style="display:none;" class="loading">
+        <div class="spinner"></div>
+      </div>
 
-    <!-- NOT FOUND VIEW -->
-    <div id="view-notfound" style="display:none;">
-      <div class="not-found">
+      <!-- NOT FOUND -->
+      <div id="view-notfound" style="display:none;" class="not-found">
         <div class="not-found-emoji">🔍</div>
         <div class="not-found-title">Card not found</div>
         <div class="not-found-desc">This card hasn't been set up yet. Ask the customer to tap their card on their phone first to create their passport.</div>
+        <button class="search-btn" style="margin:0 auto;display:block;padding:14px 28px;" onclick="resetSearch()">← Back</button>
       </div>
-      <button class="search-btn" style="width:100%;margin-top:16px;padding:16px;" onclick="showView('search')">← Back</button>
-    </div>
 
-    <!-- CUSTOMER VIEW -->
-    <div id="view-customer" style="display:none;">
-      <div class="customer-back" onclick="showView('search')">← Back</div>
+      <!-- CUSTOMER VIEW -->
+      <div id="view-customer" style="display:none;">
+        <div class="back-btn" onclick="resetSearch()">← Back</div>
 
-      <div class="customer-card">
-        <div class="customer-header">
-          <div class="customer-avatar" id="c-avatar">🐸</div>
-          <div>
-            <div class="customer-name" id="c-name">—</div>
-            <div class="customer-meta" id="c-id">—</div>
-            <div class="customer-type" id="c-type">—</div>
+        <div class="card">
+          <div class="customer-header">
+            <div class="c-avatar" id="c-avatar">🐸</div>
+            <div>
+              <div class="c-name" id="c-name">—</div>
+              <div class="c-meta" id="c-id">—</div>
+              <div class="c-type-label" id="c-type">—</div>
+            </div>
+            <div style="margin-left:auto;text-align:right;">
+              <div style="font-size:32px;font-weight:900;color:var(--gold);" id="c-count">0</div>
+              <div style="font-size:11px;color:var(--soft);font-weight:600;">stamps</div>
+            </div>
           </div>
-          <div style="margin-left:auto;text-align:right;">
-            <div style="font-size:32px;font-weight:900;color:var(--gold)" id="c-stampcount">0</div>
-            <div style="font-size:11px;color:var(--soft);font-weight:600">stamps</div>
-          </div>
+          <div class="stamp-grid" id="c-stamps"></div>
         </div>
-        <div class="stamp-grid" id="c-stampgrid"></div>
+
+        <div class="card">
+          <div class="card-label">Add Stamp</div>
+          <input class="note-input" id="stamp-note" placeholder="What did they order? (optional)" />
+          <button class="add-btn stamp" id="stamp-btn" onclick="addStamp()">✦ Add Stamp</button>
+          <button class="add-btn redeem" id="redeem-btn" style="display:none;" onclick="redeemReward()">🎁 Redeem Reward</button>
+          <div class="flash green" id="stamp-flash">✓ Stamp added!</div>
+          <div class="flash green" id="redeem-flash">🎉 Reward redeemed! Stamps reset to zero.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Visit History</div>
+          <div id="c-history"><div style="text-align:center;padding:16px;color:var(--soft);font-size:14px;">No visits yet.</div></div>
+        </div>
       </div>
 
-      <div class="stamp-section" id="stamp-section">
-        <div class="stamp-section-title" id="stamp-section-title">ADD STAMP</div>
-        <input class="note-input" id="stamp-note" placeholder="What did they order? (optional)" />
-        <button class="add-stamp-btn" id="stamp-btn" onclick="addStamp()">
-          ✦ Add Stamp
-        </button>
-        <button class="add-stamp-btn" id="redeem-btn" onclick="redeemReward()"
-          style="display:none;background:var(--green);box-shadow:0 6px 20px rgba(45,122,79,0.35);">
-          🎁 Redeem Reward
-        </button>
-        <div class="stamp-success" id="stamp-success">✓ Stamp added!</div>
-        <div class="stamp-success" id="redeem-success" style="background:rgba(45,122,79,0.15);border-color:rgba(45,122,79,0.4);">🎉 Reward redeemed! Stamps reset.</div>
+    </div><!-- end customers tab -->
+
+    <!-- SETTINGS TAB -->
+    <div id="view-settings" style="display:none;">
+
+      <div class="card">
+        <div class="card-label" style="margin-bottom:20px;">Reward Settings</div>
+        <p style="font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:22px;">Set what customers receive when their stamp card is full. Changes apply immediately.</p>
+
+        <div class="settings-group">
+          <div class="settings-label gold">👴 Senior Reward (8 stamps)</div>
+          <div class="settings-row">
+            <input class="settings-input" id="r-senior" placeholder="e.g. Empanada" />
+            <button class="save-btn" onclick="saveReward('senior')">Save</button>
+          </div>
+          <div class="save-ok" id="ok-senior">✓ Saved</div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-label pink">🧒 Kids Reward (5 stamps)</div>
+          <div class="settings-row">
+            <input class="settings-input" id="r-kids" placeholder="e.g. Cheese Dog" />
+            <button class="save-btn" style="background:#db2777;" onclick="saveReward('kids')">Save</button>
+          </div>
+          <div class="save-ok" id="ok-kids">✓ Saved</div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-label teal">🐾 Pet Reward (6 stamps)</div>
+          <div class="settings-row">
+            <input class="settings-input" id="r-pet" placeholder="e.g. Dog Treat" />
+            <button class="save-btn" style="background:#0e7490;" onclick="saveReward('pet')">Save</button>
+          </div>
+          <div class="save-ok" id="ok-pet">✓ Saved</div>
+        </div>
       </div>
 
-      <div class="customer-card" id="c-history-card">
-        <div class="customer-type" style="margin-bottom:12px;">VISIT HISTORY</div>
-        <div id="c-history"></div>
+      <div class="card">
+        <div class="card-label" style="margin-bottom:16px;">Change Staff PIN</div>
+        <input class="settings-input" id="new-pin" type="number" placeholder="New 4-digit PIN" style="width:100%;margin-bottom:12px;" />
+        <button class="save-btn" style="width:100%;padding:14px;" onclick="savePin()">Update PIN</button>
+        <div class="save-ok" id="ok-pin" style="text-align:center;">✓ PIN updated</div>
       </div>
-    </div>
+
+    </div><!-- end settings tab -->
 
   </div>
 </div>
@@ -322,12 +317,20 @@
 <script>
 const SB_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M';
-const STAFF_PIN = '1234';
+const DEFAULT_PIN = '1234';
+const MAX_STAMPS = { senior: 8, kids: 5, pet: 6 };
+const STAMP_EMOJI = { senior: '🌮', kids: '⭐', pet: '🐾' };
+const REWARD_EMOJI = { senior: '🎁', kids: '🏆', pet: '🦴' };
+const AVATARS = { senior: '👴', kids: '🧒', pet: '🐕' };
+const TYPE_LABELS = { senior: 'Senior Passport', kids: 'Kids Passport', pet: 'Pet Passport' };
 
 let pinEntry = '';
 let currentPassport = null;
 let currentStamps = [];
 let recentCustomers = JSON.parse(localStorage.getItem('wepa_recent') || '[]');
+let wepaRewards = { reward_senior: 'Empanada', reward_kids: 'Cheese Dog', reward_pet: 'Dog Treat' };
+let qrStream = null, qrFrame = null, qrActive = false;
+let nfcReader = null, nfcActive = false;
 
 // ── PIN ──
 function pinKey(k) {
@@ -350,8 +353,8 @@ function updateDots() {
 }
 
 function checkPin() {
-  const pin = localStorage.getItem('wepa_staff_pin') || STAFF_PIN;
-  if (pinEntry === pin) {
+  const savedPin = localStorage.getItem('wepa_staff_pin') || DEFAULT_PIN;
+  if (pinEntry === savedPin) {
     document.getElementById('pinScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadSettings();
@@ -360,7 +363,7 @@ function checkPin() {
   } else {
     document.getElementById('pinError').style.display = 'block';
     pinEntry = '';
-    updateDots();
+    setTimeout(updateDots, 100);
   }
 }
 
@@ -372,22 +375,123 @@ function logout() {
   document.getElementById('pinError').style.display = 'none';
 }
 
-// ── VIEWS ──
-function showView(v) {
-  ['search','loading','notfound','customer'].forEach(x => {
-    document.getElementById('view-' + x).style.display = x === v ? 'block' : 'none';
-  });
-  if (v === 'search') {
-    document.getElementById('card-input').value = '';
-    renderRecent();
+// ── TABS ──
+function showTab(tab) {
+  document.getElementById('view-customers').style.display = tab === 'customers' ? 'block' : 'none';
+  document.getElementById('view-settings').style.display = tab === 'settings' ? 'block' : 'none';
+  document.getElementById('tab-customers').classList.toggle('active', tab === 'customers');
+  document.getElementById('tab-settings').classList.toggle('active', tab === 'settings');
+}
+
+// ── QR SCANNER ──
+function toggleQR() {
+  if (qrActive) { stopQR(); return; }
+  const errEl = document.getElementById('qr-err');
+  errEl.style.display = 'none';
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+    .then(stream => {
+      qrStream = stream;
+      const video = document.getElementById('qr-video');
+      video.srcObject = stream;
+      video.play();
+      document.getElementById('qr-wrap').style.display = 'block';
+      qrActive = true;
+      document.getElementById('qr-btn').classList.add('scanning');
+      document.getElementById('qr-btn-icon').textContent = '⏳';
+      document.getElementById('qr-btn-text').textContent = 'Point at QR code...';
+      video.addEventListener('loadedmetadata', scanFrame);
+    })
+    .catch(() => {
+      errEl.style.display = 'block';
+      errEl.textContent = 'Camera access denied. Use manual entry instead.';
+    });
+}
+
+function scanFrame() {
+  if (!qrActive) return;
+  const video = document.getElementById('qr-video');
+  const canvas = document.getElementById('qr-canvas');
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+    if (code) {
+      const match = code.data.match(/[?&](?:id|card)=([A-Z0-9-]+)/i);
+      if (match) {
+        stopQR();
+        document.getElementById('card-input').value = match[1].toUpperCase();
+        lookupCard();
+        return;
+      }
+    }
   }
+  qrFrame = requestAnimationFrame(scanFrame);
+}
+
+function stopQR() {
+  qrActive = false;
+  if (qrStream) { qrStream.getTracks().forEach(t => t.stop()); qrStream = null; }
+  if (qrFrame) { cancelAnimationFrame(qrFrame); qrFrame = null; }
+  document.getElementById('qr-wrap').style.display = 'none';
+  document.getElementById('qr-video').srcObject = null;
+  const btn = document.getElementById('qr-btn');
+  btn.classList.remove('scanning');
+  document.getElementById('qr-btn-icon').textContent = '📷';
+  document.getElementById('qr-btn-text').textContent = 'Scan QR Code';
+}
+
+// ── NFC ──
+async function toggleNFC() {
+  if (nfcActive) { stopNFC(); return; }
+  if (!('NDEFReader' in window)) {
+    document.getElementById('nfc-btn').classList.add('unsupported');
+    document.getElementById('nfc-text').textContent = 'NFC not supported (Android Chrome only)';
+    return;
+  }
+  try {
+    nfcReader = new NDEFReader();
+    await nfcReader.scan();
+    nfcActive = true;
+    document.getElementById('nfc-btn').classList.add('scanning');
+    document.getElementById('nfc-icon').textContent = '⏳';
+    document.getElementById('nfc-text').textContent = 'Hold card to phone...';
+    document.getElementById('nfc-status').style.display = 'block';
+    nfcReader.onreading = ({ message }) => {
+      for (const record of message.records) {
+        if (record.recordType === 'url') {
+          const url = new TextDecoder().decode(record.data);
+          const match = url.match(/[?&]id=([A-Z0-9-]+)/i);
+          if (match) {
+            stopNFC();
+            document.getElementById('card-input').value = match[1].toUpperCase();
+            lookupCard();
+            return;
+          }
+        }
+      }
+    };
+  } catch(e) {
+    document.getElementById('nfc-err').style.display = 'block';
+    document.getElementById('nfc-err').textContent = e.name === 'NotAllowedError' ? 'NFC permission denied.' : 'NFC error: ' + e.message;
+  }
+}
+
+function stopNFC() {
+  nfcActive = false;
+  document.getElementById('nfc-btn').classList.remove('scanning');
+  document.getElementById('nfc-icon').textContent = '📡';
+  document.getElementById('nfc-text').textContent = 'Tap a Card (Android)';
+  document.getElementById('nfc-status').style.display = 'none';
 }
 
 // ── LOOKUP ──
 async function lookupCard() {
   const id = document.getElementById('card-input').value.trim().toUpperCase();
   if (!id) return;
-  showView('loading');
+  showSubview('loading');
   try {
     const [pRes, sRes] = await Promise.all([
       fetch(`${SB_URL}/rest/v1/wepa_passports?id=eq.${id}&select=*`, { headers: { apikey: SB_KEY } }),
@@ -395,20 +499,31 @@ async function lookupCard() {
     ]);
     const passports = await pRes.json();
     currentStamps = await sRes.json();
-
-    if (!passports || passports.length === 0) {
-      showView('notfound');
-      return;
-    }
-
+    if (!passports || passports.length === 0) { showSubview('notfound'); return; }
     currentPassport = passports[0];
     addToRecent(currentPassport, currentStamps.length);
     renderCustomer();
-    showView('customer');
+    showSubview('customer');
   } catch(e) {
-    showView('search');
-    alert('Connection error. Please try again.');
+    showSubview('search');
+    alert('Connection error. Try again.');
   }
+}
+
+function showSubview(v) {
+  document.getElementById('search-card').style.display = v === 'search' ? 'block' : 'none';
+  document.querySelector('.recent-label').style.display = v === 'search' ? 'block' : 'none';
+  document.getElementById('recent-list').style.display = v === 'search' ? 'block' : 'none';
+  document.getElementById('view-loading').style.display = v === 'loading' ? 'block' : 'none';
+  document.getElementById('view-notfound').style.display = v === 'notfound' ? 'block' : 'none';
+  document.getElementById('view-customer').style.display = v === 'customer' ? 'block' : 'none';
+}
+
+function resetSearch() {
+  showSubview('search');
+  document.getElementById('card-input').value = '';
+  currentPassport = null;
+  currentStamps = [];
 }
 
 function loadRecent(id) {
@@ -420,102 +535,90 @@ function loadRecent(id) {
 function renderCustomer() {
   const p = currentPassport;
   const type = p.passport_type || 'senior';
-  const avatars = { senior: '👴', kids: '🧒', pet: '🐕' };
-  const typeLabels = { senior: 'Senior Passport', kids: 'Kids Passport', pet: 'Pet Passport' };
-  const maxStamps = { senior: 8, kids: 5, pet: 6 };
-  const stampEmojis = { senior: '🌮', kids: '⭐', pet: '🐾' };
-  const rewardEmojis = { senior: '🎁', kids: '🏆', pet: '🦴' };
+  const total = MAX_STAMPS[type];
+  const earned = Math.min(currentStamps.length, total - 1);
+  const rewardReady = currentStamps.length >= (total - 1);
+  const reward = wepaRewards['reward_' + type] || 'Reward';
 
-  const total = maxStamps[type];
-  const earned = Math.min(currentStamps.length, total);
-
-  document.getElementById('c-avatar').textContent = avatars[type];
+  document.getElementById('c-avatar').textContent = AVATARS[type];
   document.getElementById('c-name').textContent = p.name || 'Wepa Guest';
   document.getElementById('c-id').textContent = p.id;
-  document.getElementById('c-type').textContent = typeLabels[type];
-  document.getElementById('c-stampcount').textContent = earned;
+  document.getElementById('c-type').textContent = TYPE_LABELS[type];
+  document.getElementById('c-count').textContent = earned;
 
-  const grid = document.getElementById('c-stampgrid');
+  const grid = document.getElementById('c-stamps');
   grid.innerHTML = '';
   for (let i = 0; i < total; i++) {
     const d = document.createElement('div');
-    if (i === total - 1) {
-      d.className = 'stamp reward-slot';
-      d.textContent = rewardEmojis[type];
-    } else if (i < earned) {
-      d.className = 'stamp earned';
-      d.textContent = stampEmojis[type];
-    } else {
-      d.className = 'stamp empty';
-      d.setAttribute('data-n', i + 1);
-    }
+    if (i === total - 1) { d.className = 'stamp reward-slot'; d.textContent = REWARD_EMOJI[type]; }
+    else if (i < earned)  { d.className = 'stamp earned';      d.textContent = STAMP_EMOJI[type]; }
+    else                  { d.className = 'stamp empty';        d.setAttribute('data-n', i + 1); }
     grid.appendChild(d);
   }
 
   const hist = document.getElementById('c-history');
-  if (currentStamps.length === 0) {
-    hist.innerHTML = '<div style="text-align:center;padding:16px;color:var(--soft);font-size:14px;">No visits yet.</div>';
-  } else {
-    hist.innerHTML = currentStamps.slice(0, 8).map(s => {
-      const d = new Date(s.stamped_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-      return `<div class="history-item">
-        <div class="history-dot">${stampEmojis[type]}</div>
-        <div class="history-note">${s.note || 'Visit'}</div>
-        <div class="history-date">${d}</div>
-      </div>`;
-    }).join('');
-  }
+  hist.innerHTML = currentStamps.length === 0
+    ? '<div style="text-align:center;padding:16px;color:var(--soft);font-size:14px;">No visits yet.</div>'
+    : currentStamps.slice(0, 8).map(s => {
+        const d = new Date(s.stamped_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        return `<div class="hist-item"><div class="hist-dot">${STAMP_EMOJI[type]}</div><div class="hist-note">${s.note || 'Visit'}</div><div class="hist-date">${d}</div></div>`;
+      }).join('');
 
   document.getElementById('stamp-note').value = '';
-  document.getElementById('stamp-success').style.display = 'none';
-  document.getElementById('redeem-success').style.display = 'none';
-
-  // Show redeem button if stamps complete
-  const maxStampsR = { senior: 8, kids: 5, pet: 6 };
-  const total = maxStampsR[p.passport_type || 'senior'];
-  const earned = Math.min(currentStamps.length, total - 1); // -1 for reward slot
-  const rewardEarned = currentStamps.length >= (total - 1);
-
-  document.getElementById('stamp-btn').style.display = rewardEarned ? 'none' : 'flex';
-  document.getElementById('redeem-btn').style.display = rewardEarned ? 'flex' : 'none';
-  document.getElementById('stamp-btn').disabled = false;
-  document.getElementById('stamp-btn').textContent = '✦ Add Stamp';
-
-  // Update reward button label with current reward
-  const reward = wepaSettings['reward_' + (p.passport_type || 'senior')] || 'Reward';
+  document.getElementById('stamp-flash').style.display = 'none';
+  document.getElementById('redeem-flash').style.display = 'none';
+  document.getElementById('stamp-btn').style.display = rewardReady ? 'none' : 'flex';
+  document.getElementById('redeem-btn').style.display = rewardReady ? 'flex' : 'none';
   document.getElementById('redeem-btn').textContent = '🎁 Redeem — ' + reward;
+  document.getElementById('stamp-btn').disabled = false;
 }
 
 // ── ADD STAMP ──
 async function addStamp() {
   const note = document.getElementById('stamp-note').value.trim() || 'Visit';
   const btn = document.getElementById('stamp-btn');
-  btn.disabled = true;
-  btn.textContent = '...';
-
+  btn.disabled = true; btn.textContent = '...';
   try {
     const res = await fetch(`${SB_URL}/rest/v1/wepa_stamps`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
       body: JSON.stringify({ passport_id: currentPassport.id, note })
     });
-
     if (res.ok || res.status === 201) {
       currentStamps.unshift({ passport_id: currentPassport.id, note, stamped_at: new Date().toISOString() });
       addToRecent(currentPassport, currentStamps.length);
       renderCustomer();
-      document.getElementById('stamp-success').style.display = 'block';
-      setTimeout(() => document.getElementById('stamp-success').style.display = 'none', 3000);
+      document.getElementById('stamp-flash').style.display = 'block';
+      setTimeout(() => document.getElementById('stamp-flash').style.display = 'none', 3000);
     } else {
-      btn.disabled = false;
-      btn.textContent = '✦ Add Stamp';
+      btn.disabled = false; btn.textContent = '✦ Add Stamp';
       alert('Error adding stamp. Try again.');
     }
-  } catch(e) {
-    btn.disabled = false;
-    btn.textContent = '✦ Add Stamp';
-    alert('Connection error.');
-  }
+  } catch(e) { btn.disabled = false; btn.textContent = '✦ Add Stamp'; alert('Connection error.'); }
+}
+
+// ── REDEEM ──
+async function redeemReward() {
+  const type = currentPassport.passport_type || 'senior';
+  const reward = wepaRewards['reward_' + type] || 'Reward';
+  if (!confirm('Redeem "' + reward + '" for ' + (currentPassport.name || 'this customer') + '?\n\nStamps will reset to zero.')) return;
+  const btn = document.getElementById('redeem-btn');
+  btn.disabled = true; btn.textContent = '...';
+  try {
+    await fetch(`${SB_URL}/rest/v1/wepa_redemptions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ passport_id: currentPassport.id, passport_type: type, reward })
+    });
+    await fetch(`${SB_URL}/rest/v1/wepa_stamps?passport_id=eq.${currentPassport.id}`, {
+      method: 'DELETE', headers: { apikey: SB_KEY }
+    });
+    currentStamps = [];
+    addToRecent(currentPassport, 0);
+    renderCustomer();
+    document.getElementById('redeem-flash').style.display = 'block';
+    setTimeout(() => document.getElementById('redeem-flash').style.display = 'none', 4000);
+  } catch(e) { btn.disabled = false; alert('Error redeeming. Try again.'); }
 }
 
 // ── RECENT ──
@@ -526,112 +629,15 @@ function addToRecent(passport, stampCount) {
   localStorage.setItem('wepa_recent', JSON.stringify(recentCustomers));
 }
 
-function checkUrlCard() {
-  const params = new URLSearchParams(window.location.search);
-  const card = params.get('card');
-  if (card) {
-    document.getElementById('card-input').value = card.toUpperCase();
-    lookupCard();
-  }
-}
-
-// ── SETTINGS ──
-let wepaSettings = { reward_senior: 'Empanada', reward_kids: 'Cheese Dog', reward_pet: 'Dog Treat' };
-let staffPin = localStorage.getItem('wepa_staff_pin') || '1234';
-
-async function loadSettings() {
-  try {
-    const res = await fetch(`${SB_URL}/rest/v1/wepa_settings?select=*`, { headers: { apikey: SB_KEY } });
-    const rows = await res.json();
-    if (Array.isArray(rows)) {
-      rows.forEach(r => { wepaSettings[r.key] = r.value; });
-    }
-    document.getElementById('reward-senior-input').value = wepaSettings['reward_senior'] || '';
-    document.getElementById('reward-kids-input').value = wepaSettings['reward_kids'] || '';
-    document.getElementById('reward-pet-input').value = wepaSettings['reward_pet'] || '';
-  } catch(e) { console.error('Settings load error', e); }
-}
-
-async function saveReward(type) {
-  const val = document.getElementById('reward-' + type + '-input').value.trim();
-  if (!val) return;
-  wepaSettings['reward_' + type] = val;
-  try {
-    await fetch(`${SB_URL}/rest/v1/wepa_settings?key=eq.reward_${type}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
-      body: JSON.stringify({ value: val, updated_at: new Date().toISOString() })
-    });
-    const ok = document.getElementById('reward-' + type + '-ok');
-    ok.style.display = 'block';
-    setTimeout(() => ok.style.display = 'none', 2000);
-  } catch(e) { alert('Error saving. Try again.'); }
-}
-
-function savePin() {
-  const val = document.getElementById('new-pin-input').value.trim();
-  if (!val || val.length < 4) { alert('PIN must be 4 digits.'); return; }
-  staffPin = val;
-  localStorage.setItem('wepa_staff_pin', val);
-  document.getElementById('pin-change-ok').style.display = 'block';
-  setTimeout(() => document.getElementById('pin-change-ok').style.display = 'none', 2000);
-}
-
-function showTab(tab) {
-  document.getElementById('view-settings').style.display = tab === 'settings' ? 'block' : 'none';
-  document.getElementById('view-search').style.display = tab === 'search' ? 'block' : 'none';
-  document.getElementById('view-customer').style.display = 'none';
-  document.getElementById('view-loading').style.display = 'none';
-  document.getElementById('view-notfound').style.display = 'none';
-  document.getElementById('tab-search-btn').style.opacity = tab === 'search' ? '1' : '0.6';
-  document.getElementById('tab-settings-btn').style.opacity = tab === 'settings' ? '1' : '0.6';
-}
-
-async function redeemReward() {
-  const type = currentPassport.passport_type || 'senior';
-  const reward = wepaSettings['reward_' + type] || 'Reward';
-  if (!confirm('Redeem "' + reward + '" for ' + (currentPassport.name || 'this customer') + '? Their stamps will reset to zero.')) return;
-
-  const btn = document.getElementById('redeem-btn');
-  btn.disabled = true;
-  btn.textContent = '...';
-
-  try {
-    // Log redemption
-    await fetch(`${SB_URL}/rest/v1/wepa_redemptions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
-      body: JSON.stringify({ passport_id: currentPassport.id, passport_type: type, reward })
-    });
-
-    // Delete all stamps for this passport
-    await fetch(`${SB_URL}/rest/v1/wepa_stamps?passport_id=eq.${currentPassport.id}`, {
-      method: 'DELETE',
-      headers: { apikey: SB_KEY }
-    });
-
-    currentStamps = [];
-    addToRecent(currentPassport, 0);
-    renderCustomer();
-    document.getElementById('redeem-success').style.display = 'block';
-    setTimeout(() => document.getElementById('redeem-success').style.display = 'none', 4000);
-  } catch(e) {
-    btn.disabled = false;
-    btn.textContent = '🎁 Redeem — ' + reward;
-    alert('Error redeeming. Try again.');
-  }
-}
-
 function renderRecent() {
   const el = document.getElementById('recent-list');
   if (recentCustomers.length === 0) {
-    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">No recent customers yet.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--soft);font-size:14px;">No recent customers yet.</div>';
     return;
   }
-  const avatars = { senior: '👴', kids: '🧒', pet: '🐕' };
   el.innerHTML = recentCustomers.map(r => `
     <div class="recent-item" onclick="loadRecent('${r.id}')">
-      <div class="recent-avatar">${avatars[r.type] || '🐸'}</div>
+      <div class="recent-avatar">${AVATARS[r.type] || '🐸'}</div>
       <div>
         <div class="recent-name">${r.name || 'Wepa Guest'}</div>
         <div class="recent-id">${r.id}</div>
@@ -640,160 +646,59 @@ function renderRecent() {
     </div>`).join('');
 }
 
-
-// ── QR SCANNER ──
-let qrStream = null;
-let qrAnimFrame = null;
-let qrScanning = false;
-
-async function startQRScan() {
-  if (qrScanning) { stopQRScan(); return; }
-
-  const btn = document.getElementById('qr-scan-btn');
-  const wrap = document.getElementById('qr-video-wrap');
-  const errEl = document.getElementById('qr-error');
-  errEl.style.display = 'none';
-
+// ── SETTINGS ──
+async function loadSettings() {
   try {
-    qrStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }
+    const res = await fetch(`${SB_URL}/rest/v1/wepa_settings?select=*`, { headers: { apikey: SB_KEY } });
+    const rows = await res.json();
+    if (Array.isArray(rows)) {
+      rows.forEach(r => { wepaRewards[r.key] = r.value; });
+      document.getElementById('r-senior').value = wepaRewards['reward_senior'] || '';
+      document.getElementById('r-kids').value = wepaRewards['reward_kids'] || '';
+      document.getElementById('r-pet').value = wepaRewards['reward_pet'] || '';
+    }
+  } catch(e) { console.log('Settings load failed', e); }
+}
+
+async function saveReward(type) {
+  const val = document.getElementById('r-' + type).value.trim();
+  if (!val) return;
+  wepaRewards['reward_' + type] = val;
+  try {
+    await fetch(`${SB_URL}/rest/v1/wepa_settings?key=eq.reward_${type}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ value: val, updated_at: new Date().toISOString() })
     });
-    const video = document.getElementById('qr-video');
-    video.srcObject = qrStream;
-    video.play();
-    wrap.style.display = 'block';
-    qrScanning = true;
-    btn.classList.add('scanning');
-    document.getElementById('qr-btn-icon').textContent = '⏳';
-    document.getElementById('qr-btn-text').textContent = 'Point at QR code...';
-    video.addEventListener('loadedmetadata', () => { scanQRFrame(); });
-  } catch(e) {
-    errEl.style.display = 'block';
-    errEl.textContent = 'Camera access denied. Use manual entry or NFC.';
-  }
+    const ok = document.getElementById('ok-' + type);
+    ok.style.display = 'block';
+    setTimeout(() => ok.style.display = 'none', 2000);
+  } catch(e) { alert('Error saving reward.'); }
 }
 
-function scanQRFrame() {
-  if (!qrScanning) return;
-  const video = document.getElementById('qr-video');
-  const canvas = document.getElementById('qr-scan-canvas');
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
-    if (code) {
-      const url = code.data;
-      const match = url.match(/[?&](?:id|card)=([A-Z0-9-]+)/i);
-      if (match) {
-        const cardId = match[1].toUpperCase();
-        stopQRScan();
-        document.getElementById('card-input').value = cardId;
-        lookupCard();
-        return;
-      }
-    }
-  }
-  qrAnimFrame = requestAnimationFrame(scanQRFrame);
+function savePin() {
+  const val = document.getElementById('new-pin').value.trim();
+  if (!val || val.length < 4) { alert('PIN must be at least 4 digits.'); return; }
+  localStorage.setItem('wepa_staff_pin', val);
+  const ok = document.getElementById('ok-pin');
+  ok.style.display = 'block';
+  setTimeout(() => ok.style.display = 'none', 2000);
 }
 
-function stopQRScan() {
-  qrScanning = false;
-  if (qrStream) { qrStream.getTracks().forEach(t => t.stop()); qrStream = null; }
-  if (qrAnimFrame) { cancelAnimationFrame(qrAnimFrame); qrAnimFrame = null; }
-  document.getElementById('qr-video-wrap').style.display = 'none';
-  document.getElementById('qr-video').srcObject = null;
-  const btn = document.getElementById('qr-scan-btn');
-  btn.classList.remove('scanning');
-  document.getElementById('qr-btn-icon').textContent = '📷';
-  document.getElementById('qr-btn-text').textContent = 'Scan QR Code';
+// ── URL CARD ──
+function checkUrlCard() {
+  const params = new URLSearchParams(window.location.search);
+  const card = params.get('card');
+  if (card) { document.getElementById('card-input').value = card.toUpperCase(); lookupCard(); }
 }
 
-// ── NFC ──
-let nfcReader = null;
-let nfcScanning = false;
-
-async function startNFC() {
-  if (!('NDEFReader' in window)) {
-    document.getElementById('nfc-btn').classList.add('unsupported');
-    document.getElementById('nfc-btn-text').textContent = 'NFC not supported on this browser';
-    document.getElementById('nfc-error').style.display = 'block';
-    document.getElementById('nfc-error').textContent = 'Use Android Chrome to scan cards. Enter the ID manually instead.';
-    return;
-  }
-
-  if (nfcScanning) {
-    stopNFC();
-    return;
-  }
-
-  try {
-    nfcReader = new NDEFReader();
-    await nfcReader.scan();
-    nfcScanning = true;
-
+// Init NFC check
+if (!('NDEFReader' in window)) {
+  document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('nfc-btn');
-    btn.classList.add('scanning');
-    document.getElementById('nfc-btn-icon').textContent = '⏳';
-    document.getElementById('nfc-btn-text').textContent = 'Hold card to phone...';
-    document.getElementById('nfc-status').style.display = 'block';
-    document.getElementById('nfc-error').style.display = 'none';
-
-    nfcReader.onreading = ({ message }) => {
-      for (const record of message.records) {
-        if (record.recordType === 'url') {
-          const decoder = new TextDecoder();
-          const url = decoder.decode(record.data);
-          const match = url.match(/[?&]id=([A-Z0-9-]+)/i);
-          if (match) {
-            const cardId = match[1].toUpperCase();
-            stopNFC();
-            document.getElementById('card-input').value = cardId;
-            lookupCard();
-            return;
-          }
-        }
-      }
-      document.getElementById('nfc-error').style.display = 'block';
-      document.getElementById('nfc-error').textContent = 'Card read but no Wepa ID found. Try again.';
-    };
-
-    nfcReader.onreadingerror = () => {
-      document.getElementById('nfc-error').style.display = 'block';
-      document.getElementById('nfc-error').textContent = 'Could not read card. Try again.';
-    };
-
-  } catch(e) {
-    nfcScanning = false;
-    document.getElementById('nfc-error').style.display = 'block';
-    if (e.name === 'NotAllowedError') {
-      document.getElementById('nfc-error').textContent = 'NFC permission denied. Allow it in browser settings.';
-    } else {
-      document.getElementById('nfc-error').textContent = 'NFC error: ' + e.message;
-    }
-  }
+    if (btn) { btn.classList.add('unsupported'); document.getElementById('nfc-text').textContent = 'NFC (Android Chrome only)'; }
+  });
 }
-
-function stopNFC() {
-  nfcScanning = false;
-  const btn = document.getElementById('nfc-btn');
-  btn.classList.remove('scanning');
-  document.getElementById('nfc-btn-icon').textContent = '📡';
-  document.getElementById('nfc-btn-text').textContent = 'Tap a Card';
-  document.getElementById('nfc-status').style.display = 'none';
-}
-
-// Check NFC support on load
-window.addEventListener('load', () => {
-  if (!('NDEFReader' in window)) {
-    const btn = document.getElementById('nfc-btn');
-    btn.classList.add('unsupported');
-    document.getElementById('nfc-btn-text').textContent = 'NFC scan (Android Chrome only)';
-  }
-});
-
 </script>
 </body>
 </html>
