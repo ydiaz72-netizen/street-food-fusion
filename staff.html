@@ -471,8 +471,8 @@ function renderCustomer() {
   document.getElementById('redeem-success').style.display = 'none';
 
   // Show redeem button if stamps complete
-  const maxStamps = { senior: 8, kids: 5, pet: 6 };
-  const total = maxStamps[p.passport_type || 'senior'];
+  const maxStampsR = { senior: 8, kids: 5, pet: 6 };
+  const total = maxStampsR[p.passport_type || 'senior'];
   const earned = Math.min(currentStamps.length, total - 1); // -1 for reward slot
   const rewardEarned = currentStamps.length >= (total - 1);
 
