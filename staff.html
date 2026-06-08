@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Wepa Staff</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0905; --card: #1a1208; --cream: #f2ece0;
+      --gold: #e8a83e; --gold-dark: #c97600; --gold-light: #fff8ed;
+      --green: #2d7a4f; --green-light: #eaf4ee;
+      --red: #c0392b; --red-light: #fdecea;
+      --soft: rgba(242,236,224,0.5);
+      --faint: rgba(242,236,224,0.08);
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    html, body { min-height: 100vh; background: var(--bg); font-family: var(--font); color: var(--cream); -webkit-font-smoothing: antialiased; }
+
+    /* PIN SCREEN */
+    .pin-screen {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 24px; text-align: center;
+    }
+    .pin-logo { font-size: 48px; margin-bottom: 16px; }
+    .pin-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
+    .pin-sub { font-size: 14px; color: var(--soft); margin-bottom: 32px; }
+    .pin-dots { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; }
+    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(242,236,224,0.3); background: transparent; transition: all 0.15s; }
+    .pin-dot.filled { background: var(--gold); border-color: var(--gold); }
+    .pin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; max-width: 280px; width: 100%; }
+    .pin-key {
+      aspect-ratio: 1; border-radius: 16px; border: 1px solid var(--faint);
+      background: var(--card); font-size: 24px; font-weight: 800;
+      color: var(--cream); cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.12s; font-family: var(--font);
+    }
+    .pin-key:active { background: rgba(232,168,62,0.15); border-color: var(--gold); transform: scale(0.95); }
+    .pin-key.del { font-size: 18px; color: var(--soft); }
+    .pin-error { font-size: 14px; color: #e74c3c; font-weight: 700; margin-top: 16px; display: none; }
+
+    /* MAIN APP */
+    .app { display: none; min-height: 100vh; }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--gold); padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .topbar-title { font-size: 16px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .topbar-logout { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.8); cursor: pointer; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: transparent; font-family: var(--font); }
+
+    /* CONTENT */
+    .content { padding: 20px; max-width: 480px; margin: 0 auto; }
+
+    /* SEARCH */
+    .search-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid var(--faint); }
+    .search-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.75; margin-bottom: 12px; }
+    .search-row { display: flex; gap: 10px; }
+    .search-input {
+      flex: 1; padding: 14px 16px; background: rgba(242,236,224,0.05);
+      border: 1px solid rgba(242,236,224,0.12); border-radius: 12px;
+      font-family: var(--font); font-size: 16px; color: var(--cream);
+      outline: none; letter-spacing: 1px; font-weight: 600;
+      text-transform: uppercase; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: rgba(232,168,62,0.4); }
+    .search-input::placeholder { color: rgba(242,236,224,0.2); text-transform: none; font-weight: 400; letter-spacing: 0; }
+    .search-btn {
+      padding: 14px 20px; background: var(--gold); color: var(--bg);
+      border: none; border-radius: 12px; font-family: var(--font);
+      font-size: 14px; font-weight: 900; cursor: pointer; white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .search-btn:hover { background: var(--gold-dark); }
+
+    /* RECENT */
+    .recent-title { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--soft); margin: 16px 0 10px; }
+    .recent-list { display: flex; flex-direction: column; gap: 8px; }
+    .recent-item {
+      background: var(--card); border: 1px solid var(--faint); border-radius: 14px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+      cursor: pointer; transition: border-color 0.15s;
+    }
+    .recent-item:hover { border-color: rgba(232,168,62,0.3); }
+    .recent-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(232,168,62,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .recent-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .recent-id { font-size: 11px; color: var(--soft); font-family: monospace; letter-spacing: 1px; }
+    .recent-stamps { margin-left: auto; background: rgba(232,168,62,0.15); color: var(--gold); font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+
+    /* CUSTOMER CARD */
+    .customer-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 14px; border: 1px solid var(--faint); }
+    .customer-back { font-size: 13px; color: var(--soft); cursor: pointer; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .customer-back:hover { color: var(--cream); }
+    .customer-header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--faint); }
+    .customer-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(232,168,62,0.15); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+    .customer-name { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+    .customer-meta { font-size: 13px; color: var(--soft); font-weight: 500; font-family: monospace; letter-spacing: 1px; }
+    .customer-type { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-top: 4px; }
+
+    /* STAMP GRID */
+    .stamp-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+    .stamp { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px dashed rgba(242,236,224,0.15); background: rgba(242,236,224,0.03); position: relative; }
+    .stamp.earned { border: 2px solid var(--gold); background: rgba(232,168,62,0.12); }
+    .stamp.reward-slot { border-color: var(--green); background: rgba(45,122,79,0.12); }
+    .stamp.empty::after { content: attr(data-n); position: absolute; font-size: 14px; font-weight: 800; color: rgba(242,236,224,0.15); }
+
+    /* STAMP BUTTON */
+    .stamp-section { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 14px; border: 1px solid var(--faint); }
+    .stamp-section-title { font-size: 14px; font-weight: 700; color: var(--soft); margin-bottom: 14px; letter-spacing: 0.5px; }
+    .note-input {
+      width: 100%; padding: 13px 15px; background: rgba(242,236,224,0.05);
+      border: 1px solid rgba(242,236,224,0.1); border-radius: 12px;
+      font-family: var(--font); font-size: 15px; color: var(--cream);
+      outline: none; margin-bottom: 14px; transition: border-color 0.2s;
+    }
+    .note-input:focus { border-color: rgba(232,168,62,0.35); }
+    .note-input::placeholder { color: rgba(242,236,224,0.2); }
+    .add-stamp-btn {
+      width: 100%; padding: 20px; background: var(--gold); color: var(--bg);
+      border: none; border-radius: 16px; font-family: var(--font);
+      font-size: 20px; font-weight: 900; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .add-stamp-btn:active { transform: scale(0.97); }
+    .add-stamp-btn:hover { background: var(--gold-dark); }
+    .add-stamp-btn:disabled { background: rgba(242,236,224,0.1); color: var(--soft); cursor: not-allowed; }
+
+    /* SUCCESS FLASH */
+    .stamp-success {
+      display: none; background: rgba(45,122,79,0.15);
+      border: 1px solid rgba(45,122,79,0.4); border-radius: 14px;
+      padding: 16px; text-align: center; font-size: 18px;
+      font-weight: 900; color: #6fcf97; margin-top: 12px;
+    }
+
+    /* RECENT STAMPS */
+    .history-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid var(--faint);
+      font-size: 13px;
+    }
+    .history-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .history-dot { font-size: 18px; flex-shrink: 0; }
+    .history-note { font-weight: 600; color: var(--cream); flex: 1; }
+    .history-date { color: var(--soft); font-weight: 500; white-space: nowrap; }
+
+    /* NOT FOUND */
+    .not-found { text-align: center; padding: 40px 20px; }
+    .not-found-emoji { font-size: 48px; margin-bottom: 14px; }
+    .not-found-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+    .not-found-desc { font-size: 14px; color: var(--soft); line-height: 1.6; }
+
+    /* LOADING */
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 40px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+  <div class="pin-logo">🐸</div>
+  <div class="pin-title">Wepa Staff</div>
+  <div class="pin-sub">Enter your PIN to continue</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key" onclick="pinKey('')"></button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+  </div>
+  <div class="pin-error" id="pinError">Wrong PIN. Try again.</div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar-title">🐸 Wepa Staff</div>
+    <button class="topbar-logout" onclick="logout()">Lock</button>
+  </div>
+  <div class="content">
+
+    <!-- SEARCH VIEW -->
+    <div id="view-search">
+      <div class="search-card">
+        <div class="search-label">Enter or Scan Card ID</div>
+        <div class="search-row">
+          <input class="search-input" id="card-input" placeholder="e.g. WEPA-001" maxlength="20"
+            onkeydown="if(event.key==='Enter') lookupCard()" />
+          <button class="search-btn" onclick="lookupCard()">Look Up</button>
+        </div>
+      </div>
+      <div class="recent-title">Recent Customers</div>
+      <div class="recent-list" id="recent-list">
+        <div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">No recent customers yet.</div>
+      </div>
+    </div>
+
+    <!-- LOADING VIEW -->
+    <div id="view-loading" style="display:none;">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- NOT FOUND VIEW -->
+    <div id="view-notfound" style="display:none;">
+      <div class="not-found">
+        <div class="not-found-emoji">🔍</div>
+        <div class="not-found-title">Card not found</div>
+        <div class="not-found-desc">This card hasn't been set up yet. Ask the customer to tap their card on their phone first to create their passport.</div>
+      </div>
+      <button class="search-btn" style="width:100%;margin-top:16px;padding:16px;" onclick="showView('search')">← Back</button>
+    </div>
+
+    <!-- CUSTOMER VIEW -->
+    <div id="view-customer" style="display:none;">
+      <div class="customer-back" onclick="showView('search')">← Back</div>
+
+      <div class="customer-card">
+        <div class="customer-header">
+          <div class="customer-avatar" id="c-avatar">🐸</div>
+          <div>
+            <div class="customer-name" id="c-name">—</div>
+            <div class="customer-meta" id="c-id">—</div>
+            <div class="customer-type" id="c-type">—</div>
+          </div>
+          <div style="margin-left:auto;text-align:right;">
+            <div style="font-size:32px;font-weight:900;color:var(--gold)" id="c-stampcount">0</div>
+            <div style="font-size:11px;color:var(--soft);font-weight:600">stamps</div>
+          </div>
+        </div>
+        <div class="stamp-grid" id="c-stampgrid"></div>
+      </div>
+
+      <div class="stamp-section">
+        <div class="stamp-section-title">ADD STAMP</div>
+        <input class="note-input" id="stamp-note" placeholder="What did they order? (optional)" />
+        <button class="add-stamp-btn" id="stamp-btn" onclick="addStamp()">
+          ✦ Add Stamp
+        </button>
+        <div class="stamp-success" id="stamp-success">✓ Stamp added!</div>
+      </div>
+
+      <div class="customer-card" id="c-history-card">
+        <div class="customer-type" style="margin-bottom:12px;">VISIT HISTORY</div>
+        <div id="c-history"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SB_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M';
+const STAFF_PIN = '1234';
+
+let pinEntry = '';
+let currentPassport = null;
+let currentStamps = [];
+let recentCustomers = JSON.parse(localStorage.getItem('wepa_recent') || '[]');
+
+// ── PIN ──
+function pinKey(k) {
+  if (!k || pinEntry.length >= 4) return;
+  pinEntry += k;
+  updateDots();
+  if (pinEntry.length === 4) checkPin();
+}
+
+function pinDel() {
+  pinEntry = pinEntry.slice(0, -1);
+  updateDots();
+  document.getElementById('pinError').style.display = 'none';
+}
+
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('d' + i).classList.toggle('filled', i < pinEntry.length);
+  }
+}
+
+function checkPin() {
+  if (pinEntry === STAFF_PIN) {
+    document.getElementById('pinScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderRecent();
+  } else {
+    document.getElementById('pinError').style.display = 'block';
+    pinEntry = '';
+    updateDots();
+  }
+}
+
+function logout() {
+  document.getElementById('pinScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  pinEntry = '';
+  updateDots();
+  document.getElementById('pinError').style.display = 'none';
+}
+
+// ── VIEWS ──
+function showView(v) {
+  ['search','loading','notfound','customer'].forEach(x => {
+    document.getElementById('view-' + x).style.display = x === v ? 'block' : 'none';
+  });
+  if (v === 'search') {
+    document.getElementById('card-input').value = '';
+    renderRecent();
+  }
+}
+
+// ── LOOKUP ──
+async function lookupCard() {
+  const id = document.getElementById('card-input').value.trim().toUpperCase();
+  if (!id) return;
+  showView('loading');
+  try {
+    const [pRes, sRes] = await Promise.all([
+      fetch(`${SB_URL}/rest/v1/wepa_passports?id=eq.${id}&select=*`, { headers: { apikey: SB_KEY } }),
+      fetch(`${SB_URL}/rest/v1/wepa_stamps?passport_id=eq.${id}&select=*&order=stamped_at.desc`, { headers: { apikey: SB_KEY } })
+    ]);
+    const passports = await pRes.json();
+    currentStamps = await sRes.json();
+
+    if (!passports || passports.length === 0) {
+      showView('notfound');
+      return;
+    }
+
+    currentPassport = passports[0];
+    addToRecent(currentPassport, currentStamps.length);
+    renderCustomer();
+    showView('customer');
+  } catch(e) {
+    showView('search');
+    alert('Connection error. Please try again.');
+  }
+}
+
+function loadRecent(id) {
+  document.getElementById('card-input').value = id;
+  lookupCard();
+}
+
+// ── RENDER CUSTOMER ──
+function renderCustomer() {
+  const p = currentPassport;
+  const type = p.passport_type || 'senior';
+  const avatars = { senior: '👴', kids: '🧒', pet: '🐕' };
+  const typeLabels = { senior: 'Senior Passport', kids: 'Kids Passport', pet: 'Pet Passport' };
+  const maxStamps = { senior: 8, kids: 5, pet: 6 };
+  const stampEmojis = { senior: '🌮', kids: '⭐', pet: '🐾' };
+  const rewardEmojis = { senior: '🎁', kids: '🏆', pet: '🦴' };
+
+  const total = maxStamps[type];
+  const earned = Math.min(currentStamps.length, total);
+
+  document.getElementById('c-avatar').textContent = avatars[type];
+  document.getElementById('c-name').textContent = p.name || 'Wepa Guest';
+  document.getElementById('c-id').textContent = p.id;
+  document.getElementById('c-type').textContent = typeLabels[type];
+  document.getElementById('c-stampcount').textContent = earned;
+
+  const grid = document.getElementById('c-stampgrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    if (i === total - 1) {
+      d.className = 'stamp reward-slot';
+      d.textContent = rewardEmojis[type];
+    } else if (i < earned) {
+      d.className = 'stamp earned';
+      d.textContent = stampEmojis[type];
+    } else {
+      d.className = 'stamp empty';
+      d.setAttribute('data-n', i + 1);
+    }
+    grid.appendChild(d);
+  }
+
+  const hist = document.getElementById('c-history');
+  if (currentStamps.length === 0) {
+    hist.innerHTML = '<div style="text-align:center;padding:16px;color:var(--soft);font-size:14px;">No visits yet.</div>';
+  } else {
+    hist.innerHTML = currentStamps.slice(0, 8).map(s => {
+      const d = new Date(s.stamped_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return `<div class="history-item">
+        <div class="history-dot">${stampEmojis[type]}</div>
+        <div class="history-note">${s.note || 'Visit'}</div>
+        <div class="history-date">${d}</div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('stamp-note').value = '';
+  document.getElementById('stamp-success').style.display = 'none';
+  document.getElementById('stamp-btn').disabled = false;
+  document.getElementById('stamp-btn').textContent = '✦ Add Stamp';
+}
+
+// ── ADD STAMP ──
+async function addStamp() {
+  const note = document.getElementById('stamp-note').value.trim() || 'Visit';
+  const btn = document.getElementById('stamp-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/wepa_stamps`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ passport_id: currentPassport.id, note })
+    });
+
+    if (res.ok || res.status === 201) {
+      currentStamps.unshift({ passport_id: currentPassport.id, note, stamped_at: new Date().toISOString() });
+      addToRecent(currentPassport, currentStamps.length);
+      renderCustomer();
+      document.getElementById('stamp-success').style.display = 'block';
+      setTimeout(() => document.getElementById('stamp-success').style.display = 'none', 3000);
+    } else {
+      btn.disabled = false;
+      btn.textContent = '✦ Add Stamp';
+      alert('Error adding stamp. Try again.');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '✦ Add Stamp';
+    alert('Connection error.');
+  }
+}
+
+// ── RECENT ──
+function addToRecent(passport, stampCount) {
+  recentCustomers = recentCustomers.filter(r => r.id !== passport.id);
+  recentCustomers.unshift({ id: passport.id, name: passport.name, type: passport.passport_type, stamps: stampCount });
+  if (recentCustomers.length > 5) recentCustomers = recentCustomers.slice(0, 5);
+  localStorage.setItem('wepa_recent', JSON.stringify(recentCustomers));
+}
+
+function renderRecent() {
+  const el = document.getElementById('recent-list');
+  if (recentCustomers.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">No recent customers yet.</div>';
+    return;
+  }
+  const avatars = { senior: '👴', kids: '🧒', pet: '🐕' };
+  el.innerHTML = recentCustomers.map(r => `
+    <div class="recent-item" onclick="loadRecent('${r.id}')">
+      <div class="recent-avatar">${avatars[r.type] || '🐸'}</div>
+      <div>
+        <div class="recent-name">${r.name || 'Wepa Guest'}</div>
+        <div class="recent-id">${r.id}</div>
+      </div>
+      <div class="recent-stamps">${r.stamps} stamps</div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
