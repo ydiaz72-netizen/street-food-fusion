@@ -210,7 +210,7 @@
 <!-- PASSPORT CONTENT -->
 <div id="app-passport" style="display:none;">
 
-  <div class="switcher">
+  <div class="switcher" id="switcher">
     <button class="type-btn active-senior" id="btn-senior" onclick="switchType('senior')">
       <span>👴</span> <span data-i="senior">Senior</span>
     </button>
@@ -588,8 +588,25 @@ function getPassportId() {
   return params.get('id') || localStorage.getItem('wepa_passport_id');
 }
 
+let wepaRewards = { senior: 'Empanada', kids: 'Cheese Dog', pet: 'Dog Treat' };
+
+async function loadRewards() {
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/wepa_settings?select=*', { headers: { apikey: SB_KEY } });
+    const rows = await res.json();
+    if (Array.isArray(rows)) {
+      rows.forEach(r => {
+        if (r.key === 'reward_senior') wepaRewards.senior = r.value;
+        if (r.key === 'reward_kids')   wepaRewards.kids   = r.value;
+        if (r.key === 'reward_pet')    wepaRewards.pet    = r.value;
+      });
+    }
+  } catch(e) { console.log('Could not load rewards', e); }
+}
+
 async function init() {
   applyTranslations();
+  await loadRewards();
   passportId = getPassportId();
 
   if (!passportId) {
@@ -626,6 +643,8 @@ async function loadPassport() {
     document.getElementById('app-passport').style.display = 'block';
     renderPassport();
     switchType(currentType);
+    // Lock to passport type — hide switcher
+    document.getElementById('switcher').style.display = 'none';
 
   } catch(e) {
     document.getElementById('app-loading').innerHTML = '<div style="padding:40px;text-align:center;color:#e74c3c;font-weight:700;">Connection error. Please try again.</div>';
@@ -653,12 +672,13 @@ function renderPassport() {
     document.getElementById('stat-stamps-' + type).textContent = earned;
     document.getElementById('stat-left-' + type).textContent = left;
 
+    const rewardItem = wepaRewards[type] || 'Reward';
     if (left === 0) {
       document.getElementById('reward-title-' + type).textContent = t('reward_' + type + '_done');
-      document.getElementById('reward-desc-' + type).textContent = t('reward_' + type + '_done_desc');
+      document.getElementById('reward-desc-' + type).textContent = rewardItem + ' — ' + (lang === 'de' ? 'zeig dem Personal!' : lang === 'es' ? '¡muéstraselo al personal!' : 'Show to staff!');
     } else {
       document.getElementById('reward-title-' + type).textContent = t('reward_' + type + '_go', { n: left });
-      document.getElementById('reward-desc-' + type).textContent = t('reward_' + type + '_desc');
+      document.getElementById('reward-desc-' + type).textContent = (lang === 'de' ? 'Sammel ' + (left === 1 ? 'einen' : left) + ' mehr → gratis ' : lang === 'es' ? 'Colecciona ' + left + ' más → ' : 'Collect ' + left + ' more → free ') + rewardItem;
     }
 
     document.getElementById('prog-label-' + type).textContent = earned + ' / ' + total;
@@ -751,6 +771,8 @@ async function createPassport() {
     document.getElementById('app-passport').style.display = 'block';
     renderPassport();
     switchType(currentType);
+    // Lock to passport type — hide switcher
+    document.getElementById('switcher').style.display = 'none';
   } catch(e) {
     btn.textContent = t('setup_btn');
     btn.disabled = false;
