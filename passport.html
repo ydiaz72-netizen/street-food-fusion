@@ -793,6 +793,13 @@ function openModal() {
   document.getElementById('m-id').textContent = passportId + ' · ' + t('passport_type_' + currentType);
   document.getElementById('m-stamps').textContent = earned;
   document.getElementById('m-stamps-label') && (document.getElementById('m-stamps-label').textContent = t('stamps_collected'));
+  const staffUrl = 'https://streetfoodfusion.de/staff.html?card=' + passportId;
+  if (typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(document.getElementById('qr-canvas'), staffUrl, {
+      width: 180, margin: 2,
+      color: { dark: '#1a1a1a', light: '#ffffff' }
+    }, function(err) { if (err) console.error('QR error:', err); });
+  }
   document.getElementById('staffModal').classList.add('open');
 }
 
