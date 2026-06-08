@@ -159,7 +159,6 @@
     .footer { text-align: center; padding: 18px 16px 40px; font-size: 12px; color: var(--soft); }
     .footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
   </style>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -381,8 +380,8 @@
     <div class="modal-stamps" id="m-stamps">0</div>
     <div class="modal-stamps-label" data-i="stamps_collected">stamps collected</div>
     <div style="margin:16px 0 8px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-bottom:10px;" data-i="scan_qr">Scan to add stamp</div>
-      <canvas id="qr-canvas" style="border-radius:12px;display:block;margin:0 auto;"></canvas>
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:10px;" data-i="scan_qr">Scan to add stamp</div>
+      <img id="qr-img" src="" alt="QR Code" style="border-radius:12px;display:block;margin:0 auto;width:180px;height:180px;background:#f5f5f5;" />
     </div>
     <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')" data-i="close">Close</button>
   </div>
@@ -795,14 +794,8 @@ function openModal() {
   document.getElementById('m-stamps-label') && (document.getElementById('m-stamps-label').textContent = t('stamps_collected'));
   document.getElementById('staffModal').classList.add('open');
   const staffUrl = 'https://streetfoodfusion.de/staff.html?card=' + passportId;
-  setTimeout(function() {
-    if (typeof QRCode !== 'undefined') {
-      QRCode.toCanvas(document.getElementById('qr-canvas'), staffUrl, {
-        width: 180, margin: 2,
-        color: { dark: '#1a1a1a', light: '#ffffff' }
-      }, function(err) { if (err) console.error('QR error:', err); });
-    }
-  }, 50);
+  const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(staffUrl);
+  document.getElementById('qr-img').src = qrApiUrl;
 }
 
 function closeModal(e) { if (e.target.id === 'staffModal') document.getElementById('staffModal').classList.remove('open'); }
