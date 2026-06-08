@@ -98,11 +98,10 @@
 
     /* Moncho */
     .moncho {
-  width: 300px;
-  height: 300px;
-  object-fit: contain;
-  margin-bottom: 40px;
-      mix-blend-mode: lighten;
+      width: 300px;
+      height: 300px;
+      object-fit: contain;
+      margin-bottom: 40px;
       opacity: 0;
       animation: rise 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) forwards;
     }
@@ -690,19 +689,39 @@
 </footer>
 
 <script>
-  function doSignup() {
+  async function doSignup() {
     const email = document.getElementById('heroEmail').value.trim();
     if (!email || !email.includes('@')) {
       document.getElementById('heroEmail').style.outline = '1px solid rgba(192,57,43,0.6)';
       document.getElementById('heroEmail').focus();
       return;
     }
-    const list = JSON.parse(localStorage.getItem('wepa_waitlist') || '[]');
-    list.push({ email, date: new Date().toISOString() });
-    localStorage.setItem('wepa_waitlist', JSON.stringify(list));
-    document.getElementById('signupField').style.display = 'none';
-    document.getElementById('signupNote').style.display = 'none';
-    document.getElementById('heroSuccess').style.display = 'block';
+    const btn = document.querySelector('.signup-field button');
+    btn.textContent = '...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://dgkcmyyafzhbtzdvtvji.supabase.co/rest/v1/wepa_waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email, source: 'streetfoodfusion.de' })
+      });
+      if (res.ok || res.status === 201) {
+        document.getElementById('signupField').style.display = 'none';
+        document.getElementById('signupNote').style.display = 'none';
+        document.getElementById('heroSuccess').style.display = 'block';
+      } else {
+        btn.textContent = 'Notify me';
+        btn.disabled = false;
+        document.getElementById('heroEmail').style.outline = '1px solid rgba(192,57,43,0.6)';
+      }
+    } catch(e) {
+      btn.textContent = 'Notify me';
+      btn.disabled = false;
+    }
   }
   document.getElementById('heroEmail').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSignup();
