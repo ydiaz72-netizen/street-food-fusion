@@ -159,6 +159,7 @@
     .footer { text-align: center; padding: 18px 16px 40px; font-size: 12px; color: var(--soft); }
     .footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
   </style>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -379,6 +380,10 @@
     <div class="modal-id" id="m-id">—</div>
     <div class="modal-stamps" id="m-stamps">0</div>
     <div class="modal-stamps-label" data-i="stamps_collected">stamps collected</div>
+    <div style="margin:16px 0 8px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-bottom:10px;" data-i="scan_qr">Scan to add stamp</div>
+      <canvas id="qr-canvas" style="border-radius:12px;display:block;margin:0 auto;"></canvas>
+    </div>
     <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')" data-i="close">Close</button>
   </div>
 </div>
@@ -393,6 +398,7 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 const TRANSLATIONS = {
   en: {
+    scan_qr: 'Staff: scan to add stamp',
     loading: 'Loading your passport...',
     setup_title: 'Welcome to Wepa!',
     setup_desc: 'This is your first visit. Choose your passport type and we\'ll remember you every time you tap your card.',
@@ -444,6 +450,7 @@ const TRANSLATIONS = {
     passport_type_pet: 'Pet Passport',
   },
   de: {
+    scan_qr: 'Personal: scannen zum Stempel hinzufügen',
     loading: 'Deinen Pass laden...',
     setup_title: 'Willkommen bei Wepa!',
     setup_desc: 'Das ist dein erster Besuch. Wähle deinen Passtyp und wir erkennen dich beim nächsten Mal automatisch.',
@@ -495,6 +502,7 @@ const TRANSLATIONS = {
     passport_type_pet: 'Tier-Pass',
   },
   es: {
+    scan_qr: 'Personal: escanear para añadir sello',
     loading: 'Cargando tu pasaporte...',
     setup_title: '¡Bienvenido a Wepa!',
     setup_desc: 'Esta es tu primera visita. Elige tu tipo de pasaporte y te reconoceremos cada vez que toques tu tarjeta.',

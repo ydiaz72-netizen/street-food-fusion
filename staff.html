@@ -80,6 +80,22 @@
     .search-btn:hover { background: var(--gold-dark); }
 
     /* RECENT */
+
+    .nfc-btn {
+      width: 100%; padding: 20px; background: rgba(232,168,62,0.1);
+      border: 1.5px solid rgba(232,168,62,0.3); border-radius: 16px;
+      font-family: var(--font); font-size: 18px; font-weight: 900;
+      color: var(--gold); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 10px;
+      margin-bottom: 14px; transition: all 0.2s;
+    }
+    .nfc-btn:hover { background: rgba(232,168,62,0.18); border-color: var(--gold); }
+    .nfc-btn.scanning { background: rgba(232,168,62,0.2); border-color: var(--gold); animation: pulse 1.2s ease-in-out infinite; }
+    .nfc-btn.unsupported { opacity: 0.35; cursor: not-allowed; border-style: dashed; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .manual-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .manual-divider::before, .manual-divider::after { content: ''; flex: 1; height: 1px; background: rgba(242,236,224,0.08); }
+    .manual-divider span { font-size: 11px; font-weight: 600; color: var(--soft); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
     .recent-title { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--soft); margin: 16px 0 10px; }
     .recent-list { display: flex; flex-direction: column; gap: 8px; }
     .recent-item {
@@ -203,7 +219,14 @@
     <!-- SEARCH VIEW -->
     <div id="view-search">
       <div class="search-card">
-        <div class="search-label">Enter or Scan Card ID</div>
+        <div class="search-label">Scan or Enter Card ID</div>
+        <button class="nfc-btn" id="nfc-btn" onclick="startNFC()">
+          <span id="nfc-btn-icon">📡</span>
+          <span id="nfc-btn-text">Tap a Card</span>
+        </button>
+        <div id="nfc-status" style="display:none;text-align:center;font-size:13px;color:var(--gold);font-weight:600;margin:10px 0;letter-spacing:0.5px;">Waiting for card...</div>
+        <div id="nfc-error" style="display:none;text-align:center;font-size:13px;color:#e74c3c;font-weight:600;margin:10px 0;"></div>
+        <div class="manual-divider"><span>or enter manually</span></div>
         <div class="search-row">
           <input class="search-input" id="card-input" placeholder="e.g. WEPA-001" maxlength="20"
             onkeydown="if(event.key==='Enter') lookupCard()" />
@@ -304,6 +327,7 @@ function checkPin() {
     document.getElementById('pinScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     renderRecent();
+    checkUrlCard();
   } else {
     document.getElementById('pinError').style.display = 'block';
     pinEntry = '';
@@ -459,6 +483,15 @@ function addToRecent(passport, stampCount) {
   localStorage.setItem('wepa_recent', JSON.stringify(recentCustomers));
 }
 
+function checkUrlCard() {
+  const params = new URLSearchParams(window.location.search);
+  const card = params.get('card');
+  if (card) {
+    document.getElementById('card-input').value = card.toUpperCase();
+    lookupCard();
+  }
+}
+
 function renderRecent() {
   const el = document.getElementById('recent-list');
   if (recentCustomers.length === 0) {
@@ -476,6 +509,90 @@ function renderRecent() {
       <div class="recent-stamps">${r.stamps} stamps</div>
     </div>`).join('');
 }
+
+// ── NFC ──
+let nfcReader = null;
+let nfcScanning = false;
+
+async function startNFC() {
+  if (!('NDEFReader' in window)) {
+    document.getElementById('nfc-btn').classList.add('unsupported');
+    document.getElementById('nfc-btn-text').textContent = 'NFC not supported on this browser';
+    document.getElementById('nfc-error').style.display = 'block';
+    document.getElementById('nfc-error').textContent = 'Use Android Chrome to scan cards. Enter the ID manually instead.';
+    return;
+  }
+
+  if (nfcScanning) {
+    stopNFC();
+    return;
+  }
+
+  try {
+    nfcReader = new NDEFReader();
+    await nfcReader.scan();
+    nfcScanning = true;
+
+    const btn = document.getElementById('nfc-btn');
+    btn.classList.add('scanning');
+    document.getElementById('nfc-btn-icon').textContent = '⏳';
+    document.getElementById('nfc-btn-text').textContent = 'Hold card to phone...';
+    document.getElementById('nfc-status').style.display = 'block';
+    document.getElementById('nfc-error').style.display = 'none';
+
+    nfcReader.onreading = ({ message }) => {
+      for (const record of message.records) {
+        if (record.recordType === 'url') {
+          const decoder = new TextDecoder();
+          const url = decoder.decode(record.data);
+          const match = url.match(/[?&]id=([A-Z0-9-]+)/i);
+          if (match) {
+            const cardId = match[1].toUpperCase();
+            stopNFC();
+            document.getElementById('card-input').value = cardId;
+            lookupCard();
+            return;
+          }
+        }
+      }
+      document.getElementById('nfc-error').style.display = 'block';
+      document.getElementById('nfc-error').textContent = 'Card read but no Wepa ID found. Try again.';
+    };
+
+    nfcReader.onreadingerror = () => {
+      document.getElementById('nfc-error').style.display = 'block';
+      document.getElementById('nfc-error').textContent = 'Could not read card. Try again.';
+    };
+
+  } catch(e) {
+    nfcScanning = false;
+    document.getElementById('nfc-error').style.display = 'block';
+    if (e.name === 'NotAllowedError') {
+      document.getElementById('nfc-error').textContent = 'NFC permission denied. Allow it in browser settings.';
+    } else {
+      document.getElementById('nfc-error').textContent = 'NFC error: ' + e.message;
+    }
+  }
+}
+
+function stopNFC() {
+  nfcScanning = false;
+  const btn = document.getElementById('nfc-btn');
+  btn.classList.remove('scanning');
+  document.getElementById('nfc-btn-icon').textContent = '📡';
+  document.getElementById('nfc-btn-text').textContent = 'Tap a Card';
+  document.getElementById('nfc-status').style.display = 'none';
+}
+
+// Check NFC support on load
+window.addEventListener('load', () => {
+  if (!('NDEFReader' in window)) {
+    const btn = document.getElementById('nfc-btn');
+    btn.classList.add('unsupported');
+    document.getElementById('nfc-btn-text').textContent = 'NFC scan (Android Chrome only)';
+  }
+});
+
 </script>
 </body>
 </html>
