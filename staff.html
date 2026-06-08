@@ -81,6 +81,10 @@
 
     /* RECENT */
 
+
+    #qr-scan-btn { margin-bottom: 10px; background: rgba(242,236,224,0.06); border-color: rgba(242,236,224,0.2); color: var(--cream); }
+    #qr-scan-btn:hover { background: rgba(242,236,224,0.12); }
+    #qr-scan-btn.scanning { animation: pulse 1.2s ease-in-out infinite; border-color: var(--gold); color: var(--gold); background: rgba(232,168,62,0.1); }
     .nfc-btn {
       width: 100%; padding: 20px; background: rgba(232,168,62,0.1);
       border: 1.5px solid rgba(232,168,62,0.3); border-radius: 16px;
@@ -177,6 +181,7 @@
     .spinner { width: 32px; height: 32px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 40px auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
 
@@ -220,6 +225,19 @@
     <div id="view-search">
       <div class="search-card">
         <div class="search-label">Scan or Enter Card ID</div>
+        <button class="nfc-btn" id="qr-scan-btn" onclick="startQRScan()">
+          <span id="qr-btn-icon">📷</span>
+          <span id="qr-btn-text">Scan QR Code</span>
+        </button>
+        <div id="qr-video-wrap" style="display:none;position:relative;border-radius:16px;overflow:hidden;margin-bottom:14px;background:#000;">
+          <video id="qr-video" style="width:100%;display:block;" playsinline></video>
+          <canvas id="qr-scan-canvas" style="display:none;"></canvas>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+            <div style="width:180px;height:180px;border:3px solid var(--gold);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,0.45);"></div>
+          </div>
+          <button onclick="stopQRScan()" style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div id="qr-error" style="display:none;text-align:center;font-size:13px;color:#e74c3c;font-weight:600;margin-bottom:10px;"></div>
         <button class="nfc-btn" id="nfc-btn" onclick="startNFC()">
           <span id="nfc-btn-icon">📡</span>
           <span id="nfc-btn-text">Tap a Card</span>
@@ -508,6 +526,77 @@ function renderRecent() {
       </div>
       <div class="recent-stamps">${r.stamps} stamps</div>
     </div>`).join('');
+}
+
+
+// ── QR SCANNER ──
+let qrStream = null;
+let qrAnimFrame = null;
+let qrScanning = false;
+
+async function startQRScan() {
+  if (qrScanning) { stopQRScan(); return; }
+
+  const btn = document.getElementById('qr-scan-btn');
+  const wrap = document.getElementById('qr-video-wrap');
+  const errEl = document.getElementById('qr-error');
+  errEl.style.display = 'none';
+
+  try {
+    qrStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }
+    });
+    const video = document.getElementById('qr-video');
+    video.srcObject = qrStream;
+    video.play();
+    wrap.style.display = 'block';
+    qrScanning = true;
+    btn.classList.add('scanning');
+    document.getElementById('qr-btn-icon').textContent = '⏳';
+    document.getElementById('qr-btn-text').textContent = 'Point at QR code...';
+    video.addEventListener('loadedmetadata', () => { scanQRFrame(); });
+  } catch(e) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Camera access denied. Use manual entry or NFC.';
+  }
+}
+
+function scanQRFrame() {
+  if (!qrScanning) return;
+  const video = document.getElementById('qr-video');
+  const canvas = document.getElementById('qr-scan-canvas');
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+    if (code) {
+      const url = code.data;
+      const match = url.match(/[?&](?:id|card)=([A-Z0-9-]+)/i);
+      if (match) {
+        const cardId = match[1].toUpperCase();
+        stopQRScan();
+        document.getElementById('card-input').value = cardId;
+        lookupCard();
+        return;
+      }
+    }
+  }
+  qrAnimFrame = requestAnimationFrame(scanQRFrame);
+}
+
+function stopQRScan() {
+  qrScanning = false;
+  if (qrStream) { qrStream.getTracks().forEach(t => t.stop()); qrStream = null; }
+  if (qrAnimFrame) { cancelAnimationFrame(qrAnimFrame); qrAnimFrame = null; }
+  document.getElementById('qr-video-wrap').style.display = 'none';
+  document.getElementById('qr-video').srcObject = null;
+  const btn = document.getElementById('qr-scan-btn');
+  btn.classList.remove('scanning');
+  document.getElementById('qr-btn-icon').textContent = '📷';
+  document.getElementById('qr-btn-text').textContent = 'Scan QR Code';
 }
 
 // ── NFC ──
