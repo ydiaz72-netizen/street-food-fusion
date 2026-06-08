@@ -696,6 +696,138 @@
 </footer>
 
 <script>
+  const I18N = {
+    en: {
+      nav_pill: 'Opening Soon',
+      hero_h1: 'The whole world<br><em>sits down to eat.</em>',
+      hero_sub: 'The only place in Erfurt where cultures,<br>stories, and flavours share one table.',
+      signup_eyebrow: 'Be first through the door',
+      signup_placeholder: 'your@email.com',
+      signup_btn: 'Notify me',
+      signup_note: 'No spam. Just the opening date.',
+      moncho_line: '"No passports required." — Moncho',
+      who_eyebrow: 'Who we are',
+      who_h: 'Two kitchens.<br><em>One table.</em>',
+      who_p: 'Wepa is the place in Erfurt where cultures meet, strangers become neighbours, and every meal is an invitation to discover another corner of the world. Born from a Puerto Rican family and a Pakistani kitchen — two households that believed food is how you show love.',
+      pr_h: 'Puerto Rico', pr_p: 'Where food is how you show love. Empanadas, mofongo, pernil — Caribbean soul that carries five centuries of history in every bite.',
+      pak_h: 'Pakistan', pak_p: 'Generations of spice, warmth, and home cooking. Samosa, pakora, biryani — made from scratch, the way it was always meant to be.',
+      why_eyebrow: 'Why we are different',
+      why_h: 'The menu<br><em>rotates. The world doesn't.</em>',
+      why_p: 'Every dish has a story. Every visit is a different corner of the world. Made from scratch, priced for everyone, available when we open our doors.',
+      dish_eyebrow: 'Coming when we open',
+      dish_title: 'Dish of the Month',
+      dish_sub: 'A new country. A new story. Every month.',
+      how_eyebrow: 'How to join',
+      how_h: 'Your seat<br><em>at the table.</em>',
+      how_p: 'Tap your NFC card or scan the QR code to open your Wepa Passport. Collect stamps with every visit. Earn rewards. No app. No login. No hassle.',
+      senior_h: 'Senior Passport', senior_p: 'Large text, simple layout. Built for ease. Collect stamps, earn free items.',
+      kids_h: 'Kids Passport', kids_p: 'Stars, adventures, prizes. Every visit is a new discovery.',
+      pet_h: 'Pet Passport', pet_p: 'Luna, Max, Bella — every furry regular deserves their own seat.',
+      passport_cta: 'Open My Passport →',
+      footer_quote: '"Come hungry. Leave with a story."',
+    },
+    de: {
+      nav_pill: 'Bald eröffnet',
+      hero_h1: 'Die ganze Welt<br><em>setzt sich zum Essen.</em>',
+      hero_sub: 'Der einzige Ort in Erfurt, wo Kulturen,<br>Geschichten und Aromen einen Tisch teilen.',
+      signup_eyebrow: 'Sei der Erste an der Tür',
+      signup_placeholder: 'deine@email.de',
+      signup_btn: 'Benachrichtigen',
+      signup_note: 'Kein Spam. Nur das Eröffnungsdatum.',
+      moncho_line: '„Kein Pass erforderlich." — Moncho',
+      who_eyebrow: 'Wer wir sind',
+      who_h: 'Zwei Küchen.<br><em>Ein Tisch.</em>',
+      who_p: 'Wepa ist der Ort in Erfurt, wo Kulturen aufeinandertreffen, Fremde zu Nachbarn werden und jede Mahlzeit eine Einladung ist, eine neue Ecke der Welt zu entdecken. Entstanden aus einer puerto-ricanischen Familie und einer pakistanischen Küche — zwei Haushalte, die glaubten: Essen ist, wie man Liebe zeigt.',
+      pr_h: 'Puerto Rico', pr_p: 'Wo Essen zeigt, wie man liebt. Empanadas, Mofongo, Pernil — karibische Seele mit fünf Jahrhunderten Geschichte in jedem Bissen.',
+      pak_h: 'Pakistan', pak_p: 'Generationen voller Gewürze, Wärme und Hausmannskost. Samosa, Pakora, Biryani — von Hand gemacht, so wie es immer sein sollte.',
+      why_eyebrow: 'Warum wir anders sind',
+      why_h: 'Das Menü<br><em>wechselt. Die Welt nicht.</em>',
+      why_p: 'Jedes Gericht hat eine Geschichte. Jeder Besuch ist eine andere Ecke der Welt. Von Hand gemacht, für alle erschwinglich, erhältlich wenn wir öffnen.',
+      dish_eyebrow: 'Kommt bei der Eröffnung',
+      dish_title: 'Gericht des Monats',
+      dish_sub: 'Ein neues Land. Eine neue Geschichte. Jeden Monat.',
+      how_eyebrow: 'Wie mitmachen',
+      how_h: 'Dein Platz<br><em>am Tisch.</em>',
+      how_p: 'Tippe deine NFC-Karte oder scanne den QR-Code um deinen Wepa-Pass zu öffnen. Sammle Stempel bei jedem Besuch. Verdiene Prämien. Keine App. Kein Login. Kein Aufwand.',
+      senior_h: 'Senior-Pass', senior_p: 'Große Schrift, einfaches Layout. Stempel sammeln, gratis Artikel verdienen.',
+      kids_h: 'Kinder-Pass', kids_p: 'Sterne, Abenteuer, Preise. Jeder Besuch ist eine neue Entdeckung.',
+      pet_h: 'Tier-Pass', pet_p: 'Luna, Max, Bella — jedes Tier verdient seinen eigenen Platz.',
+      passport_cta: 'Meinen Pass öffnen →',
+      footer_quote: '„Komm hungrig. Geh mit einer Geschichte."',
+    },
+    es: {
+      nav_pill: 'Próxima Apertura',
+      hero_h1: 'El mundo entero<br><em>se sienta a comer.</em>',
+      hero_sub: 'El único lugar en Erfurt donde culturas,<br>historias y sabores comparten una mesa.',
+      signup_eyebrow: 'Sé el primero en entrar',
+      signup_placeholder: 'tu@email.com',
+      signup_btn: 'Notifícame',
+      signup_note: 'Sin spam. Solo la fecha de apertura.',
+      moncho_line: '"No se requiere pasaporte." — Moncho',
+      who_eyebrow: 'Quiénes somos',
+      who_h: 'Dos cocinas.<br><em>Una mesa.</em>',
+      who_p: 'Wepa es el lugar en Erfurt donde las culturas se encuentran, los extraños se vuelven vecinos y cada comida es una invitación a descubrir otro rincón del mundo. Nacido de una familia puertorriqueña y una cocina pakistaní — dos hogares que creían que la comida es cómo se muestra el amor.',
+      pr_h: 'Puerto Rico', pr_p: 'Donde la comida es cómo muestras amor. Empanadas, mofongo, pernil — alma caribeña con cinco siglos de historia en cada bocado.',
+      pak_h: 'Pakistán', pak_p: 'Generaciones de especias, calidez y cocina casera. Samosa, pakora, biryani — hecho a mano, como siempre debió ser.',
+      why_eyebrow: 'Por qué somos diferentes',
+      why_h: 'El menú<br><em>cambia. El mundo no.</em>',
+      why_p: 'Cada plato tiene una historia. Cada visita es un rincón diferente del mundo. Hecho a mano, precio para todos, disponible cuando abramos.',
+      dish_eyebrow: 'Llega cuando abramos',
+      dish_title: 'Plato del Mes',
+      dish_sub: 'Un nuevo país. Una nueva historia. Cada mes.',
+      how_eyebrow: 'Cómo unirte',
+      how_h: 'Tu asiento<br><em>en la mesa.</em>',
+      how_p: 'Toca tu tarjeta NFC o escanea el código QR para abrir tu Pasaporte Wepa. Colecciona sellos en cada visita. Gana premios. Sin app. Sin login. Sin complicaciones.',
+      senior_h: 'Pasaporte Senior', senior_p: 'Texto grande, diseño simple. Colecciona sellos, gana artículos gratis.',
+      kids_h: 'Pasaporte Niños', kids_p: 'Estrellas, aventuras, premios. Cada visita es un nuevo descubrimiento.',
+      pet_h: 'Pasaporte Mascota', pet_p: 'Luna, Max, Bella — cada mascota merece su propio asiento.',
+      passport_cta: 'Abrir mi Pasaporte →',
+      footer_quote: '"Llega con hambre. Sal con una historia."',
+    }
+  };
+
+  let lang = localStorage.getItem('wepa_lang') || 'en';
+
+  function setLang(l) {
+    lang = l;
+    localStorage.setItem('wepa_lang', l);
+    document.querySelectorAll('.lb').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+    applyLang();
+  }
+
+  function applyLang() {
+    const d = I18N[lang] || I18N.en;
+    const s = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val; };
+    s('nav-pill', d.nav_pill);
+    s('hero-h1', d.hero_h1);
+    s('hero-sub', d.hero_sub);
+    s('signup-eyebrow', d.signup_eyebrow);
+    s('signup-btn', d.signup_btn);
+    s('signup-note', d.signup_note);
+    s('moncho-line', d.moncho_line);
+    s('who-eyebrow', d.who_eyebrow);
+    s('who-h', d.who_h);
+    s('who-p', d.who_p);
+    s('pr-h', d.pr_h); s('pr-p', d.pr_p);
+    s('pak-h', d.pak_h); s('pak-p', d.pak_p);
+    s('why-eyebrow', d.why_eyebrow);
+    s('why-h', d.why_h);
+    s('why-p', d.why_p);
+    s('dish-eyebrow', d.dish_eyebrow);
+    s('dish-title', d.dish_title);
+    s('dish-sub', d.dish_sub);
+    s('how-eyebrow', d.how_eyebrow);
+    s('how-h', d.how_h);
+    s('how-p', d.how_p);
+    s('senior-h', d.senior_h); s('senior-p', d.senior_p);
+    s('kids-h', d.kids_h); s('kids-p', d.kids_p);
+    s('pet-h', d.pet_h); s('pet-p', d.pet_p);
+    s('passport-cta', d.passport_cta);
+    s('footer-quote', d.footer_quote);
+    const inp = document.getElementById('heroEmail');
+    if (inp) inp.placeholder = d.signup_placeholder;
+  }
+
   async function doSignup() {
     const email = document.getElementById('heroEmail').value.trim();
     if (!email || !email.includes('@')) {
@@ -733,9 +865,10 @@
   document.getElementById('heroEmail').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSignup();
   });
-  // Apply saved language on load
-  document.querySelectorAll('.lb').forEach(b => { b.classList.toggle('active', b.textContent === lang.toUpperCase()); });
-  applyLang();
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.lb').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+    applyLang();
+  });
 </script>
 
 </body>
