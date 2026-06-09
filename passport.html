@@ -388,8 +388,18 @@
 </div>
 
 <div class="footer">
+  <div style="padding:16px;text-align:center;">
+  <a href="https://wepaexplorer.com/game.html?passport=" id="play-btn"
+    style="display:inline-flex;align-items:center;gap:10px;background:#e8a83e;color:#0a0600;padding:16px 32px;border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:900;text-decoration:none;">
+    🌍 Play Wepa Explorer
+  </a>
+</div>
+<div class="footer">
   Wepa Street Food Fusion · <a href="https://streetfoodfusion.de">streetfoodfusion.de</a> · <a href="https://setzio.com">Setzio</a>
 </div>
+<script>
+  document.getElementById('play-btn').href = 'https://wepaexplorer.com/game.html?passport=' + (passportId || '');
+</script>
 
 <script>
 const SB_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
