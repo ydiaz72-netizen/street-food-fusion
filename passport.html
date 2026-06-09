@@ -188,7 +188,7 @@
     <div class="setup-desc" data-i="setup_desc">This is your first visit. Choose your passport type and we'll remember you every time you tap your card.</div>
     <div class="setup-types">
       <div class="setup-type selected" id="stype-senior" onclick="selectType('senior')">
-        <div class="setup-type-emoji">👴</div>
+        <div class="setup-type-emoji">👑</div>
         <div class="setup-type-label" data-i="senior">Senior</div>
       </div>
       <div class="setup-type" id="stype-kids" onclick="selectType('kids')">
@@ -212,7 +212,7 @@
 
   <div class="switcher" id="switcher">
     <button class="type-btn active-senior" id="btn-senior" onclick="switchType('senior')">
-      <span>👴</span> <span data-i="senior">Senior</span>
+      <span>👑</span> <span data-i="senior">Senior</span>
     </button>
     <button class="type-btn" id="btn-kids" onclick="switchType('kids')">
       <span>🧒</span> <span data-i="kids">Kids</span>
@@ -806,7 +806,7 @@ async function submitWF(type) {
 }
 
 function openModal() {
-  const stampEmojis = { senior: '👴', kids: '🧒', pet: '🐕' };
+  const stampEmojis = { senior: '👑', kids: '🧒', pet: '🐕' };
   const maxStamps = { senior: 8, kids: 5, pet: 6 };
   const earned = Math.min(stampsData.length, maxStamps[currentType]);
   document.getElementById('m-emoji').textContent = stampEmojis[currentType];
