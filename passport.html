@@ -623,6 +623,13 @@ function setLang(l) {
   lang=l; localStorage.setItem('wepa_lang',l);
   document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active',b.textContent===l.toUpperCase()); });
   if(passportData) renderPassport();
+  // Update play button URLs with new lang
+  if(passportId){
+    ['senior','kids','pet'].forEach(function(t){
+      var pb=document.getElementById('play-btn-'+t);
+      if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId+'&lang='+lang;
+    });
+  }
 }
 
 function getPassportId() {
@@ -682,7 +689,7 @@ async function init() {
   document.getElementById('topbar-id').textContent=passportId;
   ['senior','kids','pet'].forEach(function(t){
     var pb=document.getElementById('play-btn-'+t);
-    if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+    if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId+'&lang='+lang;
   });
   await loadPassport();
   loadChampion();
@@ -941,7 +948,7 @@ async function createPassport() {
     document.getElementById('topbar-id').textContent=passportId;
     ['senior','kids','pet'].forEach(function(t){
       var pb=document.getElementById('play-btn-'+t);
-      if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+      if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId+'&lang='+lang;
     });
     passportData={id:passportId,name:name||null,email:email||null,passport_type:selectedType,created_at:new Date().toISOString(),points:0,question_index:0,last_question_asked:null,preferences:{},streak:0};
     stampsData=[]; currentType=selectedType;
