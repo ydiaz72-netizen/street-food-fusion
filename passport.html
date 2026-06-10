@@ -398,7 +398,10 @@
   Wepa Street Food Fusion · <a href="https://streetfoodfusion.de">streetfoodfusion.de</a> · <a href="https://setzio.com">Setzio</a>
 </div>
 <script>
-  document.getElementById('play-btn').href = 'https://wepaexplorer.com/game.html?passport=' + (passportId || '');
+  window.addEventListener('load', function() {
+    const btn = document.getElementById('play-btn');
+    if (btn && passportId) btn.href = 'https://wepaexplorer.com/game.html?passport=' + passportId;
+  });
 </script>
 
 <script>
