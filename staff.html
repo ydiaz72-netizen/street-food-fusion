@@ -184,6 +184,7 @@
     <div class="topbar-actions">
       <button class="topbar-btn active" id="tab-customers" onclick="showTab('customers')">Customers</button>
       <button class="topbar-btn" id="tab-champion" onclick="showTab('champion')">👑 Champion</button>
+      <button class="topbar-btn" id="tab-cards" onclick="showTab('cards')">🪪 Cards</button>
       <button class="topbar-btn" id="tab-settings" onclick="showTab('settings')">⚙️ Settings</button>
       <button class="topbar-btn" onclick="logout()">Lock</button>
     </div>
@@ -285,6 +286,15 @@
 
     </div>
 
+    <!-- CARDS TAB -->
+    <div id="view-cards" style="display:none;">
+      <div class="card">
+        <div class="card-label" style="margin-bottom:16px;">Physical Card Requests</div>
+        <p style="font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:18px;">Customers who requested a physical NFC card. Program their card to their passport URL, then mark as ready.</p>
+        <div id="card-requests-list"><div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">Loading...</div></div>
+      </div>
+    </div>
+
     <!-- SETTINGS TAB -->
     <div id="view-settings" style="display:none;">
 
@@ -371,12 +381,64 @@ function logout(){
 }
 
 function showTab(tab){
-  ['customers','champion','settings'].forEach(function(t){
+  ['customers','champion','cards','settings'].forEach(function(t){
     document.getElementById('view-'+t).style.display=t===tab?'block':'none';
     document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
   if(tab==='champion') loadChampionTab();
+  if(tab==='cards') loadCardsTab();
 }
+
+async function loadCardsTab() {
+  var el = document.getElementById('card-requests-list');
+  el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">Loading...</div>';
+  try {
+    var res = await fetch(SB_URL+'/rest/v1/wepa_card_requests?select=*&order=requested_at.desc', { headers:{ apikey:SB_KEY } });
+    var rows = await res.json();
+    if (!rows || rows.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--soft);font-size:14px;">No card requests yet.</div>';
+      return;
+    }
+    el.innerHTML = rows.map(function(r) {
+      var isPending = r.status === 'pending';
+      var date = new Date(r.requested_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      var passportUrl = 'https://streetfoodfusion.de/passport.html?id=' + r.passport_id;
+      return '<div style="background:rgba(242,236,224,0.03);border:1px solid var(--faint);border-radius:14px;padding:16px;margin-bottom:10px;">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+        + '<div>'
+        + '<div style="font-size:15px;font-weight:800;margin-bottom:2px;">' + (r.name||'Wepa Friend') + '</div>'
+        + '<div style="font-size:11px;color:var(--soft);font-family:monospace;letter-spacing:1px;">' + r.passport_id + '</div>'
+        + '<div style="font-size:11px;color:var(--soft);margin-top:3px;">' + date + '</div>'
+        + '</div>'
+        + '<div style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;'
+        + (isPending ? 'background:rgba(232,168,62,0.15);color:var(--gold);' : 'background:rgba(45,122,79,0.15);color:#6fcf97;')
+        + '">' + (isPending ? '⏳ Pending' : '✅ Ready') + '</div>'
+        + '</div>'
+        + '<div style="font-size:12px;color:var(--soft);margin-bottom:10px;word-break:break-all;">NFC URL: ' + passportUrl + '</div>'
+        + (isPending
+          ? '<button onclick="markCardReady(\'' + r.id + '\', this)" style="width:100%;padding:12px;background:var(--gold);color:var(--bg);border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;">✅ Mark as Ready for Pickup</button>'
+          : '<div style="font-size:13px;color:#6fcf97;font-weight:700;text-align:center;">Card ready — waiting for customer pickup</div>'
+        )
+        + '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:#e74c3c;font-size:14px;">Error loading requests.</div>';
+  }
+}
+
+async function markCardReady(id, btn) {
+  btn.disabled = true; btn.textContent = '...';
+  try {
+    await fetch(SB_URL+'/rest/v1/wepa_card_requests?id=eq.'+id, {
+      method:'PATCH',
+      headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
+      body:JSON.stringify({ status:'ready' })
+    });
+    loadCardsTab();
+  } catch(e) { btn.disabled=false; btn.textContent='✅ Mark as Ready for Pickup'; alert('Error. Try again.'); }
+}
+
+
 
 // QR
 function toggleQR(){

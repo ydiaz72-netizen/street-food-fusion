@@ -266,19 +266,32 @@
 </div>
 
 <div id="app-setup" style="display:none;" class="setup-screen">
-  <div class="setup-card">
+  <!-- CREATE -->
+  <div class="setup-card" id="setup-create-card">
     <div class="setup-emoji">🐸</div>
     <div class="setup-title">Welcome to Wepa!</div>
-    <div class="setup-desc">This is your first visit. Choose your passport type and we'll remember you every time you tap your card.</div>
+    <div class="setup-desc">Create your free digital passport. Collect stamps, earn rewards, and play Wepa Explorer.</div>
     <div class="setup-types">
       <div class="setup-type selected" id="stype-senior" onclick="selectType('senior')"><div class="setup-type-emoji">👑</div><div class="setup-type-label">Senior</div></div>
       <div class="setup-type" id="stype-kids" onclick="selectType('kids')"><div class="setup-type-emoji">🧒</div><div class="setup-type-label">Kids</div></div>
       <div class="setup-type" id="stype-pet" onclick="selectType('pet')"><div class="setup-type-emoji">🐾</div><div class="setup-type-label">Pet</div></div>
     </div>
     <input class="setup-input" id="setup-name" type="text" placeholder="Your name (optional)">
-    <input class="setup-input" id="setup-email" type="email" placeholder="Email (optional)">
-    <button class="setup-btn" onclick="createPassport()">Create My Passport</button>
-    <div class="setup-skip" onclick="createPassport()">Skip — just show me the passport</div>
+    <input class="setup-input" id="setup-email" type="email" placeholder="Email — your passport recovery key ✉️">
+    <div style="font-size:11px;color:var(--soft);margin-bottom:14px;text-align:left;padding:0 2px;">Your email lets you recover your passport on any device.</div>
+    <button class="setup-btn" onclick="createPassport()">Create My Passport 🐸</button>
+    <div class="setup-skip" onclick="showRecovery()">Already have a passport? Find it →</div>
+  </div>
+  <!-- RECOVERY -->
+  <div class="setup-card" id="setup-recovery-card" style="display:none;">
+    <div class="setup-emoji">🔍</div>
+    <div class="setup-title">Find My Passport</div>
+    <div class="setup-desc">Enter the email you used when creating your passport.</div>
+    <input class="setup-input" id="recovery-email" type="email" placeholder="your@email.com">
+    <button class="setup-btn" onclick="recoverPassport()">Find My Passport →</button>
+    <div class="setup-skip" onclick="showCreate()">← Back to create</div>
+    <div id="recovery-error" style="display:none;font-size:13px;color:#e74c3c;font-weight:700;margin-top:12px;text-align:center;"></div>
+    <div id="recovery-ok" style="display:none;background:var(--green-light);border-radius:12px;padding:14px;font-size:14px;font-weight:800;color:var(--green);margin-top:12px;text-align:center;"></div>
   </div>
 </div>
 
@@ -338,6 +351,8 @@
     <div class="card"><div class="card-title">📋 Visit History</div><div id="visits-senior"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
     <button class="staff-btn senior" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard()">🪪 Request a Physical NFC Card</button>
+    <div id="card-request-ok" style="display:none;background:var(--green-light);border-radius:14px;padding:14px;font-size:14px;font-weight:800;color:var(--green);text-align:center;margin-bottom:10px;">✅ Request sent! We'll have your card ready at Wepa.</div>
     <button class="waitlist-btn" onclick="toggleWF('senior')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-senior">
       <div class="wf-title">Stay in the loop!</div>
@@ -384,6 +399,7 @@
     <div class="card"><div class="card-title">🗺️ Adventure Log</div><div id="visits-kids"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
     <button class="staff-btn kids" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard()">🪪 Request a Physical NFC Card</button>
     <button class="waitlist-btn" style="border-color:var(--pink);color:var(--pink)" onclick="toggleWF('kids')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-kids">
       <div class="wf-title">Stay in the loop!</div>
@@ -429,6 +445,7 @@
     <div class="card"><div class="card-title">🗒️ Visit Notes</div><div id="visits-pet"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
     <button class="staff-btn pet" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard()">🪪 Request a Physical NFC Card</button>
     <button class="waitlist-btn" style="border-color:var(--teal);color:var(--teal)" onclick="toggleWF('pet')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-pet">
       <div class="wf-title">Stay in the loop!</div>
@@ -906,10 +923,89 @@ async function createPassport() {
     document.getElementById('app-passport').style.display='block';
     renderPassport(); switchType(currentType);
     document.getElementById('switcher').style.display='none';
+    // Show save prompt after short delay
+    setTimeout(function(){ showSavePrompt(); }, 800);
   } catch(e){ btn.textContent='Create My Passport'; btn.disabled=false; }
 }
 
-function shareWhatsApp(e) {
+function showRecovery() {
+  document.getElementById('setup-create-card').style.display='none';
+  document.getElementById('setup-recovery-card').style.display='block';
+}
+function showCreate() {
+  document.getElementById('setup-recovery-card').style.display='none';
+  document.getElementById('setup-create-card').style.display='block';
+}
+
+async function recoverPassport() {
+  var email = document.getElementById('recovery-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('recovery-error').style.display='block';
+    document.getElementById('recovery-error').textContent='Please enter a valid email.';
+    return;
+  }
+  var btn = document.querySelector('#setup-recovery-card .setup-btn');
+  btn.textContent='Searching...'; btn.disabled=true;
+  try {
+    var res = await fetch(SB_URL+'/rest/v1/wepa_passports?email=eq.'+encodeURIComponent(email)+'&select=id,name,passport_type', { headers:{ apikey:SB_KEY } });
+    var rows = await res.json();
+    if (!rows || rows.length === 0) {
+      document.getElementById('recovery-error').style.display='block';
+      document.getElementById('recovery-error').textContent='No passport found for that email. Double-check or create a new one.';
+      btn.textContent='Find My Passport →'; btn.disabled=false;
+      return;
+    }
+    var found = rows[0];
+    localStorage.setItem('wepa_passport_id', found.id);
+    var ok = document.getElementById('recovery-ok');
+    ok.style.display='block';
+    ok.textContent='Found it! Welcome back, '+(found.name||'Wepa Friend')+' 🐸 Reloading...';
+    setTimeout(function(){ window.location.href='https://streetfoodfusion.de/passport.html?id='+found.id; }, 1800);
+  } catch(e) {
+    document.getElementById('recovery-error').style.display='block';
+    document.getElementById('recovery-error').textContent='Connection error. Try again.';
+    btn.textContent='Find My Passport →'; btn.disabled=false;
+  }
+}
+
+async function requestPhysicalCard() {
+  if (!passportData) return;
+  var btn = event.target;
+  btn.disabled=true; btn.textContent='Sending request...';
+  try {
+    await fetch(SB_URL+'/rest/v1/wepa_card_requests', {
+      method:'POST',
+      headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
+      body:JSON.stringify({ passport_id:passportId, name:passportData.name||'Wepa Friend', status:'pending' })
+    });
+    btn.style.display='none';
+    document.getElementById('card-request-ok').style.display='block';
+  } catch(e) {
+    btn.disabled=false; btn.textContent='🪪 Request a Physical NFC Card';
+    alert('Could not send request. Try again.');
+  }
+}
+
+function showSavePrompt() {
+  var passportUrl = 'https://streetfoodfusion.de/passport.html?id=' + passportId;
+  // Try Web Share API first (mobile)
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Wepa Passport 🐸',
+      text: 'Save this link to keep your Wepa Passport!',
+      url: passportUrl
+    }).catch(function(){});
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(passportUrl).then(function(){
+      alert('Your passport link has been copied!\n\nSave it somewhere safe — it\'s the only way to access your passport from another device.\n\n' + passportUrl);
+    }).catch(function(){
+      alert('Your passport link:\n\n' + passportUrl + '\n\nSave this link to access your passport from any device!');
+    });
+  }
+}
+
+
   e.preventDefault();
   var msgs={en:'🐸 Hey! I just got my Wepa Passport at Wepa Street Food Fusion in Erfurt. Stamps, rewards, and the food is amazing! Get yours: https://streetfoodfusion.de',de:'🐸 Hey! Ich habe gerade meinen Wepa-Pass bekommen. Stempel, Prämien und tolles Essen! Hol dir deinen: https://streetfoodfusion.de',es:'🐸 ¡Hola! Acabo de obtener mi Pasaporte Wepa en Erfurt. ¡Sellos, premios y la comida es increíble! Obtén el tuyo: https://streetfoodfusion.de'};
   window.open('https://wa.me/?text='+encodeURIComponent(msgs[lang]||msgs.en),'_blank');
