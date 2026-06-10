@@ -76,15 +76,17 @@
     .welcome-meta { font-size: 13px; color: var(--soft); font-weight: 500; }
 
     /* LEVEL BADGE — tappable */
-    .level-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 900; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.18); cursor: pointer; transition: transform 0.15s; animation: badgePop 0.4s ease; position: relative; }
-    .level-badge:active { transform: scale(0.94); }
-    .level-badge.senior { background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; }
-    .level-badge.kids   { background: linear-gradient(135deg,#db2777,#f472b6); color: #fff; }
-    .level-badge.pet    { background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; }
-    .level-badge .pts-num { font-size: 13px; font-weight: 900; }
-    @keyframes badgePop { 0% { transform: scale(0.7); opacity: 0; } 80% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
-    @keyframes badgePulse { 0%,100% { box-shadow: 0 2px 10px rgba(232,168,62,0.3); } 50% { box-shadow: 0 0 20px rgba(232,168,62,0.7); } }
-    .level-badge.leveled-up { animation: badgePulse 0.8s ease 3; }
+    .level-badge { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 18px; font-weight: 900; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: transform 0.15s; animation: badgePop 0.5s cubic-bezier(0.34,1.56,0.64,1); position: relative; min-width: 90px; }
+    .level-badge:active { transform: scale(0.93); }
+    .level-badge.senior { background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; box-shadow: 0 4px 16px rgba(232,168,62,0.5), 0 0 0 2px rgba(232,168,62,0.2); }
+    .level-badge.kids   { background: linear-gradient(135deg,#db2777,#f472b6); color: #fff; box-shadow: 0 4px 16px rgba(219,39,119,0.5), 0 0 0 2px rgba(219,39,119,0.2); }
+    .level-badge.pet    { background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; box-shadow: 0 4px 16px rgba(14,116,144,0.5), 0 0 0 2px rgba(14,116,144,0.2); }
+    .level-badge-top { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 800; opacity: 0.85; margin-bottom: 1px; }
+    .level-badge-pts { font-size: 22px; font-weight: 900; line-height: 1; letter-spacing: -0.5px; }
+    .level-badge-pts-label { font-size: 10px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
+    @keyframes badgePop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes badgePulse { 0%,100% { transform: scale(1); } 25% { transform: scale(1.12); } 50% { transform: scale(1); } 75% { transform: scale(1.08); } }
+    .level-badge.leveled-up { animation: badgePulse 0.6s ease 3; }
 
     /* STREAK */
     .streak-bar { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: linear-gradient(135deg,#fff8f0,#fff3e0); border-radius: 12px; margin-bottom: 12px; border: 1px solid #ffe0b2; }
@@ -323,7 +325,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-senior">—</div>
-          <div class="level-badge senior" id="level-badge-senior" onclick="openDrawer()">🌱 <span class="pts-num">0</span> ⚡</div>
+          <div class="level-badge senior" id="level-badge-senior" onclick="openDrawer()"><div class="level-badge-top">🌱 <span id="level-name-senior">Newcomer</span></div><div class="level-badge-pts" id="level-pts-senior">0</div><div class="level-badge-pts-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-senior">Senior Passport</div>
       </div>
@@ -371,7 +373,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-kids">—</div>
-          <div class="level-badge kids" id="level-badge-kids" onclick="openDrawer()">🐣 <span class="pts-num">0</span> ⚡</div>
+          <div class="level-badge kids" id="level-badge-kids" onclick="openDrawer()"><div class="level-badge-top">🐣 <span id="level-name-kids">Hatchling</span></div><div class="level-badge-pts" id="level-pts-kids">0</div><div class="level-badge-pts-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-kids">Kids Passport</div>
       </div>
@@ -418,7 +420,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-pet">—</div>
-          <div class="level-badge pet" id="level-badge-pet" onclick="openDrawer()">🌱 <span class="pts-num">0</span> ⚡</div>
+          <div class="level-badge pet" id="level-badge-pet" onclick="openDrawer()"><div class="level-badge-top">🌱 <span id="level-name-pet">Newcomer</span></div><div class="level-badge-pts" id="level-pts-pet">0</div><div class="level-badge-pts-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-pet">Pet Passport</div>
       </div>
@@ -782,10 +784,12 @@ async function skipQuestion() {
 
 function renderLevelBadge(type, pts, leveledUp) {
   var lv=getLevel(type,pts);
+  var nameEl=document.getElementById('level-name-'+type);
+  var ptsEl=document.getElementById('level-pts-'+type);
   var badge=document.getElementById('level-badge-'+type);
-  if(!badge) return;
-  badge.innerHTML=lv.emoji+' '+lv.label+' <span class="pts-num">'+pts+'</span> ⚡';
-  if(leveledUp){ badge.classList.add('leveled-up'); setTimeout(function(){ badge.classList.remove('leveled-up'); },2500); }
+  if(nameEl) nameEl.textContent=lv.emoji+' '+lv.label;
+  if(ptsEl) ptsEl.textContent=pts;
+  if(badge && leveledUp){ badge.classList.add('leveled-up'); setTimeout(function(){ badge.classList.remove('leveled-up'); },2000); }
 }
 
 function openDrawer() {
