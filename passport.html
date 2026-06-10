@@ -31,12 +31,13 @@
     .switcher::-webkit-scrollbar { display: none; }
     .type-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 99px; border: 2px solid transparent; background: var(--card); font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--soft); cursor: pointer; white-space: nowrap; transition: all 0.15s; box-shadow: var(--shadow); min-height: 48px; }
     .type-btn.active-senior { background: var(--gold-light); border-color: var(--gold); color: var(--gold-dark); }
-    .type-btn.active-kids   { background: var(--pink-light);  border-color: var(--pink);  color: var(--pink); }
-    .type-btn.active-pet    { background: var(--teal-light);  border-color: var(--teal);  color: var(--teal); }
+    .type-btn.active-kids   { background: var(--pink-light); border-color: var(--pink); color: var(--pink); }
+    .type-btn.active-pet    { background: var(--teal-light); border-color: var(--teal); color: var(--teal); }
 
     .pview { display: none; padding: 16px; }
     .pview.active { display: block; }
 
+    /* SETUP */
     .setup-screen { padding: 16px; }
     .setup-card { background: var(--card); border-radius: 20px; padding: 28px; box-shadow: var(--shadow); text-align: center; }
     .setup-emoji { font-size: 64px; margin-bottom: 16px; }
@@ -44,16 +45,26 @@
     .setup-desc { font-size: 14px; color: var(--soft); font-weight: 400; line-height: 1.6; margin-bottom: 24px; }
     .setup-types { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 24px; }
     .setup-type { border: 2px solid #e5e7eb; border-radius: 14px; padding: 14px 8px; cursor: pointer; text-align: center; transition: all 0.15s; background: #f9fafb; }
-    .setup-type:hover { border-color: var(--gold); background: var(--gold-light); }
-    .setup-type.selected { border-color: var(--gold); background: var(--gold-light); }
+    .setup-type:hover, .setup-type.selected { border-color: var(--gold); background: var(--gold-light); }
     .setup-type-emoji { font-size: 28px; margin-bottom: 6px; }
     .setup-type-label { font-size: 13px; font-weight: 700; }
     .setup-input { width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: var(--font); font-size: 16px; color: var(--text); outline: none; background: #f9fafb; margin-bottom: 12px; transition: border-color 0.2s; }
     .setup-input:focus { border-color: var(--gold); background: #fff; }
-    .setup-btn { width: 100%; padding: 16px; background: var(--gold); color: #fff; border: none; border-radius: 12px; font-family: var(--font); font-size: 16px; font-weight: 900; cursor: pointer; transition: background 0.2s; }
-    .setup-btn:hover { background: var(--gold-dark); }
+    .setup-btn { width: 100%; padding: 16px; background: var(--gold); color: #fff; border: none; border-radius: 12px; font-family: var(--font); font-size: 16px; font-weight: 900; cursor: pointer; }
     .setup-skip { font-size: 13px; color: var(--soft); margin-top: 12px; cursor: pointer; text-decoration: underline; }
 
+    /* CHAMPION BANNER */
+    .champion-banner { margin: 0 16px 12px; border-radius: 18px; padding: 16px 18px; background: linear-gradient(135deg,#1a0f00,#2d1a00); border: 1.5px solid rgba(232,168,62,0.4); display: none; }
+    .champion-banner.visible { display: block; }
+    .champion-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 6px; }
+    .champion-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .champion-left { flex: 1; }
+    .champion-name { font-size: 16px; font-weight: 900; color: var(--gold); margin-bottom: 2px; }
+    .champion-reward { font-size: 12px; color: rgba(242,236,224,0.6); font-weight: 500; }
+    .champion-pts { font-size: 22px; font-weight: 900; color: var(--gold); white-space: nowrap; }
+    .champion-share-btn { font-size: 11px; font-weight: 800; color: var(--gold); background: rgba(232,168,62,0.15); border: 1px solid rgba(232,168,62,0.3); padding: 6px 12px; border-radius: 99px; cursor: pointer; white-space: nowrap; margin-top: 8px; display: inline-block; }
+
+    /* WELCOME */
     .welcome { border-radius: 20px; padding: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
     .welcome.senior { background: linear-gradient(135deg,#fff8f0,#fff3e0); border: 1.5px solid #ffe0b2; }
     .welcome.kids   { background: linear-gradient(135deg,#fdf2f8,#fce7f3); border: 1.5px solid #fbcfe8; }
@@ -64,12 +75,24 @@
     .welcome-name { font-size: 20px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .welcome-meta { font-size: 13px; color: var(--soft); font-weight: 500; }
 
-    .level-badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 99px; font-size: 12px; font-weight: 900; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: badgePop 0.4s ease; }
+    /* LEVEL BADGE — tappable */
+    .level-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 900; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.18); cursor: pointer; transition: transform 0.15s; animation: badgePop 0.4s ease; position: relative; }
+    .level-badge:active { transform: scale(0.94); }
     .level-badge.senior { background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; }
     .level-badge.kids   { background: linear-gradient(135deg,#db2777,#f472b6); color: #fff; }
     .level-badge.pet    { background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; }
-    @keyframes badgePop { 0% { transform: scale(0.7); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+    .level-badge .pts-num { font-size: 13px; font-weight: 900; }
+    @keyframes badgePop { 0% { transform: scale(0.7); opacity: 0; } 80% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes badgePulse { 0%,100% { box-shadow: 0 2px 10px rgba(232,168,62,0.3); } 50% { box-shadow: 0 0 20px rgba(232,168,62,0.7); } }
+    .level-badge.leveled-up { animation: badgePulse 0.8s ease 3; }
 
+    /* STREAK */
+    .streak-bar { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: linear-gradient(135deg,#fff8f0,#fff3e0); border-radius: 12px; margin-bottom: 12px; border: 1px solid #ffe0b2; }
+    .streak-fire { font-size: 18px; }
+    .streak-text { font-size: 13px; font-weight: 800; color: var(--gold-dark); }
+    .streak-sub  { font-size: 11px; color: var(--soft); margin-left: auto; }
+
+    /* STATS */
     .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
     .stat { background: var(--card); border-radius: 16px; padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
     .stat-num { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
@@ -77,6 +100,7 @@
     .stat-num.pet  { color: var(--teal); }
     .stat-label { font-size: 12px; font-weight: 700; color: var(--soft); }
 
+    /* REWARD */
     .reward { border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .reward.senior { background: var(--green-light); border: 1.5px solid var(--green); }
     .reward.kids   { background: var(--pink-light);  border: 1.5px solid var(--pink); }
@@ -85,17 +109,19 @@
     .reward-title { font-size: 17px; font-weight: 900; margin-bottom: 3px; }
     .reward-desc  { font-size: 13px; color: var(--soft); font-weight: 500; line-height: 1.4; }
 
+    /* CARD */
     .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
     .card-title { font-size: 17px; font-weight: 900; margin-bottom: 4px; }
     .card-sub   { font-size: 13px; color: var(--soft); font-weight: 500; margin-bottom: 16px; }
 
+    /* STAMPS */
     .stamp-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
     .stamp { aspect-ratio:1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2.5px dashed #e5e7eb; background: #f9fafb; position: relative; transition: all 0.2s; }
-    .stamp.earned        { border: 2.5px solid var(--gold);  background: var(--gold-light); }
-    .stamp.earned.kids   { border-color: var(--pink);  background: var(--pink-light); }
-    .stamp.earned.pet    { border-color: var(--teal);  background: var(--teal-light); }
-    .stamp.reward-slot   { border-color: var(--green); background: var(--green-light); }
-    .stamp.empty::after  { content: attr(data-n); position: absolute; font-size: 15px; font-weight: 800; color: #d1d5db; }
+    .stamp.earned      { border: 2.5px solid var(--gold); background: var(--gold-light); }
+    .stamp.earned.kids { border-color: var(--pink); background: var(--pink-light); }
+    .stamp.earned.pet  { border-color: var(--teal); background: var(--teal-light); }
+    .stamp.reward-slot { border-color: var(--green); background: var(--green-light); }
+    .stamp.empty::after { content: attr(data-n); position: absolute; font-size: 15px; font-weight: 800; color: #d1d5db; }
 
     .prog-wrap { margin-top: 16px; }
     .prog-labels { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 7px; }
@@ -104,6 +130,7 @@
     .prog-fill.kids { background: linear-gradient(90deg,var(--pink),#f472b6); }
     .prog-fill.pet  { background: linear-gradient(90deg,var(--teal),#22d3ee); }
 
+    /* VISITS */
     .visit { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f3f4f6; }
     .visit:last-child { border-bottom: none; padding-bottom: 0; }
     .visit-dot { width: 38px; height: 38px; border-radius: 50%; background: var(--gold-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
@@ -111,24 +138,24 @@
     .visit-date  { font-size: 12px; color: var(--soft); font-weight: 500; }
     .visit-badge { font-size: 11px; font-weight: 700; color: var(--gold-dark); background: var(--gold-light); padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
 
+    /* LOADING */
     .loading { text-align: center; padding: 60px 20px; }
     .spinner { width: 36px; height: 36px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: 15px; color: var(--soft); font-weight: 500; }
     .no-visits { text-align: center; padding: 24px; color: var(--soft); font-size: 14px; font-weight: 500; }
 
+    /* BUTTONS */
     .staff-btn { width: 100%; padding: 18px; border: none; border-radius: 18px; font-family: var(--font); font-size: 17px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; color: #fff; transition: transform 0.15s; }
     .staff-btn:active { transform: scale(0.97); }
     .staff-btn.senior { background: var(--gold); }
     .staff-btn.kids   { background: var(--pink); }
     .staff-btn.pet    { background: var(--teal); }
 
-    .whatsapp-btn { width: 100%; padding: 16px; background: #25D366; border: none; border-radius: 18px; font-family: var(--font); font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; transition: transform 0.15s, background 0.2s; text-decoration: none; }
-    .whatsapp-btn:hover { background: #1da851; }
+    .whatsapp-btn { width: 100%; padding: 16px; background: #25D366; border: none; border-radius: 18px; font-family: var(--font); font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; transition: transform 0.15s; text-decoration: none; }
     .whatsapp-btn:active { transform: scale(0.97); }
 
-    .waitlist-btn { width: 100%; padding: 16px; background: #fff; border: 2px solid var(--gold); border-radius: 18px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--gold-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; transition: background 0.2s; }
-    .waitlist-btn:hover { background: var(--gold-light); }
+    .waitlist-btn { width: 100%; padding: 16px; background: #fff; border: 2px solid var(--gold); border-radius: 18px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--gold-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
 
     .wf { display: none; background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
     .wf.open { display: block; }
@@ -136,26 +163,49 @@
     .wf-desc  { font-size: 13px; color: var(--soft); margin-bottom: 16px; line-height: 1.5; }
     .wf-label { display: block; font-size: 14px; font-weight: 800; margin-bottom: 7px; }
     .wf-input { width: 100%; padding: 13px 15px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: var(--font); font-size: 16px; color: var(--text); outline: none; background: #f9fafb; margin-bottom: 12px; transition: border-color 0.2s; }
-    .wf-input:focus { border-color: var(--gold); background: #fff; }
+    .wf-input:focus { border-color: var(--gold); }
     .wf-submit { width: 100%; padding: 14px; background: var(--gold); color: #fff; border: none; border-radius: 12px; font-family: var(--font); font-size: 15px; font-weight: 900; cursor: pointer; }
     .wf-ok { display: none; background: var(--green-light); border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 800; color: var(--green); text-align: center; }
 
+    /* STAFF MODAL */
     .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-bg.open { display: flex; }
     .modal { background: #fff; border-radius: 28px; padding: 32px 24px; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
-    .modal-emoji  { font-size: 52px; margin-bottom: 12px; }
-    .modal-label  { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
-    .modal-name   { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
-    .modal-id     { font-size: 12px; color: var(--soft); font-weight: 600; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 18px; }
+    .modal-emoji { font-size: 52px; margin-bottom: 12px; }
+    .modal-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
+    .modal-name  { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+    .modal-id    { font-size: 12px; color: var(--soft); font-weight: 600; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 18px; }
     .modal-stamps { font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
     .modal-stamps-label { font-size: 13px; color: var(--soft); font-weight: 600; margin-bottom: 22px; }
-    .modal-close  { width: 100%; padding: 14px; background: #f3f4f6; border: none; border-radius: 12px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--text); cursor: pointer; }
+    .modal-close { width: 100%; padding: 14px; background: #f3f4f6; border: none; border-radius: 12px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--text); cursor: pointer; }
 
-    /* COQUI QUESTION MODAL — slides up from bottom */
+    /* BADGE DRAWER */
+    .drawer-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; align-items: flex-end; justify-content: center; }
+    .drawer-bg.open { display: flex; }
+    .drawer { background: #fff; border-radius: 28px 28px 0 0; padding: 28px 24px 44px; width: 100%; max-width: 480px; box-shadow: 0 -8px 40px rgba(0,0,0,0.15); animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .drawer-handle { width: 40px; height: 4px; background: #e5e7eb; border-radius: 99px; margin: 0 auto 20px; }
+    .drawer-level-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .drawer-badge-big { font-size: 36px; }
+    .drawer-level-name { font-size: 22px; font-weight: 900; color: var(--text); }
+    .drawer-level-sub  { font-size: 13px; color: var(--soft); font-weight: 500; }
+    .drawer-pts-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .drawer-pts-label { font-size: 13px; font-weight: 700; color: var(--soft); }
+    .drawer-pts-val { font-size: 24px; font-weight: 900; color: var(--gold); }
+    .drawer-prog-track { height: 12px; background: #f3f4f6; border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+    .drawer-prog-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg,var(--gold),#f5c842); transition: width 1s ease; }
+    .drawer-prog-labels { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--soft); margin-bottom: 20px; }
+    .drawer-next-tease { background: var(--gold-light); border-radius: 14px; padding: 14px 16px; font-size: 14px; font-weight: 700; color: var(--gold-dark); text-align: center; margin-bottom: 20px; }
+    .drawer-streak { display: flex; align-items: center; gap: 10px; background: #fff8f0; border-radius: 14px; padding: 14px 16px; border: 1px solid #ffe0b2; margin-bottom: 16px; }
+    .drawer-streak-fire { font-size: 24px; }
+    .drawer-streak-text { font-size: 15px; font-weight: 900; color: var(--gold-dark); }
+    .drawer-streak-sub  { font-size: 12px; color: var(--soft); }
+    .drawer-close { width: 100%; padding: 14px; background: #f3f4f6; border: none; border-radius: 14px; font-family: var(--font); font-size: 15px; font-weight: 800; color: var(--text); cursor: pointer; }
+
+    /* COQUI MODAL */
     .coqui-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: flex-end; justify-content: center; }
     .coqui-modal-bg.open { display: flex; }
     .coqui-modal { background: #fff; border-radius: 28px 28px 0 0; padding: 32px 24px 44px; width: 100%; max-width: 480px; text-align: center; box-shadow: 0 -8px 40px rgba(0,0,0,0.2); animation: slideUp 0.35s ease; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .coqui-frog { font-size: 60px; display: inline-block; animation: bounce 0.7s ease infinite alternate; margin-bottom: 6px; }
     @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
     .coqui-points-badge { display: inline-block; background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; font-size: 13px; font-weight: 900; padding: 5px 16px; border-radius: 99px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(232,168,62,0.4); }
@@ -171,6 +221,27 @@
     .coqui-confirmed-text { font-size: 20px; font-weight: 900; color: var(--green); margin-bottom: 6px; }
     .coqui-confirmed-sub  { font-size: 14px; color: var(--soft); }
 
+    /* CONFETTI */
+    .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 300; overflow: hidden; }
+    .confetti-piece { position: absolute; width: 10px; height: 10px; top: -20px; animation: confettiFall linear forwards; border-radius: 2px; }
+    @keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+    /* SHARE CARD MODAL */
+    .share-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 250; align-items: center; justify-content: center; padding: 20px; }
+    .share-modal-bg.open { display: flex; }
+    .share-card { background: linear-gradient(135deg,#1a0f00,#2d1a00); border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 340px; text-align: center; border: 2px solid rgba(232,168,62,0.5); }
+    .share-card-crown { font-size: 52px; margin-bottom: 8px; }
+    .share-card-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 8px; }
+    .share-card-name { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+    .share-card-pts { font-size: 16px; font-weight: 700; color: rgba(242,236,224,0.6); margin-bottom: 16px; }
+    .share-card-reward { background: rgba(232,168,62,0.15); border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 800; color: var(--gold); margin-bottom: 20px; border: 1px solid rgba(232,168,62,0.25); }
+    .share-card-tag { font-size: 12px; color: rgba(242,236,224,0.35); margin-bottom: 20px; }
+    .share-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .share-wa  { padding: 13px; background: #25D366; border: none; border-radius: 12px; font-family: var(--font); font-size: 13px; font-weight: 900; color: #fff; cursor: pointer; }
+    .share-ig  { padding: 13px; background: linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border: none; border-radius: 12px; font-family: var(--font); font-size: 13px; font-weight: 900; color: #fff; cursor: pointer; }
+    .share-close { width: 100%; padding: 13px; background: rgba(242,236,224,0.08); border: none; border-radius: 12px; font-family: var(--font); font-size: 14px; font-weight: 800; color: rgba(242,236,224,0.5); cursor: pointer; }
+
+    /* FOOTER */
     .footer { text-align: center; padding: 18px 16px 40px; font-size: 12px; color: var(--soft); }
     .footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
   </style>
@@ -191,40 +262,45 @@
 
 <div id="app-loading" class="loading">
   <div class="spinner"></div>
-  <div class="loading-text" data-i="loading">Loading your passport...</div>
+  <div class="loading-text">Loading your passport...</div>
 </div>
 
 <div id="app-setup" style="display:none;" class="setup-screen">
   <div class="setup-card">
     <div class="setup-emoji">🐸</div>
-    <div class="setup-title" data-i="setup_title">Welcome to Wepa!</div>
-    <div class="setup-desc" data-i="setup_desc">This is your first visit. Choose your passport type and we'll remember you every time you tap your card.</div>
+    <div class="setup-title">Welcome to Wepa!</div>
+    <div class="setup-desc">This is your first visit. Choose your passport type and we'll remember you every time you tap your card.</div>
     <div class="setup-types">
-      <div class="setup-type selected" id="stype-senior" onclick="selectType('senior')">
-        <div class="setup-type-emoji">👑</div>
-        <div class="setup-type-label" data-i="senior">Senior</div>
-      </div>
-      <div class="setup-type" id="stype-kids" onclick="selectType('kids')">
-        <div class="setup-type-emoji">🧒</div>
-        <div class="setup-type-label" data-i="kids">Kids</div>
-      </div>
-      <div class="setup-type" id="stype-pet" onclick="selectType('pet')">
-        <div class="setup-type-emoji">🐾</div>
-        <div class="setup-type-label" data-i="pet">Pet</div>
-      </div>
+      <div class="setup-type selected" id="stype-senior" onclick="selectType('senior')"><div class="setup-type-emoji">👑</div><div class="setup-type-label">Senior</div></div>
+      <div class="setup-type" id="stype-kids" onclick="selectType('kids')"><div class="setup-type-emoji">🧒</div><div class="setup-type-label">Kids</div></div>
+      <div class="setup-type" id="stype-pet" onclick="selectType('pet')"><div class="setup-type-emoji">🐾</div><div class="setup-type-label">Pet</div></div>
     </div>
     <input class="setup-input" id="setup-name" type="text" placeholder="Your name (optional)">
     <input class="setup-input" id="setup-email" type="email" placeholder="Email (optional)">
-    <button class="setup-btn" onclick="createPassport()" data-i="setup_btn">Create My Passport</button>
-    <div class="setup-skip" onclick="createPassport()" data-i="setup_skip">Skip — just show me the passport</div>
+    <button class="setup-btn" onclick="createPassport()">Create My Passport</button>
+    <div class="setup-skip" onclick="createPassport()">Skip — just show me the passport</div>
   </div>
 </div>
 
 <div id="app-passport" style="display:none;">
+
+  <!-- CHAMPION BANNER -->
+  <div class="champion-banner" id="champion-banner">
+    <div class="champion-eyebrow">👑 This Week's Champion</div>
+    <div class="champion-row">
+      <div class="champion-left">
+        <div class="champion-name" id="champ-name">—</div>
+        <div class="champion-reward" id="champ-reward">—</div>
+      </div>
+      <div class="champion-pts"><span id="champ-pts">0</span> ⚡</div>
+    </div>
+    <div class="champion-share-btn" id="champ-share-btn" onclick="openShareModal()" style="display:none;">🏆 Share your win →</div>
+  </div>
+
   <div class="switcher" id="switcher">
-    <button class="type-btn active-senior" id="btn-senior" onclick="switchType('senior')"><span>👑</span> <span data-i="senior">Senior</span></button>
-    <button class="type-btn" id="btn-kids" onclick="switchType('kids')"><span>🧒</span> <span data-i="kids">Kids</span></button>
-    <button class="type-btn" id="btn-pet" onclick="switchType('pet')"><span>🐾</span> <span data-i="pet">Pet</span></button>
+    <button class="type-btn active-senior" id="btn-senior" onclick="switchType('senior')"><span>👑</span> <span>Senior</span></button>
+    <button class="type-btn" id="btn-kids" onclick="switchType('kids')"><span>🧒</span> <span>Kids</span></button>
+    <button class="type-btn" id="btn-pet" onclick="switchType('pet')"><span>🐾</span> <span>Pet</span></button>
   </div>
 
   <!-- SENIOR -->
@@ -234,39 +310,42 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-senior">—</div>
-          <div class="level-badge senior" id="level-badge-senior">🌱 Newcomer</div>
+          <div class="level-badge senior" id="level-badge-senior" onclick="openDrawer()">🌱 <span class="pts-num">0</span> ⚡</div>
         </div>
         <div class="welcome-meta" id="welcome-meta-senior">Senior Passport</div>
       </div>
     </div>
+    <div class="streak-bar" id="streak-bar-senior" style="display:none;">
+      <span class="streak-fire">🔥</span>
+      <span class="streak-text" id="streak-text-senior">3 day streak!</span>
+      <span class="streak-sub">Come back tomorrow to keep it going</span>
+    </div>
     <div class="stats">
-      <div class="stat"><div class="stat-num" id="stat-visits-senior">0</div><div class="stat-label" data-i="visits">Visits</div></div>
-      <div class="stat"><div class="stat-num" id="stat-stamps-senior">0</div><div class="stat-label" data-i="stamps">Stamps</div></div>
-      <div class="stat"><div class="stat-num" id="stat-left-senior">8</div><div class="stat-label" data-i="to_reward">To Reward</div></div>
+      <div class="stat"><div class="stat-num" id="stat-visits-senior">0</div><div class="stat-label">Visits</div></div>
+      <div class="stat"><div class="stat-num" id="stat-stamps-senior">0</div><div class="stat-label">Stamps</div></div>
+      <div class="stat"><div class="stat-num" id="stat-left-senior">8</div><div class="stat-label">To Reward</div></div>
     </div>
     <div class="reward senior"><div class="reward-icon">🎁</div><div><div class="reward-title" id="reward-title-senior">—</div><div class="reward-desc" id="reward-desc-senior">—</div></div></div>
     <div class="card">
-      <div class="card-title" data-i="your_stamps">⭐ Your Stamps</div>
-      <div class="card-sub" data-i="stamps_sub_senior">Collect 8 stamps — get a free item</div>
+      <div class="card-title">⭐ Your Stamps</div>
+      <div class="card-sub">Collect 8 stamps — get a free item</div>
       <div class="stamp-grid" id="stamps-senior"></div>
       <div class="prog-wrap">
         <div class="prog-labels"><span id="prog-label-senior">0 / 8</span><span id="prog-pct-senior" style="color:var(--gold)">0%</span></div>
         <div class="prog-track"><div class="prog-fill" id="prog-fill-senior" style="width:0%"></div></div>
       </div>
     </div>
-    <div class="card"><div class="card-title" data-i="visit_history">📋 Visit History</div><div id="visits-senior"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div></div>
-    <button class="staff-btn senior" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
-    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span data-i="share_whatsapp">Share Wepa with a friend</span></a>
-    <button class="waitlist-btn" onclick="toggleWF('senior')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="card"><div class="card-title">📋 Visit History</div><div id="visits-senior"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <button class="staff-btn senior" onclick="openModal()">📲 Show to Staff</button>
+    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" onclick="toggleWF('senior')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-senior">
-      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
-      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
-      <label class="wf-label" data-i="name_optional">Name (optional)</label>
-      <input class="wf-input" id="wf-name-senior" type="text">
-      <label class="wf-label" data-i="your_email">Your Email</label>
-      <input class="wf-input" id="wf-email-senior" type="email" placeholder="your@email.com">
-      <button class="wf-submit" onclick="submitWF('senior')" data-i="count_me_in">Count Me In!</button>
-      <div class="wf-ok" id="wf-ok-senior" data-i="wf_success">You're on the list!</div>
+      <div class="wf-title">Stay in the loop!</div>
+      <div class="wf-desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label">Name (optional)</label><input class="wf-input" id="wf-name-senior" type="text">
+      <label class="wf-label">Your Email</label><input class="wf-input" id="wf-email-senior" type="email" placeholder="your@email.com">
+      <button class="wf-submit" onclick="submitWF('senior')">Count Me In! 🌮</button>
+      <div class="wf-ok" id="wf-ok-senior">You're on the list! See you soon.</div>
     </div>
   </div>
 
@@ -277,37 +356,41 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-kids">—</div>
-          <div class="level-badge kids" id="level-badge-kids">🐣 Hatchling</div>
+          <div class="level-badge kids" id="level-badge-kids" onclick="openDrawer()">🐣 <span class="pts-num">0</span> ⚡</div>
         </div>
         <div class="welcome-meta" id="welcome-meta-kids">Kids Passport</div>
       </div>
     </div>
+    <div class="streak-bar" id="streak-bar-kids" style="display:none;background:linear-gradient(135deg,#fdf2f8,#fce7f3);border-color:#fbcfe8;">
+      <span class="streak-fire">🔥</span>
+      <span class="streak-text" id="streak-text-kids" style="color:var(--pink);">3 day streak!</span>
+      <span class="streak-sub">Come back tomorrow!</span>
+    </div>
     <div class="stats">
-      <div class="stat"><div class="stat-num kids" id="stat-visits-kids">0</div><div class="stat-label" data-i="visits">Visits</div></div>
-      <div class="stat"><div class="stat-num kids" id="stat-stamps-kids">0</div><div class="stat-label" data-i="stars">Stars</div></div>
-      <div class="stat"><div class="stat-num kids" id="stat-left-kids">5</div><div class="stat-label" data-i="to_prize">To Prize!</div></div>
+      <div class="stat"><div class="stat-num kids" id="stat-visits-kids">0</div><div class="stat-label">Visits</div></div>
+      <div class="stat"><div class="stat-num kids" id="stat-stamps-kids">0</div><div class="stat-label">Stars</div></div>
+      <div class="stat"><div class="stat-num kids" id="stat-left-kids">5</div><div class="stat-label">To Prize!</div></div>
     </div>
     <div class="reward kids"><div class="reward-icon">🏆</div><div><div class="reward-title" id="reward-title-kids">—</div><div class="reward-desc" id="reward-desc-kids">—</div></div></div>
     <div class="card">
-      <div class="card-title" data-i="your_stars">⭐ Your Stars</div>
-      <div class="card-sub" data-i="stamps_sub_kids">Collect 5 stars — win a prize!</div>
+      <div class="card-title">⭐ Your Stars</div>
+      <div class="card-sub">Collect 5 stars — win a prize!</div>
       <div class="stamp-grid" id="stamps-kids"></div>
       <div class="prog-wrap">
         <div class="prog-labels"><span id="prog-label-kids">0 / 5</span><span id="prog-pct-kids" style="color:var(--pink)">0%</span></div>
         <div class="prog-track"><div class="prog-fill kids" id="prog-fill-kids" style="width:0%"></div></div>
       </div>
     </div>
-    <div class="card"><div class="card-title" data-i="adventure_log">🗺️ Adventure Log</div><div id="visits-kids"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div></div>
-    <button class="staff-btn kids" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
-    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span data-i="share_whatsapp">Share Wepa with a friend</span></a>
-    <button class="waitlist-btn" style="border-color:var(--pink);color:var(--pink)" onclick="toggleWF('kids')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="card"><div class="card-title">🗺️ Adventure Log</div><div id="visits-kids"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <button class="staff-btn kids" onclick="openModal()">📲 Show to Staff</button>
+    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" style="border-color:var(--pink);color:var(--pink)" onclick="toggleWF('kids')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-kids">
-      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
-      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
-      <label class="wf-label" data-i="parent_email">Parent's Email</label>
-      <input class="wf-input" id="wf-email-kids" type="email" placeholder="parent@email.com">
-      <button class="wf-submit" style="background:var(--pink)" onclick="submitWF('kids')" data-i="sign_us_up">Sign Us Up!</button>
-      <div class="wf-ok" id="wf-ok-kids" data-i="wf_success_kids">You're on the list!</div>
+      <div class="wf-title">Stay in the loop!</div>
+      <div class="wf-desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label">Parent's Email</label><input class="wf-input" id="wf-email-kids" type="email" placeholder="parent@email.com">
+      <button class="wf-submit" style="background:var(--pink)" onclick="submitWF('kids')">Sign Us Up! ⭐</button>
+      <div class="wf-ok" id="wf-ok-kids">You're on the list! See you soon.</div>
     </div>
   </div>
 
@@ -318,37 +401,41 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-pet">—</div>
-          <div class="level-badge pet" id="level-badge-pet">🌱 Newcomer</div>
+          <div class="level-badge pet" id="level-badge-pet" onclick="openDrawer()">🌱 <span class="pts-num">0</span> ⚡</div>
         </div>
         <div class="welcome-meta" id="welcome-meta-pet">Pet Passport</div>
       </div>
     </div>
+    <div class="streak-bar" id="streak-bar-pet" style="display:none;background:linear-gradient(135deg,#f0fdf9,#e0f2fe);border-color:#bae6fd;">
+      <span class="streak-fire">🔥</span>
+      <span class="streak-text" id="streak-text-pet" style="color:var(--teal);">3 day streak!</span>
+      <span class="streak-sub">Come back tomorrow!</span>
+    </div>
     <div class="stats">
-      <div class="stat"><div class="stat-num pet" id="stat-visits-pet">0</div><div class="stat-label" data-i="visits">Visits</div></div>
-      <div class="stat"><div class="stat-num pet" id="stat-stamps-pet">0</div><div class="stat-label" data-i="paw_prints">Paw Prints</div></div>
-      <div class="stat"><div class="stat-num pet" id="stat-left-pet">6</div><div class="stat-label" data-i="to_treat">To Treat!</div></div>
+      <div class="stat"><div class="stat-num pet" id="stat-visits-pet">0</div><div class="stat-label">Visits</div></div>
+      <div class="stat"><div class="stat-num pet" id="stat-stamps-pet">0</div><div class="stat-label">Paw Prints</div></div>
+      <div class="stat"><div class="stat-num pet" id="stat-left-pet">6</div><div class="stat-label">To Treat!</div></div>
     </div>
     <div class="reward pet"><div class="reward-icon">🦴</div><div><div class="reward-title" id="reward-title-pet">—</div><div class="reward-desc" id="reward-desc-pet">—</div></div></div>
     <div class="card">
-      <div class="card-title" data-i="your_paws">🐾 Your Paw Prints</div>
-      <div class="card-sub" data-i="stamps_sub_pet">Collect 6 paw prints — free treat!</div>
+      <div class="card-title">🐾 Your Paw Prints</div>
+      <div class="card-sub">Collect 6 paw prints — free treat!</div>
       <div class="stamp-grid" id="stamps-pet"></div>
       <div class="prog-wrap">
         <div class="prog-labels"><span id="prog-label-pet">0 / 6</span><span id="prog-pct-pet" style="color:var(--teal)">0%</span></div>
         <div class="prog-track"><div class="prog-fill pet" id="prog-fill-pet" style="width:0%"></div></div>
       </div>
     </div>
-    <div class="card"><div class="card-title" data-i="visit_notes">🗒️ Visit Notes</div><div id="visits-pet"><div class="no-visits" data-i="no_visits">No visits yet. Come visit us!</div></div></div>
-    <button class="staff-btn pet" onclick="openModal()">📲 <span data-i="show_staff">Show to Staff</span></button>
-    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span data-i="share_whatsapp">Share Wepa with a friend</span></a>
-    <button class="waitlist-btn" style="border-color:var(--teal);color:var(--teal)" onclick="toggleWF('pet')">🔔 <span data-i="notify_me">Notify Me When You Open</span></button>
+    <div class="card"><div class="card-title">🗒️ Visit Notes</div><div id="visits-pet"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <button class="staff-btn pet" onclick="openModal()">📲 Show to Staff</button>
+    <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
+    <button class="waitlist-btn" style="border-color:var(--teal);color:var(--teal)" onclick="toggleWF('pet')">🔔 Notify Me When You Open</button>
     <div class="wf" id="wf-pet">
-      <div class="wf-title" data-i="wf_title">Stay in the loop!</div>
-      <div class="wf-desc" data-i="wf_desc">Leave your email and we'll notify you when Wepa opens.</div>
-      <label class="wf-label" data-i="your_email">Your Email</label>
-      <input class="wf-input" id="wf-email-pet" type="email" placeholder="your@email.com">
-      <button class="wf-submit" style="background:var(--teal)" onclick="submitWF('pet')" data-i="count_me_in">Count Me In!</button>
-      <div class="wf-ok" id="wf-ok-pet" data-i="wf_success">You're on the list!</div>
+      <div class="wf-title">Stay in the loop!</div>
+      <div class="wf-desc">Leave your email and we'll notify you when Wepa opens.</div>
+      <label class="wf-label">Your Email</label><input class="wf-input" id="wf-email-pet" type="email" placeholder="your@email.com">
+      <button class="wf-submit" style="background:var(--teal)" onclick="submitWF('pet')">Count Me In! 🌮</button>
+      <div class="wf-ok" id="wf-ok-pet">You're on the list! See you soon.</div>
     </div>
   </div>
 </div>
@@ -357,16 +444,45 @@
 <div class="modal-bg" id="staffModal" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-emoji" id="m-emoji">🐸</div>
-    <div class="modal-label" data-i="wepa_passport">Wepa Passport</div>
+    <div class="modal-label">Wepa Passport</div>
     <div class="modal-name" id="m-name">—</div>
     <div class="modal-id" id="m-id">—</div>
     <div class="modal-stamps" id="m-stamps">0</div>
-    <div class="modal-stamps-label" data-i="stamps_collected">stamps collected</div>
+    <div class="modal-stamps-label">stamps collected</div>
     <div style="margin:16px 0 8px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:10px;" data-i="scan_qr">Scan to add stamp</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:10px;">Scan to add stamp</div>
       <img id="qr-img" src="" alt="QR Code" style="border-radius:12px;display:block;margin:0 auto;width:180px;height:180px;background:#f5f5f5;" />
     </div>
-    <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')" data-i="close">Close</button>
+    <button class="modal-close" onclick="document.getElementById('staffModal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<!-- BADGE DRAWER -->
+<div class="drawer-bg" id="drawerBg" onclick="closeDrawer(event)">
+  <div class="drawer" id="drawerContent">
+    <div class="drawer-handle"></div>
+    <div class="drawer-level-row">
+      <div class="drawer-badge-big" id="drawer-emoji">🌱</div>
+      <div>
+        <div class="drawer-level-name" id="drawer-level-name">Newcomer</div>
+        <div class="drawer-level-sub" id="drawer-level-sub">Keep coming back to level up!</div>
+      </div>
+    </div>
+    <div class="drawer-pts-row">
+      <div class="drawer-pts-label">Your points</div>
+      <div class="drawer-pts-val" id="drawer-pts">0 ⚡</div>
+    </div>
+    <div class="drawer-prog-track"><div class="drawer-prog-fill" id="drawer-prog-fill" style="width:0%"></div></div>
+    <div class="drawer-prog-labels"><span id="drawer-prog-min">0</span><span id="drawer-prog-next-label">Next level</span><span id="drawer-prog-max">21</span></div>
+    <div class="drawer-next-tease" id="drawer-next-tease">✨ 21 more points to ☕ Regular</div>
+    <div class="drawer-streak" id="drawer-streak">
+      <div class="drawer-streak-fire">🔥</div>
+      <div>
+        <div class="drawer-streak-text" id="drawer-streak-text">0 day streak</div>
+        <div class="drawer-streak-sub">Answer Coquí's daily question to earn points</div>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="document.getElementById('drawerBg').classList.remove('open')">Got it!</button>
   </div>
 </div>
 
@@ -375,18 +491,34 @@
   <div class="coqui-modal">
     <div id="coqui-question-view">
       <div class="coqui-frog">🐸</div>
-      <div class="coqui-points-badge">+5 ⚡ points for answering!</div>
+      <div class="coqui-points-badge" id="coqui-pts-badge">+5 ⚡ points for answering!</div>
       <div class="coqui-question" id="coqui-q-text"></div>
       <div class="coqui-answers" id="coqui-answers-grid"></div>
-      <span class="coqui-skip" onclick="skipQuestion()" data-i="coqui_skip">Skip for now</span>
+      <span class="coqui-skip" onclick="skipQuestion()">Skip for now</span>
     </div>
-    <div class="coqui-confirmed" id="coqui-confirmed-view">
-      <div class="coqui-confirmed-emoji">🎉</div>
-      <div class="coqui-confirmed-text" id="coqui-confirmed-text">+5 points earned!</div>
-      <div class="coqui-confirmed-sub" id="coqui-confirmed-sub">Coqui saved your answer.</div>
-    </div>
+    <div class="coqui-confirmed" id="coqui-confirmed-view"></div>
   </div>
 </div>
+
+<!-- SHARE MODAL -->
+<div class="share-modal-bg" id="shareModal" onclick="closeShareModal(event)">
+  <div class="share-card">
+    <div class="share-card-crown">👑</div>
+    <div class="share-card-label">Wepa Weekly Champion</div>
+    <div class="share-card-name" id="share-name">—</div>
+    <div class="share-card-pts" id="share-pts">0 ⚡ points this week</div>
+    <div class="share-card-reward" id="share-reward">—</div>
+    <div class="share-card-tag">🐸 Wepa Street Food Fusion · Erfurt · streetfoodfusion.de</div>
+    <div class="share-btns">
+      <button class="share-wa" onclick="shareChampionWA()">💬 WhatsApp</button>
+      <button class="share-ig" onclick="shareChampionIG()">📸 Instagram</button>
+    </div>
+    <button class="share-close" onclick="document.getElementById('shareModal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<!-- CONFETTI -->
+<div class="confetti-container" id="confetti-container"></div>
 
 <div style="padding:16px;text-align:center;">
   <a href="https://wepaexplorer.com/game.html" id="play-btn"
@@ -404,454 +536,441 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 const LEVELS = {
   senior: [
-    { min:0,   max:20,   emoji:'🌱', label:'Newcomer' },
-    { min:21,  max:50,   emoji:'☕', label:'Regular' },
-    { min:51,  max:100,  emoji:'🌟', label:'Wepa Friend' },
-    { min:101, max:9999, emoji:'👑', label:'Wepa Legend' }
+    { min:0,   max:20,   emoji:'🌱', label:'Newcomer',    sub:'Keep coming back to level up!' },
+    { min:21,  max:50,   emoji:'☕', label:'Regular',     sub:'You are becoming a true local!' },
+    { min:51,  max:100,  emoji:'🌟', label:'Wepa Friend', sub:'Wepa would not be the same without you.' },
+    { min:101, max:9999, emoji:'👑', label:'Wepa Legend', sub:'You are part of the Wepa family forever.' }
   ],
   kids: [
-    { min:0,   max:20,   emoji:'🐣', label:'Hatchling' },
-    { min:21,  max:50,   emoji:'🐸', label:'Coqui Jr.' },
-    { min:51,  max:100,  emoji:'🚀', label:'Explorer' },
-    { min:101, max:9999, emoji:'🏆', label:'Champion' }
+    { min:0,   max:20,   emoji:'🐣', label:'Hatchling',  sub:'Your adventure is just beginning!' },
+    { min:21,  max:50,   emoji:'🐸', label:'Coqui Jr.',  sub:'You are getting good at this!' },
+    { min:51,  max:100,  emoji:'🚀', label:'Explorer',   sub:'You have discovered so much!' },
+    { min:101, max:9999, emoji:'🏆', label:'Champion',   sub:'You are the ultimate Wepa explorer!' }
   ],
   pet: [
-    { min:0,   max:20,   emoji:'🌱', label:'Newcomer' },
-    { min:21,  max:50,   emoji:'🐾', label:'Regular' },
-    { min:51,  max:100,  emoji:'🌟', label:'Wepa Pal' },
-    { min:101, max:9999, emoji:'👑', label:'Wepa Legend' }
+    { min:0,   max:20,   emoji:'🌱', label:'Newcomer',   sub:'First paws through the door!' },
+    { min:21,  max:50,   emoji:'🐾', label:'Regular',    sub:'Always happy to see you!' },
+    { min:51,  max:100,  emoji:'🌟', label:'Wepa Pal',   sub:'A true Wepa companion.' },
+    { min:101, max:9999, emoji:'👑', label:'Wepa Legend',sub:'The most loyal paws in Erfurt.' }
   ]
 };
 
 function getLevel(type, pts) {
-  return (LEVELS[type] || LEVELS.senior).find(function(l){ return pts >= l.min && pts <= l.max; }) || LEVELS[type][0];
+  return (LEVELS[type]||LEVELS.senior).find(function(l){ return pts>=l.min&&pts<=l.max; })||(LEVELS[type]||LEVELS.senior)[0];
+}
+function getNextLevel(type, pts) {
+  var arr = LEVELS[type]||LEVELS.senior;
+  return arr.find(function(l){ return pts<l.min; })||null;
 }
 
 const QUESTIONS = {
-  senior: [
-    { q: { en:'How do you like your coffee? ☕', de:'Wie trinkst du deinen Kaffee? ☕', es:'¿Cómo te gusta el café? ☕' },
-      a: { en:['Black, no sugar','With milk','Sweet & creamy','No coffee for me'], de:['Schwarz, kein Zucker','Mit Milch','Süß & cremig','Kein Kaffee'], es:['Negro sin azúcar','Con leche','Dulce y cremoso','Sin café para mí'] }, key:'coffee_pref' },
-    { q: { en:'Your favorite spot at Wepa? 🪑', de:'Dein Lieblingsplatz bei Wepa? 🪑', es:'¿Tu lugar favorito en Wepa? 🪑' },
-      a: { en:['Window seat','Bar stool','Outside terrace','Wherever!'], de:['Fensterplatz','Barhocker','Terrasse','Wo Platz ist!'], es:['Ventana','Taburete de barra','Terraza exterior','¡Donde sea!'] }, key:'fav_spot' },
-    { q: { en:'Sweet or savory? 🍮', de:'Süß oder herzhaft? 🍮', es:'¿Dulce o salado? 🍮' },
-      a: { en:['Always sweet 🍮','Always savory 🌮','Both!','Depends on the day'], de:['Immer süß 🍮','Immer herzhaft 🌮','Beides!','Je nach Tag'], es:['Siempre dulce 🍮','Siempre salado 🌮','¡Ambos!','Depende del día'] }, key:'sweet_savory' },
-    { q: { en:'Best time to visit? 🕐', de:'Beste Besuchszeit? 🕐', es:'¿Mejor hora para venir? 🕐' },
-      a: { en:['Morning ☀️','Lunchtime 🥗','Afternoon','Evening 🌙'], de:['Morgens ☀️','Mittagszeit 🥗','Nachmittags','Abends 🌙'], es:['Mañana ☀️','Mediodía 🥗','Tarde','Noche 🌙'] }, key:'visit_time' },
-    { q: { en:'Favorite cuisine? 🌍', de:'Lieblingsküche? 🌍', es:'¿Cocina favorita? 🌍' },
-      a: { en:['Caribbean 🌴','Asian 🍜','Mediterranean 🫒','German classics 🥨'], de:['Karibik 🌴','Asiatisch 🍜','Mediterran 🫒','Deutsche Klassiker 🥨'], es:['Caribeña 🌴','Asiática 🍜','Mediterránea 🫒','Clásicos alemanes 🥨'] }, key:'fav_cuisine' }
+  senior:[
+    {q:{en:'How do you like your coffee? ☕',de:'Wie trinkst du deinen Kaffee? ☕',es:'¿Cómo te gusta el café? ☕'},a:{en:['Black, no sugar','With milk','Sweet & creamy','No coffee for me'],de:['Schwarz, kein Zucker','Mit Milch','Süß & cremig','Kein Kaffee'],es:['Negro sin azúcar','Con leche','Dulce y cremoso','Sin café para mí']},key:'coffee_pref'},
+    {q:{en:'Your favorite spot at Wepa? 🪑',de:'Dein Lieblingsplatz? 🪑',es:'¿Tu lugar favorito? 🪑'},a:{en:['Window seat','Bar stool','Outside terrace','Wherever!'],de:['Fensterplatz','Barhocker','Terrasse','Wo Platz ist!'],es:['Ventana','Taburete','Terraza','¡Donde sea!']},key:'fav_spot'},
+    {q:{en:'Sweet or savory? 🍮',de:'Süß oder herzhaft? 🍮',es:'¿Dulce o salado? 🍮'},a:{en:['Always sweet 🍮','Always savory 🌮','Both!','Depends'],de:['Immer süß 🍮','Immer herzhaft 🌮','Beides!','Je nach Tag'],es:['Siempre dulce 🍮','Siempre salado 🌮','¡Ambos!','Depende']},key:'sweet_savory'},
+    {q:{en:'Best time to visit? 🕐',de:'Beste Besuchszeit? 🕐',es:'¿Mejor hora? 🕐'},a:{en:['Morning ☀️','Lunchtime 🥗','Afternoon','Evening 🌙'],de:['Morgens ☀️','Mittagszeit 🥗','Nachmittags','Abends 🌙'],es:['Mañana ☀️','Mediodía 🥗','Tarde','Noche 🌙']},key:'visit_time'},
+    {q:{en:'Favorite world cuisine? 🌍',de:'Lieblingsküche? 🌍',es:'¿Cocina favorita? 🌍'},a:{en:['Caribbean 🌴','Asian 🍜','Mediterranean 🫒','German 🥨'],de:['Karibik 🌴','Asiatisch 🍜','Mediterran 🫒','Deutsch 🥨'],es:['Caribeña 🌴','Asiática 🍜','Mediterránea 🫒','Alemana 🥨']},key:'fav_cuisine'}
   ],
-  kids: [
-    { q: { en:'Favorite color? 🎨', de:'Lieblingsfarbe? 🎨', es:'¿Color favorito? 🎨' },
-      a: { en:['Red 🔴','Blue 💙','Yellow 💛','Green 💚'], de:['Rot 🔴','Blau 💙','Gelb 💛','Grün 💚'], es:['Rojo 🔴','Azul 💙','Amarillo 💛','Verde 💚'] }, key:'fav_color' },
-    { q: { en:'Superpower: fly or invisible? 🦸', de:'Superpower: fliegen oder unsichtbar? 🦸', es:'¿Superpoder: volar o invisibilidad? 🦸' },
-      a: { en:['Fly! ✈️','Invisible! 👻','Super speed! ⚡','Mind reading! 🧠'], de:['Fliegen! ✈️','Unsichtbar! 👻','Superschnell! ⚡','Gedankenlesen! 🧠'], es:['¡Volar! ✈️','¡Invisible! 👻','¡Supervelocidad! ⚡','¡Leer mentes! 🧠'] }, key:'superpower' },
-    { q: { en:'Best food ever? 🌮', de:'Bestes Essen der Welt? 🌮', es:'¿La mejor comida? 🌮' },
-      a: { en:['Pizza 🍕','Tacos 🌮','Ice cream 🍦','Nuggets 🍗'], de:['Pizza 🍕','Tacos 🌮','Eis 🍦','Nuggets 🍗'], es:['Pizza 🍕','Tacos 🌮','Helado 🍦','Nuggets 🍗'] }, key:'fav_food' },
-    { q: { en:'You are more of a... 🐸', de:'Du bist eher... 🐸', es:'Eres más un... 🐸' },
-      a: { en:['Morning bird 🐦','Night owl 🦉','Always hungry 🍕','Always sleepy 😴'], de:['Frühaufsteher 🐦','Nachteule 🦉','Immer hungrig 🍕','Immer müde 😴'], es:['Madrugador 🐦','Noctámbulo 🦉','Siempre hambriento 🍕','Siempre dormilón 😴'] }, key:'personality' },
-    { q: { en:'After eating you love to... 🎮', de:'Nach dem Essen machst du... 🎮', es:'Después de comer te gusta... 🎮' },
-      a: { en:['Play games 🎮','Watch TV 📺','Run around 🏃','Nap time 💤'], de:['Spielen 🎮','Fernsehen 📺','Rumrennen 🏃','Schlafen 💤'], es:['Jugar 🎮','Ver tele 📺','Correr 🏃','Siesta 💤'] }, key:'after_eating' }
+  kids:[
+    {q:{en:'Favorite color? 🎨',de:'Lieblingsfarbe? 🎨',es:'¿Color favorito? 🎨'},a:{en:['Red 🔴','Blue 💙','Yellow 💛','Green 💚'],de:['Rot 🔴','Blau 💙','Gelb 💛','Grün 💚'],es:['Rojo 🔴','Azul 💙','Amarillo 💛','Verde 💚']},key:'fav_color'},
+    {q:{en:'Superpower: fly or invisible? 🦸',de:'Superpower: fliegen oder unsichtbar? 🦸',es:'¿Superpoder? 🦸'},a:{en:['Fly! ✈️','Invisible! 👻','Super speed! ⚡','Mind reading! 🧠'],de:['Fliegen! ✈️','Unsichtbar! 👻','Superschnell! ⚡','Gedankenlesen! 🧠'],es:['¡Volar! ✈️','¡Invisible! 👻','¡Velocidad! ⚡','¡Leer mentes! 🧠']},key:'superpower'},
+    {q:{en:'Best food ever? 🌮',de:'Bestes Essen? 🌮',es:'¿Mejor comida? 🌮'},a:{en:['Pizza 🍕','Tacos 🌮','Ice cream 🍦','Nuggets 🍗'],de:['Pizza 🍕','Tacos 🌮','Eis 🍦','Nuggets 🍗'],es:['Pizza 🍕','Tacos 🌮','Helado 🍦','Nuggets 🍗']},key:'fav_food'},
+    {q:{en:'You are more of a... 🐸',de:'Du bist eher... 🐸',es:'Eres más... 🐸'},a:{en:['Morning bird 🐦','Night owl 🦉','Always hungry 🍕','Always sleepy 😴'],de:['Frühaufsteher 🐦','Nachteule 🦉','Immer hungrig 🍕','Immer müde 😴'],es:['Madrugador 🐦','Noctámbulo 🦉','Siempre hambriento 🍕','Dormilón 😴']},key:'personality'},
+    {q:{en:'After eating you love to... 🎮',de:'Nach dem Essen machst du... 🎮',es:'Después de comer... 🎮'},a:{en:['Play games 🎮','Watch TV 📺','Run around 🏃','Nap 💤'],de:['Spielen 🎮','Fernsehen 📺','Rumrennen 🏃','Schlafen 💤'],es:['Jugar 🎮','Ver tele 📺','Correr 🏃','Siesta 💤']},key:'after_eating'}
   ],
-  pet: [
-    { q: { en:'What pet visits with you? 🐾', de:'Was für ein Tier kommt mit? 🐾', es:'¿Qué mascota te acompaña? 🐾' },
-      a: { en:['Dog 🐕','Cat 🐈','Rabbit 🐇','Other 🐾'], de:['Hund 🐕','Katze 🐈','Hase 🐇','Anderes 🐾'], es:['Perro 🐕','Gato 🐈','Conejo 🐇','Otro 🐾'] }, key:'pet_type' },
-    { q: { en:'How does your pet say hello? 😄', de:'Wie begrüßt dein Tier andere? 😄', es:'¿Cómo saluda tu mascota? 😄' },
-      a: { en:['Tail wagging 🐕','Slow blink 😸','Nose nudge 🐽','Stays shy 🙈'], de:['Schwanz wedeln 🐕','Langsames Blinzeln 😸','Nasenstupser 🐽','Schüchtern 🙈'], es:['Menea la cola 🐕','Parpadeo lento 😸','Hocico amigable 🐽','Tímida 🙈'] }, key:'pet_greeting' },
-    { q: { en:'Your pet\'s vibe is... 🌟', de:'Die Energie deines Tieres ist... 🌟', es:'La energía de tu mascota es... 🌟' },
-      a: { en:['Crazy hyper ⚡','Total chill 😌','Curious explorer 🔍','Cuddle monster 🤗'], de:['Hyperaktiv ⚡','Total entspannt 😌','Neugierig 🔍','Kuscheltier 🤗'], es:['Hiperactiva ⚡','Muy relajada 😌','Exploradora 🔍','Le encanta acurrucarse 🤗'] }, key:'pet_vibe' }
+  pet:[
+    {q:{en:'What pet visits with you? 🐾',de:'Was für ein Tier? 🐾',es:'¿Qué mascota? 🐾'},a:{en:['Dog 🐕','Cat 🐈','Rabbit 🐇','Other 🐾'],de:['Hund 🐕','Katze 🐈','Hase 🐇','Anderes 🐾'],es:['Perro 🐕','Gato 🐈','Conejo 🐇','Otro 🐾']},key:'pet_type'},
+    {q:{en:'How does your pet say hello? 😄',de:'Wie begrüßt dein Tier? 😄',es:'¿Cómo saluda tu mascota? 😄'},a:{en:['Tail wagging 🐕','Slow blink 😸','Nose nudge 🐽','Stays shy 🙈'],de:['Schwanz wedeln 🐕','Langsames Blinzeln 😸','Nasenstupser 🐽','Schüchtern 🙈'],es:['Menea la cola 🐕','Parpadeo lento 😸','Hocico amigable 🐽','Tímida 🙈']},key:'pet_greeting'},
+    {q:{en:'Your pet\'s vibe is... 🌟',de:'Die Energie deines Tieres... 🌟',es:'La energía de tu mascota... 🌟'},a:{en:['Crazy hyper ⚡','Total chill 😌','Curious 🔍','Cuddle monster 🤗'],de:['Hyperaktiv ⚡','Entspannt 😌','Neugierig 🔍','Kuscheltier 🤗'],es:['Hiperactiva ⚡','Relajada 😌','Exploradora 🔍','Mimosa 🤗']},key:'pet_vibe'}
   ]
 };
 
-const TRANSLATIONS = {
-  en: {
-    scan_qr:'Staff: scan to add stamp', loading:'Loading your passport...', setup_title:'Welcome to Wepa!',
-    setup_desc:"This is your first visit. Choose your passport type and we'll remember you every time you tap your card.",
-    setup_btn:'Create My Passport', setup_skip:'Skip — just show me the passport',
-    senior:'Senior', kids:'Kids', pet:'Pet',
-    visits:'Visits', stamps:'Stamps', to_reward:'To Reward', stars:'Stars', to_prize:'To Prize!', paw_prints:'Paw Prints', to_treat:'To Treat!',
-    your_stamps:'⭐ Your Stamps', your_stars:'⭐ Your Stars', your_paws:'🐾 Your Paw Prints',
-    stamps_sub_senior:'Collect 8 stamps — get a free item', stamps_sub_kids:'Collect 5 stars — win a prize!', stamps_sub_pet:'Collect 6 paw prints — free treat!',
-    visit_history:'📋 Visit History', adventure_log:'🗺️ Adventure Log', visit_notes:'🗒️ Visit Notes',
-    no_visits:'No visits yet. Come visit us!', show_staff:'Show to Staff',
-    share_whatsapp:'Share Wepa with a friend',
-    notify_me:'Notify Me When You Open', wf_title:'Stay in the loop!',
-    wf_desc:"Leave your email and we'll notify you when Wepa opens.",
-    name_optional:'Name (optional)', your_email:'Your Email', parent_email:"Parent's Email",
-    count_me_in:'Count Me In! 🌮', sign_us_up:'Sign Us Up! ⭐',
-    wf_success:"You're on the list! See you soon.", wf_success_kids:"You're on the list! See you soon! 🌟",
-    wepa_passport:'Wepa Passport', stamps_collected:'stamps collected', close:'Close',
-    reward_senior_go:'🎁 {n} more stamps to go!', reward_kids_go:'🏆 {n} more stars to go!', reward_pet_go:'🦴 {n} more paw prints!',
-    reward_senior_done:'🎉 Reward unlocked!', reward_kids_done:'🎉 Prize unlocked!', reward_pet_done:'🎉 Treat unlocked!',
-    member_since:'Member since',
-    passport_type_senior:'Senior Passport', passport_type_kids:'Kids Passport', passport_type_pet:'Pet Passport',
-    coqui_skip:'Skip for now',
-    coqui_confirmed:'+{n} points earned! 🎉', coqui_confirmed_sub:'Coqui saved your answer.',
-    wa_message:'🐸 Hey! I just got my Wepa Passport at Wepa Street Food Fusion in Erfurt. Stamps, rewards, and the food is amazing! Get yours: https://streetfoodfusion.de'
-  },
-  de: {
-    scan_qr:'Personal: scannen zum Stempel', loading:'Deinen Pass laden...', setup_title:'Willkommen bei Wepa!',
-    setup_desc:'Das ist dein erster Besuch. Wähle deinen Passtyp und wir erkennen dich beim nächsten Mal.',
-    setup_btn:'Meinen Pass erstellen', setup_skip:'Überspringen',
-    senior:'Senior', kids:'Kinder', pet:'Tier',
-    visits:'Besuche', stamps:'Stempel', to_reward:'Bis Prämie', stars:'Sterne', to_prize:'Bis Preis!', paw_prints:'Pfoten', to_treat:'Bis Leckerli!',
-    your_stamps:'⭐ Deine Stempel', your_stars:'⭐ Deine Sterne', your_paws:'🐾 Deine Pfoten',
-    stamps_sub_senior:'8 Stempel → gratis Empanada', stamps_sub_kids:'5 Sterne → Preis gewinnen!', stamps_sub_pet:'6 Pfoten → gratis Leckerli!',
-    visit_history:'📋 Besuchshistorie', adventure_log:'🗺️ Abenteuerlog', visit_notes:'🗒️ Besuchsnotizen',
-    no_visits:'Noch keine Besuche. Komm uns besuchen!', show_staff:'Mitarbeiter zeigen',
-    share_whatsapp:'Wepa mit Freunden teilen',
-    notify_me:'Benachrichtige mich bei Eröffnung', wf_title:'Bleib auf dem Laufenden!',
-    wf_desc:'Hinterlasse deine E-Mail und wir benachrichtigen dich wenn Wepa öffnet.',
-    name_optional:'Name (optional)', your_email:'Deine E-Mail', parent_email:'E-Mail der Eltern',
-    count_me_in:'Ich bin dabei! 🌮', sign_us_up:'Anmelden! ⭐',
-    wf_success:'Du bist auf der Liste! Bis bald.', wf_success_kids:'Ihr seid auf der Liste! Bis bald! 🌟',
-    wepa_passport:'Wepa-Pass', stamps_collected:'Stempel gesammelt', close:'Schließen',
-    reward_senior_go:'🎁 Noch {n} Stempel!', reward_kids_go:'🏆 Noch {n} Sterne!', reward_pet_go:'🦴 Noch {n} Pfoten!',
-    reward_senior_done:'🎉 Prämie freigeschaltet!', reward_kids_done:'🎉 Preis freigeschaltet!', reward_pet_done:'🎉 Leckerli freigeschaltet!',
-    member_since:'Mitglied seit',
-    passport_type_senior:'Senior-Pass', passport_type_kids:'Kinder-Pass', passport_type_pet:'Tier-Pass',
-    coqui_skip:'Jetzt überspringen',
-    coqui_confirmed:'+{n} Punkte verdient! 🎉', coqui_confirmed_sub:'Coqui hat deine Antwort gespeichert.',
-    wa_message:'🐸 Hey! Ich habe gerade meinen Wepa-Pass bei Wepa Street Food Fusion in Erfurt bekommen. Stempel, Prämien und tolles Essen! Hol dir deinen: https://streetfoodfusion.de'
-  },
-  es: {
-    scan_qr:'Personal: escanear para sello', loading:'Cargando tu pasaporte...', setup_title:'¡Bienvenido a Wepa!',
-    setup_desc:'Esta es tu primera visita. Elige tu tipo de pasaporte y te reconoceremos cada vez.',
-    setup_btn:'Crear mi pasaporte', setup_skip:'Omitir',
-    senior:'Senior', kids:'Niños', pet:'Mascota',
-    visits:'Visitas', stamps:'Sellos', to_reward:'Para Premio', stars:'Estrellas', to_prize:'¡Para Premio!', paw_prints:'Huellas', to_treat:'¡Para Golosina!',
-    your_stamps:'⭐ Tus Sellos', your_stars:'⭐ Tus Estrellas', your_paws:'🐾 Tus Huellas',
-    stamps_sub_senior:'8 sellos → empanada gratis', stamps_sub_kids:'5 estrellas → ¡gana un premio!', stamps_sub_pet:'6 huellas → ¡golosina gratis!',
-    visit_history:'📋 Historial de visitas', adventure_log:'🗺️ Registro de aventuras', visit_notes:'🗒️ Notas de visita',
-    no_visits:'Aún no hay visitas. ¡Ven a visitarnos!', show_staff:'Mostrar al personal',
-    share_whatsapp:'Comparte Wepa con un amigo',
-    notify_me:'Notifícame cuando abran', wf_title:'¡Mantente informado!',
-    wf_desc:'Deja tu correo y te avisaremos cuando Wepa abra.',
-    name_optional:'Nombre (opcional)', your_email:'Tu correo', parent_email:'Correo del padre/madre',
-    count_me_in:'¡Apúntame! 🌮', sign_us_up:'¡Regístranos! ⭐',
-    wf_success:'¡Estás en la lista! Hasta pronto.', wf_success_kids:'¡Estáis en la lista! ¡Hasta pronto! 🌟',
-    wepa_passport:'Pasaporte Wepa', stamps_collected:'sellos coleccionados', close:'Cerrar',
-    reward_senior_go:'🎁 ¡Faltan {n} sellos!', reward_kids_go:'🏆 ¡Faltan {n} estrellas!', reward_pet_go:'🦴 ¡Faltan {n} huellas!',
-    reward_senior_done:'🎉 ¡Premio desbloqueado!', reward_kids_done:'🎉 ¡Premio desbloqueado!', reward_pet_done:'🎉 ¡Golosina desbloqueada!',
-    member_since:'Miembro desde',
-    passport_type_senior:'Pasaporte Senior', passport_type_kids:'Pasaporte Niños', passport_type_pet:'Pasaporte Mascota',
-    coqui_skip:'Ahora no',
-    coqui_confirmed:'+{n} puntos ganados! 🎉', coqui_confirmed_sub:'Coqui guardó tu respuesta.',
-    wa_message:'🐸 ¡Hola! Acabo de obtener mi Pasaporte Wepa en Wepa Street Food Fusion en Erfurt. ¡Sellos, premios y la comida es increíble! Obtén el tuyo: https://streetfoodfusion.de'
-  }
-};
-
-var lang = localStorage.getItem('wepa_lang') || 'en';
-var passportId = null;
-var passportData = null;
-var stampsData = [];
-var selectedType = 'senior';
-var currentType = 'senior';
-var wepaRewards = { senior:'Empanada', kids:'Cheese Dog', pet:'Dog Treat' };
-
-function t(key, vars) {
-  var str = (TRANSLATIONS[lang] || TRANSLATIONS.en)[key] || key;
-  if (vars) Object.keys(vars).forEach(function(k){ str = str.replace('{'+k+'}', vars[k]); });
-  return str;
-}
+var lang = localStorage.getItem('wepa_lang')||'en';
+var passportId = null, passportData = null, stampsData = [], selectedType = 'senior', currentType = 'senior';
+var wepaRewards = {senior:'Empanada',kids:'Cheese Dog',pet:'Dog Treat'};
+var weeklyReward = 'Free meal for two 🍽️';
+var championData = null;
 
 function setLang(l) {
-  lang = l;
-  localStorage.setItem('wepa_lang', l);
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); if(b.textContent===l.toUpperCase()) b.classList.add('active'); });
-  applyTranslations();
-  if (passportData) renderPassport();
-}
-
-function applyTranslations() {
-  document.querySelectorAll('[data-i]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i')); });
+  lang=l; localStorage.setItem('wepa_lang',l);
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active',b.textContent===l.toUpperCase()); });
+  if(passportData) renderPassport();
 }
 
 function getPassportId() {
-  var params = new URLSearchParams(window.location.search);
-  var urlId = params.get('id');
-  if (urlId) { localStorage.setItem('wepa_passport_id', urlId); return urlId; }
+  var p=new URLSearchParams(window.location.search), urlId=p.get('id');
+  if(urlId){ localStorage.setItem('wepa_passport_id',urlId); return urlId; }
   return localStorage.getItem('wepa_passport_id');
 }
 
 async function loadRewards() {
   try {
-    var res = await fetch(SB_URL+'/rest/v1/wepa_settings?select=*', { headers:{ apikey:SB_KEY } });
-    var rows = await res.json();
-    if (Array.isArray(rows)) rows.forEach(function(r){
+    var res=await fetch(SB_URL+'/rest/v1/wepa_settings?select=*',{headers:{apikey:SB_KEY}});
+    var rows=await res.json();
+    if(Array.isArray(rows)) rows.forEach(function(r){
       if(r.key==='reward_senior') wepaRewards.senior=r.value;
-      if(r.key==='reward_kids') wepaRewards.kids=r.value;
-      if(r.key==='reward_pet') wepaRewards.pet=r.value;
+      if(r.key==='reward_kids')   wepaRewards.kids=r.value;
+      if(r.key==='reward_pet')    wepaRewards.pet=r.value;
+      if(r.key==='weekly_reward') weeklyReward=r.value;
     });
-  } catch(e) {}
+  } catch(e){}
+}
+
+async function loadChampion() {
+  try {
+    var monday = getWeekStart();
+    var res=await fetch(SB_URL+'/rest/v1/wepa_weekly_champion?week_start=eq.'+monday+'&select=*&order=points.desc&limit=1',{headers:{apikey:SB_KEY}});
+    var rows=await res.json();
+    if(Array.isArray(rows)&&rows.length>0){
+      championData=rows[0];
+      document.getElementById('champ-name').textContent=championData.name||'Wepa Champion';
+      document.getElementById('champ-pts').textContent=championData.points;
+      document.getElementById('champ-reward').textContent='🎁 Prize: '+championData.reward;
+      document.getElementById('champion-banner').classList.add('visible');
+      if(passportData&&passportData.name&&championData.name===passportData.name){
+        document.getElementById('champ-share-btn').style.display='inline-block';
+      }
+    }
+  } catch(e){}
+}
+
+function getWeekStart() {
+  var d=new Date(); var day=d.getDay(); var diff=d.getDate()-(day===0?6:day-1);
+  var monday=new Date(d.setDate(diff));
+  return monday.toISOString().split('T')[0];
 }
 
 async function init() {
-  applyTranslations();
   await loadRewards();
-  passportId = getPassportId();
-  if (!passportId) {
-    passportId = 'WEPA-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,4).toUpperCase();
-    document.getElementById('app-loading').style.display = 'none';
-    document.getElementById('app-setup').style.display = 'block';
+  passportId=getPassportId();
+  if(!passportId){
+    passportId='WEPA-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,4).toUpperCase();
+    document.getElementById('app-loading').style.display='none';
+    document.getElementById('app-setup').style.display='block';
     return;
   }
-  document.getElementById('topbar-id').textContent = passportId;
-  var playBtn = document.getElementById('play-btn');
-  if (playBtn) playBtn.href = 'https://wepaexplorer.com/game.html?passport='+passportId;
+  document.getElementById('topbar-id').textContent=passportId;
+  var pb=document.getElementById('play-btn'); if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
   await loadPassport();
+  loadChampion();
 }
 
 async function loadPassport() {
   try {
-    var pRes = await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId+'&select=*', { headers:{ apikey:SB_KEY } });
-    var passports = await pRes.json();
+    var pRes=await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId+'&select=*',{headers:{apikey:SB_KEY}});
+    var passports=await pRes.json();
     try {
-      var sRes = await fetch(SB_URL+'/rest/v1/wepa_stamps?passport_id=eq.'+passportId+'&select=*&order=stamped_at.desc', { headers:{ apikey:SB_KEY } });
-      var raw = await sRes.json();
-      stampsData = Array.isArray(raw) ? raw : [];
-    } catch(e) { stampsData = []; }
-
-    if (!passports || passports.length === 0) {
-      document.getElementById('app-loading').style.display = 'none';
-      document.getElementById('app-setup').style.display = 'block';
-      return;
+      var sRes=await fetch(SB_URL+'/rest/v1/wepa_stamps?passport_id=eq.'+passportId+'&select=*&order=stamped_at.desc',{headers:{apikey:SB_KEY}});
+      var raw=await sRes.json(); stampsData=Array.isArray(raw)?raw:[];
+    } catch(e){ stampsData=[]; }
+    if(!passports||passports.length===0){
+      document.getElementById('app-loading').style.display='none';
+      document.getElementById('app-setup').style.display='block'; return;
     }
-    passportData = passports[0];
-    currentType = passportData.passport_type || 'senior';
-    localStorage.setItem('wepa_passport_id', passportId);
-    document.getElementById('app-loading').style.display = 'none';
-    document.getElementById('app-passport').style.display = 'block';
-    renderPassport();
-    switchType(currentType);
-    document.getElementById('switcher').style.display = 'none';
+    passportData=passports[0]; currentType=passportData.passport_type||'senior';
+    localStorage.setItem('wepa_passport_id',passportId);
+    document.getElementById('app-loading').style.display='none';
+    document.getElementById('app-passport').style.display='block';
+    renderPassport(); switchType(currentType);
+    document.getElementById('switcher').style.display='none';
     checkCoquiQuestion();
-  } catch(e) {
-    document.getElementById('app-loading').innerHTML = '<div style="padding:40px;text-align:center;color:#e74c3c;font-weight:700;">Connection error. Please try again.</div>';
+  } catch(e){
+    document.getElementById('app-loading').innerHTML='<div style="padding:40px;text-align:center;color:#e74c3c;font-weight:700;">Connection error. Please try again.</div>';
   }
 }
 
+/* DAILY cadence — one question per calendar day */
 function checkCoquiQuestion() {
-  if (!passportData) return;
-  var lastAsked = passportData.last_question_asked;
-  var sevenDaysAgo = new Date(Date.now() - 7*24*60*60*1000);
-  var shouldAsk = !lastAsked || new Date(lastAsked) < sevenDaysAgo;
-  if (!shouldAsk) return;
-  var pool = QUESTIONS[currentType] || QUESTIONS.senior;
-  var idx = (passportData.question_index || 0) % pool.length;
-  setTimeout(function(){ showCoquiQuestion(pool[idx], idx); }, 1200);
+  if(!passportData) return;
+  var lastAsked=passportData.last_question_asked;
+  var todayStr=new Date().toISOString().split('T')[0];
+  var lastAskedStr=lastAsked?new Date(lastAsked).toISOString().split('T')[0]:'';
+  if(lastAskedStr===todayStr) return; // already asked today
+  var pool=QUESTIONS[currentType]||QUESTIONS.senior;
+  var idx=(passportData.question_index||0)%pool.length;
+  setTimeout(function(){ showCoquiQuestion(pool[idx]); },1200);
 }
 
-function showCoquiQuestion(q, idx) {
-  var qText = q.q[lang] || q.q.en;
-  var answers = q.a[lang] || q.a.en;
-  var isKids = currentType === 'kids';
-  document.getElementById('coqui-q-text').textContent = qText;
-  var grid = document.getElementById('coqui-answers-grid');
-  grid.innerHTML = answers.map(function(a, i){
-    return '<button class="coqui-answer'+(isKids?' sel-kids':'')+'" onclick="answerQuestion(\''+q.key+'\',this,'+i+')">'+a+'</button>';
+function showCoquiQuestion(q) {
+  var isKids=currentType==='kids';
+  // Variable reward: 25% chance of bonus
+  var bonus=Math.random()<0.25;
+  var pts=bonus?15:5;
+  var badge=document.getElementById('coqui-pts-badge');
+  if(bonus){ badge.textContent='🎰 Lucky! +'+pts+' ⚡ bonus points!'; badge.style.background='linear-gradient(135deg,#db2777,#f472b6)'; badge.style.color='#fff'; }
+  else      { badge.textContent='+'+pts+' ⚡ points for answering!'; badge.style.background=''; badge.style.color=''; }
+  document.getElementById('coqui-q-text').textContent=q.q[lang]||q.q.en;
+  var answers=q.a[lang]||q.a.en;
+  var grid=document.getElementById('coqui-answers-grid');
+  grid.innerHTML=answers.map(function(a){
+    return '<button class="coqui-answer'+(isKids?' sel-kids':'')+'" onclick="answerQuestion(\''+q.key+'\',this,'+pts+')">'+a+'</button>';
   }).join('');
-  document.getElementById('coqui-question-view').style.display = 'block';
-  document.getElementById('coqui-confirmed-view').style.display = 'none';
+  document.getElementById('coqui-question-view').style.display='block';
+  document.getElementById('coqui-confirmed-view').style.display='none';
   document.getElementById('coquiModal').classList.add('open');
 }
 
-async function answerQuestion(key, btn, idx) {
-  document.querySelectorAll('.coqui-answer').forEach(function(b){ b.disabled = true; });
+async function answerQuestion(key, btn, ptsEarned) {
+  document.querySelectorAll('.coqui-answer').forEach(function(b){ b.disabled=true; });
   btn.classList.add('sel');
-  var answer = btn.textContent;
-  var pts = (passportData.points || 0) + 5;
-  var newIdx = (passportData.question_index || 0) + 1;
-  var prefs = passportData.preferences || {};
-  prefs[key] = answer;
+  var answer=btn.textContent;
+  var prevPts=passportData.points||0;
+  var newPts=prevPts+ptsEarned;
+  var newIdx=(passportData.question_index||0)+1;
+  var prefs=passportData.preferences||{};
+  prefs[key]=answer;
   try {
-    await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId, {
+    await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId,{
       method:'PATCH',
-      headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
-      body:JSON.stringify({ points:pts, question_index:newIdx, last_question_asked:new Date().toISOString(), preferences:prefs })
+      headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},
+      body:JSON.stringify({points:newPts,question_index:newIdx,last_question_asked:new Date().toISOString(),preferences:prefs})
     });
-    passportData.points = pts;
-    passportData.question_index = newIdx;
-    passportData.last_question_asked = new Date().toISOString();
-    passportData.preferences = prefs;
-  } catch(e) {}
-  document.getElementById('coqui-question-view').style.display = 'none';
-  var cv = document.getElementById('coqui-confirmed-view');
-  cv.style.display = 'block';
-  cv.innerHTML = '<div class="coqui-confirmed-emoji">🎉</div><div class="coqui-confirmed-text">'+t('coqui_confirmed',{n:5})+'</div><div class="coqui-confirmed-sub">'+t('coqui_confirmed_sub')+'</div>';
-  renderLevelBadge(currentType, pts);
-  setTimeout(function(){ document.getElementById('coquiModal').classList.remove('open'); }, 2200);
+    passportData.points=newPts; passportData.question_index=newIdx;
+    passportData.last_question_asked=new Date().toISOString(); passportData.preferences=prefs;
+  } catch(e){}
+  // Check level up
+  var prevLevel=getLevel(currentType,prevPts);
+  var newLevel=getLevel(currentType,newPts);
+  var leveledUp=prevLevel.label!==newLevel.label;
+  document.getElementById('coqui-question-view').style.display='none';
+  var cv=document.getElementById('coqui-confirmed-view');
+  cv.style.display='block';
+  cv.innerHTML='<div class="coqui-confirmed-emoji">'+(ptsEarned>=15?'🎰':'🎉')+'</div>'
+    +'<div class="coqui-confirmed-text">+'+(ptsEarned)+' points earned!</div>'
+    +(leveledUp?'<div style="font-size:16px;font-weight:900;color:var(--gold);margin-top:8px;">🆙 Level up! You are now '+newLevel.emoji+' '+newLevel.label+'!</div>':'')
+    +'<div class="coqui-confirmed-sub">Coquí saved your answer.</div>';
+  renderLevelBadge(currentType,newPts,leveledUp);
+  launchConfetti();
+  setTimeout(function(){ document.getElementById('coquiModal').classList.remove('open'); },2500);
 }
 
 async function skipQuestion() {
   try {
-    await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId, {
-      method:'PATCH',
-      headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
-      body:JSON.stringify({ last_question_asked:new Date().toISOString() })
+    await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+passportId,{
+      method:'PATCH',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},
+      body:JSON.stringify({last_question_asked:new Date().toISOString()})
     });
-  } catch(e) {}
+  } catch(e){}
   document.getElementById('coquiModal').classList.remove('open');
 }
 
-function renderLevelBadge(type, pts) {
-  var lv = getLevel(type, pts);
-  var badge = document.getElementById('level-badge-'+type);
-  if (badge) { badge.innerHTML = lv.emoji+' '+lv.label+'<span style="opacity:0.7;font-weight:700;font-size:11px;margin-left:5px;">⚡'+pts+'</span>'; }
+function renderLevelBadge(type, pts, leveledUp) {
+  var lv=getLevel(type,pts);
+  var badge=document.getElementById('level-badge-'+type);
+  if(!badge) return;
+  badge.innerHTML=lv.emoji+' '+lv.label+' <span class="pts-num">'+pts+'</span> ⚡';
+  if(leveledUp){ badge.classList.add('leveled-up'); setTimeout(function(){ badge.classList.remove('leveled-up'); },2500); }
+}
+
+function openDrawer() {
+  var pts=passportData?passportData.points||0:0;
+  var streak=passportData?passportData.streak||0:0;
+  var lv=getLevel(currentType,pts);
+  var next=getNextLevel(currentType,pts);
+  document.getElementById('drawer-emoji').textContent=lv.emoji;
+  document.getElementById('drawer-level-name').textContent=lv.label;
+  document.getElementById('drawer-level-sub').textContent=lv.sub;
+  document.getElementById('drawer-pts').textContent=pts+' ⚡';
+  document.getElementById('drawer-streak-text').textContent=streak+' day streak';
+  if(next){
+    var range=next.min-lv.min; var progress=pts-lv.min; var pct=Math.round((progress/range)*100);
+    document.getElementById('drawer-prog-fill').style.width=pct+'%';
+    document.getElementById('drawer-prog-min').textContent=lv.min;
+    document.getElementById('drawer-prog-max').textContent=next.min;
+    document.getElementById('drawer-prog-next-label').textContent='→ '+next.emoji+' '+next.label;
+    document.getElementById('drawer-next-tease').textContent='✨ '+(next.min-pts)+' more points to '+next.emoji+' '+next.label;
+  } else {
+    document.getElementById('drawer-prog-fill').style.width='100%';
+    document.getElementById('drawer-next-tease').textContent='👑 You have reached the highest level!';
+  }
+  document.getElementById('drawerBg').classList.add('open');
+}
+
+function closeDrawer(e){ if(e.target.id==='drawerBg') document.getElementById('drawerBg').classList.remove('open'); }
+
+function launchConfetti() {
+  var container=document.getElementById('confetti-container');
+  container.innerHTML='';
+  var colors=['#e8a83e','#db2777','#0e7490','#2d7a4f','#f472b6','#f5c842'];
+  for(var i=0;i<60;i++){
+    var p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration=(1.5+Math.random()*2)+'s';
+    p.style.animationDelay=Math.random()*0.8+'s';
+    p.style.width=(6+Math.random()*10)+'px';
+    p.style.height=(6+Math.random()*10)+'px';
+    p.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    container.appendChild(p);
+  }
+  setTimeout(function(){ container.innerHTML=''; },4000);
 }
 
 function renderPassport() {
-  var maxStamps = { senior:8, kids:5, pet:6 };
-  var stampEmojis = { senior:'🐸', kids:'⭐', pet:'🐾' };
-  var types = ['senior','kids','pet'];
+  var maxStamps={senior:8,kids:5,pet:6};
+  var stampEmojis={senior:'🐸',kids:'⭐',pet:'🐾'};
+  var types=['senior','kids','pet'];
   types.forEach(function(type){
-    var stamps = stampsData.filter(function(s){ return s.note !== 'other'; }).length;
-    var total = maxStamps[type];
-    var earned = Math.min(stamps, total);
-    var left = Math.max(0, total - earned);
-    var pct = Math.round((earned/total)*100);
-    var name = passportData.name || 'Wepa Friend';
-    var pts = passportData.points || 0;
-    var since = new Date(passportData.created_at).toLocaleDateString(lang==='de'?'de-DE':lang==='es'?'es-ES':'en-GB',{month:'long',year:'numeric'});
+    var stamps=stampsData.filter(function(s){ return s.note!=='other'; }).length;
+    var total=maxStamps[type]; var earned=Math.min(stamps,total); var left=Math.max(0,total-earned);
+    var pct=Math.round((earned/total)*100);
+    var name=passportData.name||'Wepa Friend';
+    var pts=passportData.points||0;
+    var streak=passportData.streak||0;
+    var since=new Date(passportData.created_at).toLocaleDateString(lang==='de'?'de-DE':lang==='es'?'es-ES':'en-GB',{month:'long',year:'numeric'});
 
-    document.getElementById('welcome-name-'+type).textContent = name;
-    document.getElementById('welcome-meta-'+type).textContent = t('passport_type_'+type)+' · '+t('member_since')+' '+since;
-    renderLevelBadge(type, pts);
+    document.getElementById('welcome-name-'+type).textContent=name;
+    document.getElementById('welcome-meta-'+type).textContent=(lang==='de'?'Mitglied seit':lang==='es'?'Miembro desde':'Member since')+' '+since;
+    renderLevelBadge(type,pts,false);
 
-    document.getElementById('stat-visits-'+type).textContent = stampsData.length;
-    document.getElementById('stat-stamps-'+type).textContent = earned;
-    document.getElementById('stat-left-'+type).textContent = left;
+    // Streak bar
+    var sb=document.getElementById('streak-bar-'+type);
+    if(streak>=2){ sb.style.display='flex'; document.getElementById('streak-text-'+type).textContent=streak+' day streak! 🔥'; }
+    else { sb.style.display='none'; }
 
-    var rewardItem = wepaRewards[type] || 'Reward';
-    if (left === 0) {
-      document.getElementById('reward-title-'+type).textContent = t('reward_'+type+'_done');
-      document.getElementById('reward-desc-'+type).textContent = rewardItem+' — '+(lang==='de'?'zeig dem Personal!':lang==='es'?'¡muéstraselo al personal!':'Show to staff!');
+    document.getElementById('stat-visits-'+type).textContent=stampsData.length;
+    document.getElementById('stat-stamps-'+type).textContent=earned;
+    document.getElementById('stat-left-'+type).textContent=left;
+
+    var rewardItem=wepaRewards[type]||'Reward';
+    if(left===0){
+      document.getElementById('reward-title-'+type).textContent='🎉 Reward unlocked!';
+      document.getElementById('reward-desc-'+type).textContent=rewardItem+' — '+(lang==='de'?'zeig dem Personal!':lang==='es'?'¡muéstraselo al personal!':'Show to staff!');
     } else {
-      document.getElementById('reward-title-'+type).textContent = t('reward_'+type+'_go',{n:left});
-      document.getElementById('reward-desc-'+type).textContent = (lang==='de'?'Noch '+left+' mehr → gratis ':lang==='es'?'Faltan '+left+' más → ':'Collect '+left+' more → free ')+rewardItem;
+      document.getElementById('reward-title-'+type).textContent=(lang==='de'?'🎁 Noch '+left+' mehr!':lang==='es'?'🎁 ¡Faltan '+left+'!':'🎁 '+left+' more to go!');
+      document.getElementById('reward-desc-'+type).textContent=(lang==='de'?'Noch '+left+' → gratis ':lang==='es'?'Faltan '+left+' → ':'Collect '+left+' more → free ')+rewardItem;
     }
 
-    document.getElementById('prog-label-'+type).textContent = earned+' / '+total;
-    document.getElementById('prog-pct-'+type).textContent = pct+'%';
-    document.getElementById('prog-fill-'+type).style.width = pct+'%';
+    document.getElementById('prog-label-'+type).textContent=earned+' / '+total;
+    document.getElementById('prog-pct-'+type).textContent=pct+'%';
+    document.getElementById('prog-fill-'+type).style.width=pct+'%';
 
-    var grid = document.getElementById('stamps-'+type);
-    grid.innerHTML = '';
-    for (var i=0; i<total; i++) {
-      var div = document.createElement('div');
-      if (i===total-1) { div.className='stamp reward-slot'; div.textContent=type==='senior'?'🎁':type==='kids'?'🏆':'🦴'; }
-      else if (i<earned) { div.className='stamp earned '+type; div.textContent=stampEmojis[type]; }
-      else { div.className='stamp empty'; div.setAttribute('data-n', i+1); }
+    var grid=document.getElementById('stamps-'+type); grid.innerHTML='';
+    for(var i=0;i<total;i++){
+      var div=document.createElement('div');
+      if(i===total-1){ div.className='stamp reward-slot'; div.textContent=type==='senior'?'🎁':type==='kids'?'🏆':'🦴'; }
+      else if(i<earned){ div.className='stamp earned '+type; div.textContent=stampEmojis[type]; }
+      else { div.className='stamp empty'; div.setAttribute('data-n',i+1); }
       grid.appendChild(div);
     }
 
-    var visitsEl = document.getElementById('visits-'+type);
-    if (stampsData.length === 0) {
-      visitsEl.innerHTML = '<div class="no-visits">'+t('no_visits')+'</div>';
-    } else {
-      visitsEl.innerHTML = stampsData.slice(0,5).map(function(s){
-        var d = new Date(s.stamped_at).toLocaleDateString(lang==='de'?'de-DE':lang==='es'?'es-ES':'en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    var ve=document.getElementById('visits-'+type);
+    if(stampsData.length===0){ ve.innerHTML='<div class="no-visits">No visits yet. Come visit us!</div>'; }
+    else {
+      ve.innerHTML=stampsData.slice(0,5).map(function(s){
+        var d=new Date(s.stamped_at).toLocaleDateString(lang==='de'?'de-DE':lang==='es'?'es-ES':'en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
         return '<div class="visit"><div class="visit-dot">'+stampEmojis[type]+'</div><div style="flex:1"><div class="visit-title">'+(s.note||'Wepa Visit')+'</div><div class="visit-date">'+d+'</div></div><div class="visit-badge">+1 '+stampEmojis[type]+'</div></div>';
       }).join('');
     }
   });
-  document.getElementById('m-emoji').textContent = currentType==='senior'?'👑':currentType==='kids'?'🧒':'🐕';
-  document.getElementById('m-name').textContent = passportData.name||'Wepa Friend';
-  document.getElementById('m-id').textContent = passportId+' · '+t('passport_type_'+currentType);
-  document.getElementById('m-stamps').textContent = Math.min(stampsData.length, maxStamps[currentType]);
+  var ae={senior:'👑',kids:'🧒',pet:'🐕'};
+  document.getElementById('m-emoji').textContent=ae[currentType];
+  document.getElementById('m-name').textContent=passportData.name||'Wepa Friend';
+  document.getElementById('m-id').textContent=passportId+' · '+(currentType==='senior'?'Senior':currentType==='kids'?'Kids':'Pet')+' Passport';
+  document.getElementById('m-stamps').textContent=Math.min(stampsData.length,{senior:8,kids:5,pet:6}[currentType]);
 }
 
 function switchType(type) {
   ['senior','kids','pet'].forEach(function(tp){
     document.getElementById('pview-'+tp).classList.remove('active');
-    var btn=document.getElementById('btn-'+tp); if(btn) btn.className='type-btn';
+    var b=document.getElementById('btn-'+tp); if(b) b.className='type-btn';
   });
   document.getElementById('pview-'+type).classList.add('active');
-  var btn=document.getElementById('btn-'+type); if(btn) btn.classList.add('active-'+type);
-  currentType = type;
-  window.scrollTo({top:0,behavior:'smooth'});
+  var b=document.getElementById('btn-'+type); if(b) b.classList.add('active-'+type);
+  currentType=type; window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function selectType(type) {
-  selectedType = type;
+  selectedType=type;
   ['senior','kids','pet'].forEach(function(tp){ document.getElementById('stype-'+tp).classList.remove('selected'); });
   document.getElementById('stype-'+type).classList.add('selected');
 }
 
 async function createPassport() {
-  var name = document.getElementById('setup-name').value.trim();
-  var email = document.getElementById('setup-email').value.trim();
-  var btn = document.querySelector('.setup-btn');
-  btn.textContent = '...'; btn.disabled = true;
+  var name=document.getElementById('setup-name').value.trim();
+  var email=document.getElementById('setup-email').value.trim();
+  var btn=document.querySelector('.setup-btn'); btn.textContent='...'; btn.disabled=true;
   try {
-    await fetch(SB_URL+'/rest/v1/wepa_passports', {
-      method:'POST',
-      headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
-      body:JSON.stringify({ id:passportId, name:name||null, email:email||null, passport_type:selectedType, points:0, question_index:0 })
+    await fetch(SB_URL+'/rest/v1/wepa_passports',{
+      method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},
+      body:JSON.stringify({id:passportId,name:name||null,email:email||null,passport_type:selectedType,points:0,question_index:0,streak:0})
     });
-    if (email) {
-      fetch(SB_URL+'/rest/v1/wepa_waitlist', {
-        method:'POST', headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
-        body:JSON.stringify({ email:email, source:'passport-setup' })
-      }).catch(function(){});
-    }
-    localStorage.setItem('wepa_passport_id', passportId);
-    document.getElementById('topbar-id').textContent = passportId;
-    var playBtn = document.getElementById('play-btn');
-    if (playBtn) playBtn.href = 'https://wepaexplorer.com/game.html?passport='+passportId;
-    passportData = { id:passportId, name:name||null, email:email||null, passport_type:selectedType, created_at:new Date().toISOString(), points:0, question_index:0, last_question_asked:null, preferences:{} };
-    stampsData = [];
-    currentType = selectedType;
-    document.getElementById('app-setup').style.display = 'none';
-    document.getElementById('app-passport').style.display = 'block';
-    renderPassport();
-    switchType(currentType);
-    document.getElementById('switcher').style.display = 'none';
-  } catch(e) { btn.textContent = t('setup_btn'); btn.disabled = false; }
+    if(email){ fetch(SB_URL+'/rest/v1/wepa_waitlist',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},body:JSON.stringify({email:email,source:'passport-setup'})}).catch(function(){}); }
+    localStorage.setItem('wepa_passport_id',passportId);
+    document.getElementById('topbar-id').textContent=passportId;
+    var pb=document.getElementById('play-btn'); if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+    passportData={id:passportId,name:name||null,email:email||null,passport_type:selectedType,created_at:new Date().toISOString(),points:0,question_index:0,last_question_asked:null,preferences:{},streak:0};
+    stampsData=[]; currentType=selectedType;
+    document.getElementById('app-setup').style.display='none';
+    document.getElementById('app-passport').style.display='block';
+    renderPassport(); switchType(currentType);
+    document.getElementById('switcher').style.display='none';
+  } catch(e){ btn.textContent='Create My Passport'; btn.disabled=false; }
 }
 
 function shareWhatsApp(e) {
   e.preventDefault();
-  window.open('https://wa.me/?text='+encodeURIComponent(t('wa_message')), '_blank');
+  var msgs={en:'🐸 Hey! I just got my Wepa Passport at Wepa Street Food Fusion in Erfurt. Stamps, rewards, and the food is amazing! Get yours: https://streetfoodfusion.de',de:'🐸 Hey! Ich habe gerade meinen Wepa-Pass bekommen. Stempel, Prämien und tolles Essen! Hol dir deinen: https://streetfoodfusion.de',es:'🐸 ¡Hola! Acabo de obtener mi Pasaporte Wepa en Erfurt. ¡Sellos, premios y la comida es increíble! Obtén el tuyo: https://streetfoodfusion.de'};
+  window.open('https://wa.me/?text='+encodeURIComponent(msgs[lang]||msgs.en),'_blank');
+}
+
+function openShareModal() {
+  if(!championData) return;
+  document.getElementById('share-name').textContent=championData.name||'Wepa Champion';
+  document.getElementById('share-pts').textContent=championData.points+' ⚡ points this week';
+  document.getElementById('share-reward').textContent='🎁 Prize: '+championData.reward;
+  document.getElementById('shareModal').classList.add('open');
+}
+
+function closeShareModal(e){ if(e.target.id==='shareModal') document.getElementById('shareModal').classList.remove('open'); }
+
+function shareChampionWA() {
+  var name=championData?championData.name||'I':'I';
+  var pts=championData?championData.points:0;
+  var reward=championData?championData.reward:weeklyReward;
+  var msgs={en:'👑 I just won the Wepa Weekly Championship! 🐸\n\n⚡ '+pts+' points this week\n🎁 Prize: '+reward+'\n\nJoin the fun at Wepa Street Food Fusion, Erfurt!\nGet your passport: https://streetfoodfusion.de',de:'👑 Ich habe gerade die Wepa Wochenmeisterschaft gewonnen! 🐸\n\n⚡ '+pts+' Punkte diese Woche\n🎁 Preis: '+reward+'\n\nMach mit bei Wepa Street Food Fusion, Erfurt!\nhttps://streetfoodfusion.de',es:'👑 ¡Acabo de ganar el Campeonato Semanal de Wepa! 🐸\n\n⚡ '+pts+' puntos esta semana\n🎁 Premio: '+reward+'\n\n¡Únete en Wepa Street Food Fusion, Erfurt!\nhttps://streetfoodfusion.de'};
+  window.open('https://wa.me/?text='+encodeURIComponent(msgs[lang]||msgs.en),'_blank');
+}
+
+function shareChampionIG() {
+  var name=championData?championData.name||'I':'I';
+  var pts=championData?championData.points:0;
+  var reward=championData?championData.reward:weeklyReward;
+  var text='👑 Weekly Wepa Champion!\n'+name+' — '+pts+' ⚡ points\n🎁 '+reward+'\n🐸 Wepa Street Food Fusion · Erfurt\n📍 streetfoodfusion.de\n\nGet your passport and join the game!';
+  navigator.clipboard.writeText(text).then(function(){
+    alert('Caption copied! Open Instagram and paste it with your screenshot. 📸');
+  }).catch(function(){
+    alert('Share text:\n\n'+text);
+  });
 }
 
 function toggleWF(type) {
-  var el = document.getElementById('wf-'+type);
-  el.classList.toggle('open');
-  if (el.classList.contains('open')) setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
+  var el=document.getElementById('wf-'+type); el.classList.toggle('open');
+  if(el.classList.contains('open')) setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); },50);
 }
 
 async function submitWF(type) {
-  var emailEl = document.getElementById('wf-email-'+type);
-  var email = emailEl.value.trim();
-  if (!email || !email.includes('@')) { emailEl.style.borderColor='#e74c3c'; emailEl.focus(); return; }
-  var btn = document.querySelector('#wf-'+type+' .wf-submit');
-  btn.textContent='...'; btn.disabled=true;
-  try {
-    await fetch(SB_URL+'/rest/v1/wepa_waitlist', {
-      method:'POST', headers:{'Content-Type':'application/json', apikey:SB_KEY, Prefer:'return=minimal'},
-      body:JSON.stringify({ email:email, source:'passport-'+type })
-    });
-  } catch(e) {}
+  var emailEl=document.getElementById('wf-email-'+type); var email=emailEl.value.trim();
+  if(!email||!email.includes('@')){ emailEl.style.borderColor='#e74c3c'; emailEl.focus(); return; }
+  var btn=document.querySelector('#wf-'+type+' .wf-submit'); btn.textContent='...'; btn.disabled=true;
+  try { await fetch(SB_URL+'/rest/v1/wepa_waitlist',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},body:JSON.stringify({email:email,source:'passport-'+type})}); } catch(e){}
   btn.style.display='none';
   document.querySelectorAll('#wf-'+type+' .wf-input, #wf-'+type+' .wf-label').forEach(function(el){ el.style.display='none'; });
-  var ok=document.getElementById('wf-ok-'+type);
-  ok.textContent=t(type==='kids'?'wf_success_kids':'wf_success'); ok.style.display='block';
+  var ok=document.getElementById('wf-ok-'+type); ok.textContent='You\'re on the list! See you soon.'; ok.style.display='block';
 }
 
 function openModal() {
-  var maxStamps={senior:8,kids:5,pet:6};
-  var avatarEmojis={senior:'👑',kids:'🧒',pet:'🐕'};
-  var earned=Math.min(stampsData.length,maxStamps[currentType]);
-  document.getElementById('m-emoji').textContent=avatarEmojis[currentType];
+  var ae={senior:'👑',kids:'🧒',pet:'🐕'}, ms={senior:8,kids:5,pet:6};
+  document.getElementById('m-emoji').textContent=ae[currentType];
   document.getElementById('m-name').textContent=passportData?(passportData.name||'Wepa Friend'):'—';
-  document.getElementById('m-id').textContent=passportId+' · '+t('passport_type_'+currentType);
-  document.getElementById('m-stamps').textContent=earned;
+  document.getElementById('m-id').textContent=passportId+' · '+(currentType==='senior'?'Senior':currentType==='kids'?'Kids':'Pet')+' Passport';
+  document.getElementById('m-stamps').textContent=Math.min(stampsData.length,ms[currentType]);
   document.getElementById('staffModal').classList.add('open');
-  var staffUrl='https://streetfoodfusion.de/staff.html?card='+passportId;
-  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(staffUrl);
+  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent('https://streetfoodfusion.de/staff.html?card='+passportId);
 }
 
-function closeModal(e) { if(e.target.id==='staffModal') document.getElementById('staffModal').classList.remove('open'); }
+function closeModal(e){ if(e.target.id==='staffModal') document.getElementById('staffModal').classList.remove('open'); }
 
 init();
 </script>
