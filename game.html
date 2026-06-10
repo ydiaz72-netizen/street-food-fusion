@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Wepa Explorer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0600; --cream: #f2ece0; --gold: #e8a83e;
+      --gold-dark: #c97600; --green: #2d7a4f;
+      --muted: rgba(242,236,224,0.5); --faint: rgba(242,236,224,0.08);
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    html, body { height: 100%; background: var(--bg); font-family: var(--font); color: var(--cream); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: none; }
+
+    .screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; z-index: 10; }
+    .screen.hidden { display: none; }
+
+    /* LOADING */
+    #screen-loading .spinner { width: 40px; height: 40px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* AUTH */
+    #screen-auth .emoji { font-size: 64px; margin-bottom: 16px; }
+    #screen-auth h2 { font-size: 24px; font-weight: 900; margin-bottom: 12px; }
+    #screen-auth p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 320px; margin: 0 auto 24px; }
+    .btn-gold { background: var(--gold); color: var(--bg); border: none; padding: 16px 32px; border-radius: 99px; font-family: var(--font); font-size: 15px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
+    .btn-gold:hover { background: #f0b84a; }
+
+    /* START */
+    #screen-start { background: var(--bg); }
+    #screen-start .mascot { font-size: 72px; margin-bottom: 8px; animation: bobble 2s ease-in-out infinite; }
+    @keyframes bobble { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+    #screen-start h1 { font-size: clamp(32px, 8vw, 56px); font-weight: 900; letter-spacing: -1px; margin-bottom: 6px; }
+    #screen-start h1 span { color: var(--gold); }
+    .passport-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,168,62,0.1); border: 1px solid rgba(232,168,62,0.25); border-radius: 99px; padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--gold); margin: 12px 0 8px; }
+    .best-score { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .best-score span { color: var(--cream); font-weight: 800; }
+
+    /* SPIRIT BANNER */
+    .spirit-banner { background: linear-gradient(135deg,rgba(232,168,62,0.15),rgba(232,168,62,0.05)); border: 1.5px solid rgba(232,168,62,0.4); border-radius: 16px; padding: 14px 18px; margin-bottom: 14px; max-width: 320px; width: 100%; animation: spiritPulse 2s ease-in-out infinite; }
+    @keyframes spiritPulse { 0%,100% { border-color: rgba(232,168,62,0.4); box-shadow: 0 0 0 rgba(232,168,62,0); } 50% { border-color: rgba(232,168,62,0.8); box-shadow: 0 0 20px rgba(232,168,62,0.2); } }
+    .spirit-banner-title { font-size: 14px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+    .spirit-banner-sub { font-size: 12px; color: var(--muted); }
+    .spirit-timer { font-size: 18px; font-weight: 900; color: var(--gold); margin-top: 4px; }
+
+    .featured-badge { background: rgba(232,168,62,0.08); border: 1px solid var(--faint); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; color: var(--muted); max-width: 320px; width: 100%; }
+    .featured-badge strong { color: var(--gold); }
+
+    .start-btn { font-size: 20px; padding: 20px 48px; margin-bottom: 12px; display: block; width: 100%; max-width: 320px; border-radius: 18px; }
+    .how-to { font-size: 13px; color: var(--muted); max-width: 300px; }
+    .how-to strong { color: var(--cream); }
+
+    /* HUD */
+    #hud { position: fixed; top: 0; left: 0; right: 0; z-index: 5; padding: 12px 20px; display: none; align-items: center; justify-content: space-between; background: linear-gradient(to bottom, rgba(10,6,0,0.9), transparent); }
+    #hud.active { display: flex; }
+    .hud-score { font-size: 22px; font-weight: 900; color: var(--cream); }
+    .hud-combo { font-size: 14px; font-weight: 800; color: var(--gold); min-width: 80px; text-align: center; }
+    .hud-level { font-size: 13px; font-weight: 700; color: var(--muted); }
+
+    /* CATCH ZONE INDICATOR */
+    #catch-zone { position: fixed; left: 0; right: 0; z-index: 4; pointer-events: none; display: none; }
+    #catch-zone.active { display: block; }
+
+    /* CANVAS */
+    #gameCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: none; cursor: pointer; }
+    #gameCanvas.active { display: block; }
+
+    /* TAP HINT */
+    #tap-hint { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 700; color: rgba(242,236,224,0.4); pointer-events: none; display: none; letter-spacing: 1px; text-transform: uppercase; }
+    #tap-hint.active { display: block; animation: hintFade 3s ease forwards; }
+    @keyframes hintFade { 0%,60% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* CATCH FLASH */
+    #catch-flash { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 28px; font-weight: 900; pointer-events: none; display: none; z-index: 30; }
+    #catch-flash.show { display: block; animation: flashPop 0.6s ease forwards; }
+    @keyframes flashPop { 0% { opacity:1; transform:translate(-50%,-50%) scale(0.5); } 60% { opacity:1; transform:translate(-50%,-80%) scale(1.3); } 100% { opacity:0; transform:translate(-50%,-120%) scale(1); } }
+
+    /* SPIRIT CATCH FLASH */
+    #spirit-flash { position: fixed; inset: 0; pointer-events: none; display: none; z-index: 25; background: radial-gradient(circle at center, rgba(232,168,62,0.3), transparent 70%); }
+    #spirit-flash.show { display: block; animation: spiritFlash 0.8s ease forwards; }
+    @keyframes spiritFlash { 0% { opacity:0; } 30% { opacity:1; } 100% { opacity:0; } }
+
+    /* POPUPS */
+    .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10,6,0,0.97); border: 1px solid rgba(232,168,62,0.3); border-radius: 24px; padding: 28px 24px; text-align: center; z-index: 20; max-width: 340px; width: 90%; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; display: none; }
+    .popup.show { display: block; }
+    @keyframes popIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.7); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
+    .popup-emoji { font-size: 52px; margin-bottom: 12px; }
+    .popup-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .popup-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .popup-fact { font-size: 13px; color: var(--cream); background: rgba(232,168,62,0.08); border-radius: 12px; padding: 12px; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+    .popup-close { background: var(--gold); color: var(--bg); border: none; padding: 12px 28px; border-radius: 99px; font-family: var(--font); font-size: 15px; font-weight: 800; cursor: pointer; }
+
+    .golden-popup { border-color: var(--gold); }
+    .golden-popup .popup-title { color: var(--gold); font-size: 26px; }
+
+    /* SPIRIT POPUP */
+    .spirit-popup { border-color: var(--gold); background: linear-gradient(135deg,rgba(20,12,0,0.99),rgba(10,6,0,0.99)); }
+    .spirit-popup .popup-title { color: var(--gold); font-size: 24px; }
+    .spirit-pts { font-size: 36px; font-weight: 900; color: var(--gold); margin: 8px 0; }
+
+    /* GAME OVER */
+    #screen-gameover { background: rgba(10,6,0,0.97); }
+    #screen-gameover h2 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+    .go-score { font-size: 56px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+    .go-best { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .go-countries { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; max-width: 320px; }
+    .go-country { background: rgba(232,168,62,0.1); border: 1px solid rgba(232,168,62,0.2); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 700; }
+    .go-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; }
+    .btn-secondary { background: rgba(242,236,224,0.08); color: var(--cream); border: 1px solid var(--faint); padding: 14px 28px; border-radius: 99px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; }
+    .btn-secondary:hover { background: rgba(242,236,224,0.14); }
+
+    /* LEADERBOARD */
+    #screen-leaderboard { background: rgba(10,6,0,0.98); overflow-y: auto; justify-content: flex-start; padding-top: 60px; }
+    #screen-leaderboard h2 { font-size: 26px; font-weight: 900; margin-bottom: 4px; }
+    .lb-week { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .lb-list { width: 100%; max-width: 400px; margin-bottom: 20px; }
+    .lb-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--faint); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-size: 18px; font-weight: 900; width: 32px; flex-shrink: 0; color: var(--muted); }
+    .lb-name { flex: 1; font-size: 15px; font-weight: 700; text-align: left; }
+    .lb-you { color: var(--gold); }
+    .lb-score { font-size: 16px; font-weight: 900; }
+    .lb-type { font-size: 11px; color: var(--muted); }
+    .lb-empty { font-size: 14px; color: var(--muted); padding: 32px; }
+    .lb-reward { background: rgba(232,168,62,0.08); border: 1px solid rgba(232,168,62,0.2); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; max-width: 400px; width: 100%; }
+    .lb-reward-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .lb-reward-text { font-size: 16px; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="screen" id="screen-loading">
+  <div class="spinner"></div>
+  <div style="font-size:14px;color:var(--muted);">Loading Wepa Explorer...</div>
+</div>
+
+<!-- NOT AUTHORIZED -->
+<div class="screen hidden" id="screen-auth">
+  <div class="emoji" style="font-size:64px;margin-bottom:16px;">🐸</div>
+  <h2 style="font-size:24px;font-weight:900;margin-bottom:12px;">Passport Required</h2>
+  <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:320px;margin:0 auto 24px;">Wepa Explorer is exclusive to Wepa passport holders. Tap your NFC card or scan the QR code to get your passport first.</p>
+  <a href="https://streetfoodfusion.de" class="btn-gold">Get My Passport →</a>
+</div>
+
+<!-- START -->
+<div class="screen hidden" id="screen-start">
+  <div class="mascot">🐸</div>
+  <h1>Wepa <span>Explorer</span></h1>
+  <div class="passport-badge" id="passport-badge">🎫 Loading...</div>
+  <div class="best-score">Your best: <span id="best-score-display">0</span> pts</div>
+
+  <!-- SPIRIT BANNER — shown only if fresh stamp -->
+  <div class="spirit-banner hidden" id="spirit-banner">
+    <div class="spirit-banner-title" id="spirit-banner-emoji">👑 Your Spirit is here!</div>
+    <div class="spirit-banner-sub">Catch it in-game for a massive bonus!</div>
+    <div class="spirit-timer" id="spirit-timer">⏳ --:--</div>
+  </div>
+
+  <div class="featured-badge">
+    ⭐ This week: <strong id="featured-country-name">Puerto Rico</strong> — <strong id="featured-multiplier">3x</strong> points!
+  </div>
+  <button class="btn-gold start-btn" onclick="startGame()">🌍 Play Now</button>
+  <p class="how-to"><strong>Tap</strong> the screen · <strong>Catch</strong> ingredients · <strong>Discover</strong> the world</p>
+  <button class="btn-secondary" style="margin-top:14px;padding:10px 24px;border-radius:99px;" onclick="showLeaderboard()">🏆 Leaderboard</button>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div>
+    <div class="hud-score" id="hud-score">0</div>
+    <div class="hud-level" id="hud-level">Level 1</div>
+  </div>
+  <div class="hud-combo" id="hud-combo"></div>
+  <button onclick="pauseGame()" style="background:rgba(242,236,224,0.1);border:1px solid var(--faint);color:var(--cream);padding:8px 14px;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;">⏸</button>
+</div>
+
+<!-- CANVAS -->
+<canvas id="gameCanvas"></canvas>
+
+<!-- CATCH FLASH -->
+<div id="catch-flash"></div>
+<div id="spirit-flash"></div>
+
+<!-- TAP HINT -->
+<div id="tap-hint">Tap to catch!</div>
+
+<!-- COUNTRY UNLOCK POPUP -->
+<div class="popup" id="popup-unlock">
+  <div class="popup-emoji" id="pu-flag">🇵🇷</div>
+  <div class="popup-title" id="pu-name">Puerto Rico Unlocked!</div>
+  <div class="popup-sub" id="pu-sub">You discovered Empanada!</div>
+  <div class="popup-fact" id="pu-fact">Fun fact here</div>
+  <button class="popup-close" onclick="closeUnlockPopup()">Keep Exploring →</button>
+</div>
+
+<!-- GOLDEN COQUI POPUP -->
+<div class="popup golden-popup" id="popup-golden">
+  <div class="popup-emoji">✨🐸✨</div>
+  <div class="popup-title">Golden Coquí!</div>
+  <div class="popup-sub">You caught the legendary Golden Coquí! You've earned this week's special reward.</div>
+  <div class="popup-fact" id="golden-reward-text">Free Dessert 🍮</div>
+  <button class="popup-close" onclick="closeGoldenPopup()">Claim Reward →</button>
+</div>
+
+<!-- PERSONAL SPIRIT POPUP -->
+<div class="popup spirit-popup" id="popup-spirit">
+  <div class="popup-emoji" id="spirit-popup-emoji">👑✨</div>
+  <div class="popup-title">Your Spirit Caught!</div>
+  <div class="spirit-pts" id="spirit-pts-display">+200 pts</div>
+  <div class="popup-sub" id="spirit-popup-sub">Your passport spirit appeared because you visited Wepa today. It will return on your next visit!</div>
+  <div class="popup-fact" id="spirit-popup-fact"></div>
+  <button class="popup-close" onclick="closeSpiritPopup()">Amazing! →</button>
+</div>
+
+<!-- GAME OVER -->
+<div class="screen hidden" id="screen-gameover">
+  <div style="font-size:48px;margin-bottom:8px;">🐸</div>
+  <h2>Game Over!</h2>
+  <div class="go-score" id="go-score">0</div>
+  <div class="go-best" id="go-best">New best!</div>
+  <div class="go-countries" id="go-countries"></div>
+  <div class="go-btns">
+    <button class="btn-gold" style="padding:16px;" onclick="startGame()">🔄 Play Again</button>
+    <button class="btn-secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+    <button class="btn-secondary" onclick="showStart()">← Back</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="screen hidden" id="screen-leaderboard">
+  <h2>🏆 Leaderboard</h2>
+  <div class="lb-week" id="lb-week">This Week</div>
+  <div class="lb-reward">
+    <div class="lb-reward-label">This Week's Prize</div>
+    <div class="lb-reward-text" id="lb-reward-text">Loading...</div>
+  </div>
+  <div class="lb-list" id="lb-list"><div class="lb-empty">Loading scores...</div></div>
+  <button class="btn-secondary" onclick="hideLeaderboard()">← Back</button>
+</div>
+
+<script>
+const SB_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M';
+
+// ── COUNTRIES ──
+const COUNTRIES = {
+  PR: { name:'Puerto Rico', flag:'🇵🇷', ingredient:'🫔', ingredientName:'Empanada',
+    facts:['The coquí frog is Puerto Rico\'s national symbol — its song fills the island every night.','Puerto Rico has over 270 beaches along its 311-mile coastline.','Mofongo, made from fried plantains, is one of Puerto Rico\'s most beloved dishes with roots in West Africa.','Puerto Rico is home to the only tropical rainforest in the US National Forest system — El Yunque.'] },
+  DE: { name:'Germany', flag:'🇩🇪', ingredient:'🥨', ingredientName:'Pretzel',
+    facts:['Germany has over 1,500 different types of beer and more than 1,300 breweries.','The pretzel has been a German symbol since the 12th century — monks gave them to children as rewards.','Germany invented the Christmas tree tradition, now celebrated worldwide.','There are over 300 different types of bread baked in Germany — more than any other country.'] },
+  MA: { name:'Morocco', flag:'🇲🇦', ingredient:'🫕', ingredientName:'Tagine',
+    facts:['Morocco is the only African country with coastlines on both the Atlantic and Mediterranean.','Mint tea in Morocco is a symbol of hospitality — refusing it is considered impolite.','The city of Fes has the world\'s oldest university, founded in 859 AD.','Moroccan tagine gets its name from the conical clay pot it\'s cooked in.'] },
+  TR: { name:'Turkey', flag:'🇹🇷', ingredient:'🥙', ingredientName:'Döner',
+    facts:['Turkey is the world\'s largest producer of hazelnuts, supplying 70% of global demand.','Istanbul is the only city in the world that spans two continents — Europe and Asia.','Turkish coffee culture dates back to 1475 in Istanbul — the world\'s first coffee shops.','The döner kebab was invented in Turkey and later became Germany\'s favourite street food.'] },
+  IN: { name:'India', flag:'🇮🇳', ingredient:'🍛', ingredientName:'Curry',
+    facts:['India is the birthplace of chess, yoga, and the number zero.','India has the world\'s largest vegetarian population — about 400 million people.','Chai tea is consumed by over a billion people in India daily.','The spice trade with India changed the entire course of world history and exploration.'] },
+  JP: { name:'Japan', flag:'🇯🇵', ingredient:'🍜', ingredientName:'Ramen',
+    facts:['Japan has over 100 different regional ramen styles — each city has its own unique recipe.','The Japanese concept of Ikigai means finding purpose through passion, mission, and contribution.','Japan has more vending machines per capita than any other country — one for every 23 people.','Sushi was originally street food in Tokyo — fast food before fast food existed.'] },
+  TH: { name:'Thailand', flag:'🇹🇭', ingredient:'🥭', ingredientName:'Mango',
+    facts:['Thailand is the world\'s largest exporter of rice, feeding much of the planet.','Pad Thai was invented in the 1930s as part of a national campaign to promote Thai identity.','Thailand has over 40,000 Buddhist temples woven into daily life and food culture.','Mango sticky rice is considered Thailand\'s most iconic dish internationally.'] },
+  CO: { name:'Colombia', flag:'🇨🇴', ingredient:'🌶️', ingredientName:'Ají',
+    facts:['Colombia is the only South American country with coastlines on both the Pacific and Caribbean.','Colombia produces about 12% of the world\'s coffee.','Arepas are among the oldest foods in the Americas, dating back 3,000 years.','Colombia has more species of birds than any other country in the world — over 1,900 species.'] },
+  BR: { name:'Brazil', flag:'🇧🇷', ingredient:'🍍', ingredientName:'Pineapple',
+    facts:['Brazil is home to 60% of the Amazon rainforest — the world\'s largest tropical forest.','Feijoada, a black bean and pork stew, is Brazil\'s national dish with African and Portuguese roots.','Brazil has been the world\'s top coffee producer for over 150 years.','Carnival in Rio draws over 2 million people onto the streets daily.'] },
+  MX: { name:'Mexico', flag:'🇲🇽', ingredient:'🌮', ingredientName:'Taco',
+    facts:['Mexico is the birthplace of chocolate — the Aztecs used cacao beans as currency.','Mexican cuisine is one of only two in the world recognized by UNESCO as Intangible Cultural Heritage.','The avocado originated in Mexico over 10,000 years ago.','Mexico has 35 UNESCO World Heritage Sites — more than any other country in the Americas.'] },
+};
+
+const COUNTRY_CODES = Object.keys(COUNTRIES);
+const LANE_COUNT = 3; // top, middle, bottom lanes for items
+
+// ── SPIRIT FACTS (personal — delivered only by the spirit) ──
+const SPIRIT_FACTS = {
+  senior: 'Your loyalty makes Wepa what it is. Every visit you make brings more warmth to our table. Thank you. 👑',
+  kids:   'You are officially a Wepa Explorer! The world is yours to discover, one ingredient at a time. 🌍',
+  pet:    'Every paw print at Wepa tells a story. Your companion is part of our family. 🐾'
+};
+
+// ── STATE ──
+let passportId = null;
+let passportData = null;
+let gameSettings = { featured_country:'PR', featured_multiplier:3, explorer_reward:'Secret Badge 🏅' };
+let bestScore = 0;
+let currentScore = 0;
+let gameRunning = false;
+let gamePaused = false;
+let animFrame = null;
+let sessionCountries = [];
+let discoveredCountries = [];
+let combo = 0;
+let comboTimer = null;
+let goldenCoquiShown = false;
+let spiritActive = false;
+let spiritCaught = false;
+let spiritExpiry = null;
+let spiritTimerInterval = null;
+let tapHandled = false;
+
+// ── CANVAS ──
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// ── GAME OBJECTS ──
+let wepa, items, particles, lanes;
+let speed, frameCount, level;
+let catchWindowOpen = false;
+
+function laneY(laneIdx) {
+  // 3 lanes: top 30%, middle 55%, bottom 75% of screen
+  const positions = [0.30, 0.52, 0.72];
+  return H * positions[laneIdx];
+}
+
+function initGame() {
+  speed = 3.5;
+  frameCount = 0;
+  level = 1;
+  currentScore = 0;
+  combo = 0;
+  sessionCountries = [];
+  goldenCoquiShown = false;
+  spiritCaught = false;
+  items = [];
+  particles = [];
+  catchWindowOpen = false;
+  tapHandled = false;
+
+  // Wepa sits in the middle lane by default, shifts to catch
+  wepa = {
+    x: W * 0.18,
+    targetLane: 1,
+    currentLane: 1,
+    laneProgress: 1, // 0→1 transition
+    size: 56,
+    animFrame: 0,
+    catching: false,
+    catchAnim: 0,
+    missed: 0, // misses before game over
+  };
+}
+
+// ── CLOSEST ITEM TARGETING ──
+function getClosestItem() {
+  const catchZone = W * 0.35; // items within this x distance are "catchable"
+  let closest = null;
+  let closestDist = Infinity;
+  items.forEach(function(item) {
+    if (item.caught || item.missed) return;
+    const dist = Math.abs(item.x - wepa.x);
+    if (item.x > wepa.x && item.x < wepa.x + catchZone && dist < closestDist) {
+      closest = item;
+      closestDist = dist;
+    }
+  });
+  return closest;
+}
+
+// ── TAP TO CATCH ──
+function onTap() {
+  if (!gameRunning || gamePaused) return;
+  const target = getClosestItem();
+  if (!target) return;
+
+  // Move Wepa to that lane
+  wepa.targetLane = target.lane;
+  wepa.catching = true;
+  wepa.catchAnim = 1;
+
+  // Catch it
+  target.caught = true;
+
+  if (target.isSpirit) {
+    spiritCaught = true;
+    showSpiritPopup();
+  } else if (target.isGolden) {
+    goldenCoquiShown = true;
+    collectItem(target);
+    showGoldenPopup();
+  } else {
+    collectItem(target);
+  }
+}
+
+canvas.addEventListener('click', onTap);
+canvas.addEventListener('touchstart', function(e) { e.preventDefault(); onTap(); }, { passive: false });
+document.addEventListener('keydown', function(e) { if (e.code === 'Space') { e.preventDefault(); onTap(); } });
+
+// ── SPAWN ITEM ──
+function spawnItem() {
+  // Decide: spirit, golden, or normal
+  const isSpirit = spiritActive && !spiritCaught && Math.random() < 0.08; // 8% chance each spawn when spirit active
+  const isGolden = !isSpirit && !goldenCoquiShown && Math.random() < 0.002;
+
+  let emoji, code, size;
+  if (isSpirit) {
+    const typeEmoji = { senior:'👑', kids:'🧒', pet:'🐾' };
+    emoji = (typeEmoji[passportData?.passport_type] || '🐸') + '✨';
+    code = null; size = 48;
+  } else if (isGolden) {
+    emoji = '✨🐸✨'; code = null; size = 48;
+  } else {
+    const sessionPool = COUNTRY_CODES.filter(function(c){ return !sessionCountries.includes(c); });
+    const pool = sessionPool.length > 0 ? sessionPool : COUNTRY_CODES;
+    code = pool[Math.floor(Math.random() * pool.length)];
+    emoji = COUNTRIES[code].ingredient;
+    size = 40;
+  }
+
+  const lane = Math.floor(Math.random() * LANE_COUNT);
+
+  items.push({
+    x: W + 60,
+    lane: lane,
+    y: laneY(lane),
+    emoji: emoji,
+    code: code,
+    isSpirit: isSpirit,
+    isGolden: isGolden,
+    size: size,
+    caught: false,
+    missed: false,
+    alpha: 1,
+  });
+}
+
+// ── COLLECT ITEM ──
+function collectItem(item) {
+  if (!item.code) return;
+  const country = COUNTRIES[item.code];
+  const isFeatured = item.code === gameSettings.featured_country;
+  const multiplier = isFeatured ? gameSettings.featured_multiplier : 1;
+  const pts = 50 * multiplier * Math.max(1, combo);
+  currentScore += pts;
+  combo++;
+  clearTimeout(comboTimer);
+  comboTimer = setTimeout(function(){ combo = 0; }, 2000);
+  spawnParticles(item.x, item.y, '#e8a83e', 10);
+
+  // Flash
+  showCatchFlash('+' + pts + (isFeatured ? ' 🌟' : ''));
+
+  if (!sessionCountries.includes(item.code)) {
+    sessionCountries.push(item.code);
+    if (!discoveredCountries.includes(item.code)) {
+      discoveredCountries.push(item.code);
+      showUnlockPopup(item.code);
+    }
+  }
+}
+
+// ── DRAW ──
+function drawBackground() {
+  // Sky
+  var grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#0a0600');
+  grad.addColorStop(0.6, '#120b00');
+  grad.addColorStop(1, '#1a0f00');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  ctx.fillStyle = 'rgba(242,236,224,0.35)';
+  for (var i = 0; i < 40; i++) {
+    var sx = ((i * 137.5 + frameCount * 0.08) % W);
+    var sy = (i * 73) % (H * 0.55);
+    var ss = 1 + (i % 3) * 0.5;
+    ctx.beginPath();
+    ctx.arc(sx, sy, ss, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Lane guides — subtle dashed lines
+  for (var l = 0; l < LANE_COUNT; l++) {
+    var ly = laneY(l);
+    ctx.strokeStyle = 'rgba(232,168,62,0.06)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([20, 30]);
+    ctx.beginPath();
+    ctx.moveTo(0, ly);
+    ctx.lineTo(W, ly);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Ground
+  ctx.fillStyle = '#140d00';
+  ctx.fillRect(0, H * 0.82, W, H * 0.18);
+
+  // Ground glow line
+  var lineGrad = ctx.createLinearGradient(0, H * 0.82, W, H * 0.82);
+  lineGrad.addColorStop(0, 'transparent');
+  lineGrad.addColorStop(0.5, 'rgba(232,168,62,0.3)');
+  lineGrad.addColorStop(1, 'transparent');
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, H * 0.82);
+  ctx.lineTo(W, H * 0.82);
+  ctx.stroke();
+
+  // Scrolling ground dots
+  ctx.fillStyle = 'rgba(232,168,62,0.12)';
+  for (var j = 0; j < 20; j++) {
+    var dx = ((j * 80 - frameCount * speed * 0.4) % W + W) % W;
+    ctx.beginPath();
+    ctx.arc(dx, H * 0.82 + 10, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawWepa() {
+  // Smooth lane transition
+  if (wepa.currentLane !== wepa.targetLane) {
+    wepa.laneProgress = Math.min(1, (wepa.laneProgress || 0) + 0.12);
+    if (wepa.laneProgress >= 1) {
+      wepa.currentLane = wepa.targetLane;
+      wepa.laneProgress = 1;
+    }
+  }
+
+  var fromY = laneY(wepa.currentLane);
+  var toY = laneY(wepa.targetLane);
+  var ease = wepa.laneProgress < 1 ? wepa.laneProgress * wepa.laneProgress * (3 - 2 * wepa.laneProgress) : 1;
+  var wy = fromY + (toY - fromY) * ease;
+
+  // Bob animation
+  var bob = Math.sin(frameCount * 0.08) * 4;
+
+  // Catching stretch
+  var scaleX = wepa.catching ? 1.3 : 1.0;
+  var scaleY = wepa.catching ? 0.85 : 1.0;
+  if (wepa.catching) {
+    wepa.catchAnim -= 0.08;
+    if (wepa.catchAnim <= 0) { wepa.catching = false; scaleX = 1; scaleY = 1; }
+  }
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(232,168,62,0.3)';
+  ctx.shadowBlur = 15;
+  ctx.font = wepa.size + 'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.translate(wepa.x, wy + bob);
+  ctx.scale(scaleX, scaleY);
+  ctx.fillText('🐸', 0, 0);
+  ctx.restore();
+
+  // Catch ring indicator — shows target item's lane
+  var nearest = getClosestItem();
+  if (nearest) {
+    var ringY = laneY(nearest.lane);
+    var ringAlpha = 0.3 + Math.sin(frameCount * 0.15) * 0.2;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(232,168,62,' + ringAlpha + ')';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.arc(wepa.x, ringY, 30, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+}
+
+function drawItems() {
+  items.forEach(function(item) {
+    if (item.caught || item.missed) return;
+    ctx.save();
+
+    if (item.isSpirit) {
+      // Golden pulsing glow for spirit
+      var pulse = 1 + Math.sin(frameCount * 0.12) * 0.12;
+      ctx.shadowColor = 'rgba(232,168,62,0.9)';
+      ctx.shadowBlur = 25 + Math.sin(frameCount * 0.1) * 10;
+      ctx.scale(pulse, pulse);
+    } else if (item.isGolden) {
+      ctx.shadowColor = 'rgba(255,215,0,0.8)';
+      ctx.shadowBlur = 20;
+      var gp = 1 + Math.sin(frameCount * 0.1) * 0.1;
+      ctx.scale(gp, gp);
+    }
+
+    ctx.font = item.size + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.globalAlpha = item.alpha;
+    ctx.fillText(item.emoji, item.x / (item.isSpirit || item.isGolden ? (1 + Math.sin(frameCount * 0.12) * 0.12) : 1), item.y);
+    ctx.restore();
+
+    // Item label underneath
+    if (!item.isSpirit && !item.isGolden && item.code) {
+      ctx.save();
+      ctx.font = '11px ' + getComputedStyle(document.body).fontFamily;
+      ctx.fillStyle = 'rgba(232,168,62,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText(COUNTRIES[item.code].flag, item.x, item.y + item.size * 0.7);
+      ctx.restore();
+    }
+
+    if (item.isSpirit) {
+      ctx.save();
+      ctx.font = '11px ' + getComputedStyle(document.body).fontFamily;
+      ctx.fillStyle = 'rgba(232,168,62,0.8)';
+      ctx.textAlign = 'center';
+      ctx.fillText('YOUR SPIRIT', item.x, item.y + item.size * 0.7);
+      ctx.restore();
+    }
+  });
+}
+
+function drawParticles() {
+  particles.forEach(function(p) {
+    ctx.save();
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawMissIndicator() {
+  if (wepa.missed > 0) {
+    for (var i = 0; i < 3; i++) {
+      ctx.save();
+      ctx.font = '18px serif';
+      ctx.textAlign = 'center';
+      ctx.globalAlpha = i < wepa.missed ? 1 : 0.2;
+      ctx.fillText('💔', W - 30 - i * 28, 50);
+      ctx.restore();
+    }
+  }
+}
+
+// ── PARTICLES ──
+function spawnParticles(x, y, color, count) {
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: x, y: y,
+      vx: (Math.random() - 0.5) * 7,
+      vy: (Math.random() - 0.5) * 7 - 3,
+      life: 1, color: color,
+      size: 4 + Math.random() * 6,
+    });
+  }
+}
+
+// ── GAME LOOP ──
+function gameLoop() {
+  if (!gameRunning || gamePaused) return;
+  frameCount++;
+
+  // Speed ramp
+  speed = 3.5 + Math.floor(frameCount / 360) * 0.4;
+  level = Math.min(5, 1 + Math.floor(frameCount / 360));
+  document.getElementById('hud-level').textContent = 'Level ' + level;
+  document.getElementById('hud-score').textContent = Math.floor(currentScore);
+
+  // Spawn
+  var spawnRate = Math.max(50, 90 - level * 8);
+  if (frameCount % spawnRate === 0) spawnItem();
+
+  // Passive score
+  currentScore += speed * 0.04;
+
+  // Move items
+  items.forEach(function(item) { item.x -= speed; });
+
+  // Check for missed items (passed Wepa without being caught)
+  items.forEach(function(item) {
+    if (!item.caught && !item.missed && item.x < wepa.x - 40) {
+      item.missed = true;
+      if (!item.isSpirit && !item.isGolden) {
+        // Miss penalty
+        wepa.missed = (wepa.missed || 0) + 1;
+        spawnParticles(wepa.x, laneY(1), '#c0392b', 5);
+        combo = 0;
+        if (wepa.missed >= 3) {
+          endGame();
+          return;
+        }
+      }
+    }
+  });
+
+  // Clean
+  items = items.filter(function(item) { return item.x > -80; });
+
+  // Particles
+  particles.forEach(function(p) { p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.life -= 0.035; });
+  particles = particles.filter(function(p) { return p.life > 0; });
+
+  // Combo HUD
+  if (combo > 1) {
+    document.getElementById('hud-combo').textContent = combo + 'x COMBO!';
+  } else {
+    document.getElementById('hud-combo').textContent = '';
+  }
+
+  // Draw
+  drawBackground();
+  drawItems();
+  drawWepa();
+  drawParticles();
+  drawMissIndicator();
+
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+// ── CATCH FLASH ──
+function showCatchFlash(text) {
+  var el = document.getElementById('catch-flash');
+  el.textContent = text;
+  el.classList.remove('show');
+  void el.offsetWidth;
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 600);
+}
+
+// ── POPUPS ──
+function showUnlockPopup(code) {
+  gamePaused = true;
+  var country = COUNTRIES[code];
+  var fact = country.facts[Math.floor(Math.random() * country.facts.length)];
+  document.getElementById('pu-flag').textContent = country.flag;
+  document.getElementById('pu-name').textContent = country.name + ' Unlocked!';
+  document.getElementById('pu-sub').textContent = 'You discovered ' + country.ingredientName + '!';
+  document.getElementById('pu-fact').textContent = '🌍 ' + fact;
+  document.getElementById('popup-unlock').classList.add('show');
+}
+
+function closeUnlockPopup() {
+  document.getElementById('popup-unlock').classList.remove('show');
+  gamePaused = false;
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+function showGoldenPopup() {
+  gamePaused = true;
+  document.getElementById('golden-reward-text').textContent = gameSettings.explorer_reward;
+  document.getElementById('popup-golden').classList.add('show');
+}
+
+function closeGoldenPopup() {
+  document.getElementById('popup-golden').classList.remove('show');
+  gamePaused = false;
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+function showSpiritPopup() {
+  gamePaused = true;
+  var type = passportData?.passport_type || 'senior';
+  var typeEmoji = { senior:'👑', kids:'🧒', pet:'🐾' }[type] || '🐸';
+  var pts = 200;
+  currentScore += pts;
+  spawnParticles(wepa.x, laneY(1), '#e8a83e', 20);
+  // Full screen glow
+  var sf = document.getElementById('spirit-flash');
+  sf.classList.remove('show'); void sf.offsetWidth; sf.classList.add('show');
+
+  document.getElementById('spirit-popup-emoji').textContent = typeEmoji + '✨';
+  document.getElementById('spirit-pts-display').textContent = '+' + pts + ' pts';
+  document.getElementById('spirit-popup-sub').textContent = 'Your passport spirit appeared because you visited Wepa today. It will return on your next visit!';
+  document.getElementById('spirit-popup-fact').textContent = '💛 ' + (SPIRIT_FACTS[type] || SPIRIT_FACTS.senior);
+  document.getElementById('popup-spirit').classList.add('show');
+}
+
+function closeSpiritPopup() {
+  document.getElementById('popup-spirit').classList.remove('show');
+  gamePaused = false;
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+// ── SPIRIT TIMER ──
+function startSpiritTimer() {
+  if (spiritTimerInterval) clearInterval(spiritTimerInterval);
+  function update() {
+    var now = new Date();
+    var diff = spiritExpiry - now;
+    if (diff <= 0) {
+      clearInterval(spiritTimerInterval);
+      document.getElementById('spirit-banner').classList.add('hidden');
+      spiritActive = false;
+      return;
+    }
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('spirit-timer').textContent = '⏳ ' + h + 'h ' + (m < 10 ? '0' : '') + m + 'm ' + (s < 10 ? '0' : '') + s + 's';
+  }
+  update();
+  spiritTimerInterval = setInterval(update, 1000);
+}
+
+// ── START / PAUSE / END ──
+function startGame() {
+  showScreen(null);
+  document.getElementById('hud').classList.add('active');
+  document.getElementById('gameCanvas').classList.add('active');
+  initGame();
+  gameRunning = true;
+  gamePaused = false;
+  animFrame = requestAnimationFrame(gameLoop);
+  // Tap hint
+  var hint = document.getElementById('tap-hint');
+  hint.classList.remove('active');
+  void hint.offsetWidth;
+  hint.classList.add('active');
+}
+
+function pauseGame() {
+  if (!gameRunning) return;
+  gamePaused = !gamePaused;
+  if (!gamePaused) animFrame = requestAnimationFrame(gameLoop);
+}
+
+async function endGame() {
+  gameRunning = false;
+  cancelAnimationFrame(animFrame);
+  document.getElementById('hud').classList.remove('active');
+  document.getElementById('gameCanvas').classList.remove('active');
+
+  var score = Math.floor(currentScore);
+  var isNewBest = score > bestScore;
+  if (isNewBest) bestScore = score;
+
+  // Save score
+  try {
+    await fetch(SB_URL + '/rest/v1/wepa_scores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+      body: JSON.stringify({ passport_id: passportId, passport_type: passportData?.passport_type || 'senior', score: score, countries_unlocked: sessionCountries })
+    });
+    for (var code of sessionCountries) {
+      fetch(SB_URL + '/rest/v1/wepa_discoveries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Prefer: 'return=minimal' },
+        body: JSON.stringify({ passport_id: passportId, country_code: code })
+      }).catch(function(){});
+    }
+  } catch(e) { console.error('Save error', e); }
+
+  document.getElementById('go-score').textContent = score;
+  document.getElementById('go-best').textContent = isNewBest ? '🎉 New personal best!' : 'Best: ' + bestScore + ' pts';
+  document.getElementById('best-score-display').textContent = bestScore;
+
+  var countriesEl = document.getElementById('go-countries');
+  countriesEl.innerHTML = sessionCountries.map(function(c) {
+    return '<div class="go-country">' + COUNTRIES[c].flag + ' ' + COUNTRIES[c].name + '</div>';
+  }).join('') || '<div style="color:var(--muted);font-size:13px;">No countries this run — try again!</div>';
+
+  showScreen('screen-gameover');
+}
+
+// ── LEADERBOARD ──
+async function showLeaderboard() {
+  showScreen('screen-leaderboard');
+  document.getElementById('lb-reward-text').textContent = gameSettings.explorer_reward;
+  var now = new Date();
+  var day = now.getDay();
+  var diff = (day === 0 ? -6 : 1 - day);
+  var monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  document.getElementById('lb-week').textContent = 'Week of ' + monday.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/wepa_scores?played_at=gte.' + monday.toISOString() + '&order=score.desc&limit=10&select=score,passport_id,passport_type,wepa_passports(name)', { headers: { apikey: SB_KEY } });
+    var rows = await res.json();
+    var el = document.getElementById('lb-list');
+    if (!rows || rows.length === 0) { el.innerHTML = '<div class="lb-empty">No scores yet this week. Be the first! 🌍</div>'; return; }
+    var rankClass = ['gold','silver','bronze'];
+    el.innerHTML = rows.map(function(r, i) {
+      var name = r.wepa_passports?.name || 'Wepa Explorer';
+      var isYou = r.passport_id === passportId;
+      var typeEmoji = { senior:'👑', kids:'🧒', pet:'🐾' }[r.passport_type] || '🐸';
+      return '<div class="lb-row"><div class="lb-rank ' + (rankClass[i]||'') + '">' + (i < 3 ? ['🥇','🥈','🥉'][i] : i+1) + '</div><div><div class="lb-name ' + (isYou?'lb-you':'') + '">' + name + (isYou?' (You)':'') + '</div><div class="lb-type">' + typeEmoji + '</div></div><div class="lb-score">' + r.score + '</div></div>';
+    }).join('');
+  } catch(e) { document.getElementById('lb-list').innerHTML = '<div class="lb-empty">Could not load scores.</div>'; }
+}
+
+function hideLeaderboard() { showScreen('screen-start'); }
+
+// ── SCREENS ──
+function showScreen(id) {
+  ['screen-loading','screen-auth','screen-start','screen-gameover','screen-leaderboard'].forEach(function(s) {
+    document.getElementById(s).classList.add('hidden');
+  });
+  if (id) document.getElementById(id).classList.remove('hidden');
+}
+
+function showStart() { showScreen('screen-start'); }
+
+// ── INIT ──
+async function init() {
+  showScreen('screen-loading');
+  var params = new URLSearchParams(window.location.search);
+  passportId = params.get('passport');
+
+  if (!passportId) { showScreen('screen-auth'); return; }
+
+  try {
+    // Load passport
+    var pRes = await fetch(SB_URL + '/rest/v1/wepa_passports?id=eq.' + passportId + '&select=*', { headers: { apikey: SB_KEY } });
+    var passports = await pRes.json();
+    if (!passports || passports.length === 0) { showScreen('screen-auth'); return; }
+    passportData = passports[0];
+
+    // Check spirit — is last_stamp_at within 8 hours?
+    if (passportData.last_stamp_at) {
+      var stampTime = new Date(passportData.last_stamp_at);
+      var expiryTime = new Date(stampTime.getTime() + 8 * 60 * 60 * 1000);
+      if (new Date() < expiryTime) {
+        spiritActive = true;
+        spiritExpiry = expiryTime;
+        var typeEmoji = { senior:'👑', kids:'🧒', pet:'🐾' }[passportData.passport_type] || '🐸';
+        document.getElementById('spirit-banner').classList.remove('hidden');
+        document.getElementById('spirit-banner-emoji').textContent = typeEmoji + ' Your Spirit is waiting!';
+        startSpiritTimer();
+      }
+    }
+
+    // Load settings
+    var sRes = await fetch(SB_URL + '/rest/v1/wepa_settings?select=*', { headers: { apikey: SB_KEY } });
+    var settings = await sRes.json();
+    if (Array.isArray(settings)) {
+      settings.forEach(function(s) {
+        if (s.key === 'explorer_featured_country') gameSettings.featured_country = s.value;
+        if (s.key === 'explorer_featured_multiplier') gameSettings.featured_multiplier = parseInt(s.value) || 3;
+        if (s.key === 'explorer_reward') gameSettings.explorer_reward = s.value;
+      });
+    }
+
+    // Best score
+    var bRes = await fetch(SB_URL + '/rest/v1/wepa_scores?passport_id=eq.' + passportId + '&order=score.desc&limit=1', { headers: { apikey: SB_KEY } });
+    var best = await bRes.json();
+    if (best && best.length > 0) bestScore = best[0].score;
+
+    // Discoveries
+    var dRes = await fetch(SB_URL + '/rest/v1/wepa_discoveries?passport_id=eq.' + passportId, { headers: { apikey: SB_KEY } });
+    var disc = await dRes.json();
+    if (Array.isArray(disc)) discoveredCountries = disc.map(function(d){ return d.country_code; });
+
+    // UI
+    var typeEmoji = { senior:'👑', kids:'🧒', pet:'🐾' }[passportData.passport_type] || '🐸';
+    document.getElementById('passport-badge').textContent = typeEmoji + ' ' + (passportData.name || 'Explorer') + ' · ' + passportId;
+    document.getElementById('best-score-display').textContent = bestScore;
+    var fc = COUNTRIES[gameSettings.featured_country];
+    if (fc) {
+      document.getElementById('featured-country-name').textContent = fc.flag + ' ' + fc.name;
+      document.getElementById('featured-multiplier').textContent = gameSettings.featured_multiplier + 'x';
+    }
+
+    showScreen('screen-start');
+  } catch(e) {
+    console.error('Init error', e);
+    showScreen('screen-auth');
+  }
+}
+
+init();
+</script>
+</body>
+</html>

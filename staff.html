@@ -533,7 +533,7 @@ async function addStamp(){
       else if(lastVisit!==today) newStreak=1;
       await fetch(SB_URL+'/rest/v1/wepa_passports?id=eq.'+currentPassport.id,{
         method:'PATCH',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},
-        body:JSON.stringify({last_visit_date:today,streak:newStreak})
+        body:JSON.stringify({last_visit_date:today,streak:newStreak,last_stamp_at:new Date().toISOString()})
       }).catch(function(){});
       currentPassport.streak=newStreak; currentPassport.last_visit_date=today;
       currentStamps.unshift({passport_id:currentPassport.id,note:note,stamped_at:new Date().toISOString()});
