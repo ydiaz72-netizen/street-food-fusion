@@ -75,18 +75,22 @@
     .welcome-name { font-size: 20px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .welcome-meta { font-size: 13px; color: var(--soft); font-weight: 500; }
 
-    /* LEVEL BADGE — tappable */
+    /* LEVEL BADGE — always visible, no tap needed, tappable for more */
     .level-badge { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 18px; font-weight: 900; white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: transform 0.15s; animation: badgePop 0.5s cubic-bezier(0.34,1.56,0.64,1); position: relative; min-width: 90px; }
     .level-badge:active { transform: scale(0.93); }
-    .level-badge.senior { background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; box-shadow: 0 4px 16px rgba(232,168,62,0.5), 0 0 0 2px rgba(232,168,62,0.2); }
-    .level-badge.kids   { background: linear-gradient(135deg,#db2777,#f472b6); color: #fff; box-shadow: 0 4px 16px rgba(219,39,119,0.5), 0 0 0 2px rgba(219,39,119,0.2); }
-    .level-badge.pet    { background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; box-shadow: 0 4px 16px rgba(14,116,144,0.5), 0 0 0 2px rgba(14,116,144,0.2); }
-    .level-badge-top { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 800; opacity: 0.85; margin-bottom: 1px; }
+    .level-badge.senior { background: linear-gradient(135deg,#e8a83e,#f5c842); color: #5c3a00; box-shadow: 0 4px 16px rgba(232,168,62,0.5); }
+    .level-badge.kids   { background: linear-gradient(135deg,#db2777,#f472b6); color: #fff; box-shadow: 0 4px 16px rgba(219,39,119,0.4); }
+    .level-badge.pet    { background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; box-shadow: 0 4px 16px rgba(14,116,144,0.4); }
+    .level-badge-level { font-size: 12px; font-weight: 800; opacity: 0.85; margin-bottom: 1px; }
     .level-badge-pts { font-size: 22px; font-weight: 900; line-height: 1; letter-spacing: -0.5px; }
-    .level-badge-pts-label { font-size: 10px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
+    .level-badge-label { font-size: 10px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
     @keyframes badgePop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
     @keyframes badgePulse { 0%,100% { transform: scale(1); } 25% { transform: scale(1.12); } 50% { transform: scale(1); } 75% { transform: scale(1.08); } }
     .level-badge.leveled-up { animation: badgePulse 0.6s ease 3; }
+
+    /* WEPA EXPLORER BUTTON */
+    .wepa-explorer-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 18px; background: linear-gradient(135deg,#0e7490,#22d3ee); color: #fff; border: none; border-radius: 18px; font-family: var(--font); font-size: 17px; font-weight: 900; cursor: pointer; margin-bottom: 10px; text-decoration: none; box-shadow: 0 4px 16px rgba(14,116,144,0.35); transition: transform 0.15s; }
+    .wepa-explorer-btn:active { transform: scale(0.97); }
 
     /* STREAK */
     .streak-bar { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: linear-gradient(135deg,#fff8f0,#fff3e0); border-radius: 12px; margin-bottom: 12px; border: 1px solid #ffe0b2; }
@@ -325,7 +329,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-senior">—</div>
-          <div class="level-badge senior" id="level-badge-senior" onclick="openDrawer()"><div class="level-badge-top">🌱 <span id="level-name-senior">Newcomer</span></div><div class="level-badge-pts" id="level-pts-senior">0</div><div class="level-badge-pts-label">⚡ points</div></div>
+          <div class="level-badge senior" id="level-badge-senior" onclick="openDrawer()"><div class="level-badge-level" id="level-name-senior">🌱 Newcomer</div><div class="level-badge-pts" id="level-pts-senior">0</div><div class="level-badge-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-senior">Senior Passport</div>
       </div>
@@ -351,6 +355,7 @@
       </div>
     </div>
     <div class="card"><div class="card-title">📋 Visit History</div><div id="visits-senior"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <a class="wepa-explorer-btn" id="play-btn-senior" href="https://wepaexplorer.com/game.html" target="_blank">🌍 Play Wepa Explorer</a>
     <button class="staff-btn senior" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
     <button class="waitlist-btn card-request-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard(this)">🪪 Request a Physical NFC Card</button>
@@ -373,7 +378,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-kids">—</div>
-          <div class="level-badge kids" id="level-badge-kids" onclick="openDrawer()"><div class="level-badge-top">🐣 <span id="level-name-kids">Hatchling</span></div><div class="level-badge-pts" id="level-pts-kids">0</div><div class="level-badge-pts-label">⚡ points</div></div>
+          <div class="level-badge kids" id="level-badge-kids" onclick="openDrawer()"><div class="level-badge-level" id="level-name-kids">🐣 Hatchling</div><div class="level-badge-pts" id="level-pts-kids">0</div><div class="level-badge-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-kids">Kids Passport</div>
       </div>
@@ -399,6 +404,7 @@
       </div>
     </div>
     <div class="card"><div class="card-title">🗺️ Adventure Log</div><div id="visits-kids"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <a class="wepa-explorer-btn" id="play-btn-kids" href="https://wepaexplorer.com/game.html" target="_blank">🌍 Play Wepa Explorer</a>
     <button class="staff-btn kids" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
     <button class="waitlist-btn card-request-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard(this)">🪪 Request a Physical NFC Card</button>
@@ -420,7 +426,7 @@
       <div class="welcome-info">
         <div class="welcome-top-row">
           <div class="welcome-name" id="welcome-name-pet">—</div>
-          <div class="level-badge pet" id="level-badge-pet" onclick="openDrawer()"><div class="level-badge-top">🌱 <span id="level-name-pet">Newcomer</span></div><div class="level-badge-pts" id="level-pts-pet">0</div><div class="level-badge-pts-label">⚡ points</div></div>
+          <div class="level-badge pet" id="level-badge-pet" onclick="openDrawer()"><div class="level-badge-level" id="level-name-pet">🌱 Newcomer</div><div class="level-badge-pts" id="level-pts-pet">0</div><div class="level-badge-label">⚡ points</div></div>
         </div>
         <div class="welcome-meta" id="welcome-meta-pet">Pet Passport</div>
       </div>
@@ -446,6 +452,7 @@
       </div>
     </div>
     <div class="card"><div class="card-title">🗒️ Visit Notes</div><div id="visits-pet"><div class="no-visits">No visits yet. Come visit us!</div></div></div>
+    <a class="wepa-explorer-btn" id="play-btn-pet" href="https://wepaexplorer.com/game.html" target="_blank">🌍 Play Wepa Explorer</a>
     <button class="staff-btn pet" onclick="openModal()">📲 Show to Staff</button>
     <a class="whatsapp-btn" href="#" onclick="shareWhatsApp(event)"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share Wepa with a friend</a>
     <button class="waitlist-btn card-request-btn" style="border-color:#6b7280;color:#6b7280;" onclick="requestPhysicalCard(this)">🪪 Request a Physical NFC Card</button>
@@ -673,7 +680,10 @@ async function init() {
     return;
   }
   document.getElementById('topbar-id').textContent=passportId;
-  var pb=document.getElementById('play-btn'); if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+  ['senior','kids','pet'].forEach(function(t){
+    var pb=document.getElementById('play-btn-'+t);
+    if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+  });
   await loadPassport();
   loadChampion();
 }
@@ -789,7 +799,7 @@ function renderLevelBadge(type, pts, leveledUp) {
   var badge=document.getElementById('level-badge-'+type);
   if(nameEl) nameEl.textContent=lv.emoji+' '+lv.label;
   if(ptsEl) ptsEl.textContent=pts;
-  if(badge && leveledUp){ badge.classList.add('leveled-up'); setTimeout(function(){ badge.classList.remove('leveled-up'); },2000); }
+  if(badge&&leveledUp){ badge.classList.add('leveled-up'); setTimeout(function(){ badge.classList.remove('leveled-up'); },2000); }
 }
 
 function openDrawer() {
@@ -929,7 +939,10 @@ async function createPassport() {
     if(email){ fetch(SB_URL+'/rest/v1/wepa_waitlist',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Prefer:'return=minimal'},body:JSON.stringify({email:email,source:'passport-setup'})}).catch(function(){}); }
     localStorage.setItem('wepa_passport_id',passportId);
     document.getElementById('topbar-id').textContent=passportId;
-    var pb=document.getElementById('play-btn'); if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+    ['senior','kids','pet'].forEach(function(t){
+      var pb=document.getElementById('play-btn-'+t);
+      if(pb) pb.href='https://wepaexplorer.com/game.html?passport='+passportId;
+    });
     passportData={id:passportId,name:name||null,email:email||null,passport_type:selectedType,created_at:new Date().toISOString(),points:0,question_index:0,last_question_asked:null,preferences:{},streak:0};
     stampsData=[]; currentType=selectedType;
     document.getElementById('app-setup').style.display='none';
