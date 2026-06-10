@@ -1011,6 +1011,7 @@ function showSavePrompt() {
 }
 
 
+function shareWhatsApp(e) {
   e.preventDefault();
   var msgs={en:'🐸 Hey! I just got my Wepa Passport at Wepa Street Food Fusion in Erfurt. Stamps, rewards, and the food is amazing! Get yours: https://streetfoodfusion.de',de:'🐸 Hey! Ich habe gerade meinen Wepa-Pass bekommen. Stempel, Prämien und tolles Essen! Hol dir deinen: https://streetfoodfusion.de',es:'🐸 ¡Hola! Acabo de obtener mi Pasaporte Wepa en Erfurt. ¡Sellos, premios y la comida es increíble! Obtén el tuyo: https://streetfoodfusion.de'};
   window.open('https://wa.me/?text='+encodeURIComponent(msgs[lang]||msgs.en),'_blank');
