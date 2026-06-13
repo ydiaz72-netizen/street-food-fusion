@@ -725,6 +725,7 @@ async function loadPassport() {
 }
 
 /* DAILY cadence — one question per calendar day */
+/* DAILY cadence — one question per calendar day, never repeat answered questions */
 function checkCoquiQuestion() {
   if(!passportData) return;
   var lastAsked=passportData.last_question_asked;
@@ -732,8 +733,15 @@ function checkCoquiQuestion() {
   var lastAskedStr=lastAsked?new Date(lastAsked).toISOString().split('T')[0]:'';
   if(lastAskedStr===todayStr) return; // already asked today
   var pool=QUESTIONS[currentType]||QUESTIONS.senior;
-  var idx=(passportData.question_index||0)%pool.length;
-  setTimeout(function(){ showCoquiQuestion(pool[idx]); },1200);
+  var prefs=passportData.preferences||{};
+  // Find next unanswered question — never ask the same key twice
+  var nextQ=null;
+  for(var i=0;i<pool.length;i++){
+    var q=pool[((passportData.question_index||0)+i)%pool.length];
+    if(!prefs[q.key]){ nextQ=q; break; }
+  }
+  if(!nextQ) return; // all questions answered — nothing to ask
+  setTimeout(function(){ showCoquiQuestion(nextQ); },1200);
 }
 
 function showCoquiQuestion(q) {
